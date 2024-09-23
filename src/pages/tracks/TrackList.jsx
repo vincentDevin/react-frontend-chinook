@@ -37,7 +37,6 @@ const TrackList = () => {
             console.error("Invalid track ID:", track);
             return;
         }
-        console.log(track);
         setSelectedTrack(track);
         setShowModal(true);
     };
