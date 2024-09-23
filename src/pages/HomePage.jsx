@@ -1,11 +1,19 @@
-import MainLayout from './MainLayout.jsx'
+import MainLayout from './MainLayout';
+import HeroSection from '../components/HeroSection';
+import FeatureHighlights from '../components/FeatureHighlights';
+import RandomSpotlight from '../components/RandomSpotlight';
+import { useDocTitle } from '../useDocTitle';
 
 const HomePage = () => {
+    useDocTitle('Home - Music Database App');
+
     return (
         <MainLayout>
-            <h1>Home Page</h1>
+            <HeroSection />
+            <FeatureHighlights />
+            <RandomSpotlight />
         </MainLayout>
-    )
-}
+    );
+};
 
-export default HomePage
+export default HomePage;

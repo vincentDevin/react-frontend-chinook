@@ -1,0 +1,328 @@
+{
+  "artists": [
+    {
+      "id": "1",
+      "name": "AC/DC"
+    },
+    {
+      "id": "2",
+      "name": "Accept"
+    }
+  ],
+  "albums": [
+    {
+      "id": "1",
+      "title": "For Those About To Rock We Salute You",
+      "artistId": 1,
+      "artist": "AC/DC"
+    },
+    {
+      "id": "2",
+      "title": "Balls to the Wall",
+      "artistId": 2,
+      "artist": "Accept"
+    },
+    {
+      "id": "3",
+      "title": "Restless and Wild",
+      "artistId": 2,
+      "artist": "Accept"
+    },
+    {
+      "id": "9af4",
+      "name": "Test Album",
+      "artist": "Test"
+    }
+  ],
+  "genres": [
+    {
+      "id": "1",
+      "name": "Rock"
+    },
+    {
+      "id": "2",
+      "name": "Jazz"
+    },
+    {
+      "id": "3",
+      "name": "Metal"
+    },
+    {
+      "id": "4",
+      "name": "Alternative & Punk"
+    },
+    {
+      "id": "5",
+      "name": "Rock And Roll"
+    },
+    {
+      "id": "6",
+      "name": "Blues"
+    },
+    {
+      "id": "7",
+      "name": "Latin"
+    },
+    {
+      "id": "8",
+      "name": "Reggae"
+    },
+    {
+      "id": "9",
+      "name": "Pop"
+    },
+    {
+      "id": "10",
+      "name": "Soundtrack"
+    },
+    {
+      "id": "11",
+      "name": "Bossa Nova"
+    },
+    {
+      "id": "12",
+      "name": "Easy Listening"
+    },
+    {
+      "id": "13",
+      "name": "Heavy Metal"
+    },
+    {
+      "id": "14",
+      "name": "R&B/Soul"
+    },
+    {
+      "id": "15",
+      "name": "Electronica/Dance"
+    },
+    {
+      "id": "16",
+      "name": "World"
+    },
+    {
+      "id": "17",
+      "name": "Hip Hop/Rap"
+    },
+    {
+      "id": "18",
+      "name": "Science Fiction"
+    },
+    {
+      "id": "19",
+      "name": "TV Shows"
+    },
+    {
+      "id": "20",
+      "name": "Sci Fi & Fantasy"
+    },
+    {
+      "id": "21",
+      "name": "Drama"
+    },
+    {
+      "id": "22",
+      "name": "Comedy"
+    },
+    {
+      "id": "23",
+      "name": "Alternative"
+    },
+    {
+      "id": "24",
+      "name": "Classical"
+    },
+    {
+      "id": "25",
+      "name": "Opera"
+    }
+  ],
+  "media-types": [
+    {
+      "id": "1",
+      "name": "MPEG audio file"
+    },
+    {
+      "id": "2",
+      "name": "Protected AAC audio file"
+    },
+    {
+      "id": "3",
+      "name": "Protected MPEG-4 video file"
+    },
+    {
+      "id": "4",
+      "name": "Purchased AAC audio file"
+    },
+    {
+      "id": "5",
+      "name": "AAC audio file"
+    }
+  ],
+  "tracks": [
+    {
+      "name": "For Those About To Rock (We Salute You)",
+      "album": "For Those About To Rock We Salute You",
+      "genre": "Rock",
+      "mediaType": "MPEG audio file",
+      "milliseconds": 343719,
+      "price": 0.99,
+      "id": "1"
+    },
+    {
+      "id": "6",
+      "name": "Put The Finger On You",
+      "albumId": 1,
+      "album": "For Those About To Rock We Salute You",
+      "genreId": 1,
+      "genre": "Rock",
+      "mediaTypeId": 1,
+      "mediaType": "MPEG audio file",
+      "milliseconds": 205662,
+      "price": 0.99
+    },
+    {
+      "id": "7",
+      "name": "Let's Get It Up",
+      "albumId": 1,
+      "album": "For Those About To Rock We Salute You",
+      "genreId": 1,
+      "genre": "Rock",
+      "mediaTypeId": 1,
+      "mediaType": "MPEG audio file",
+      "milliseconds": 233926,
+      "price": 0.99
+    },
+    {
+      "id": "8",
+      "name": "Inject The Venom",
+      "albumId": 1,
+      "album": "For Those About To Rock We Salute You",
+      "genreId": 1,
+      "genre": "Rock",
+      "mediaTypeId": 1,
+      "mediaType": "MPEG audio file",
+      "milliseconds": 210834,
+      "price": 0.99
+    },
+    {
+      "id": "9",
+      "name": "Snowballed",
+      "albumId": 1,
+      "album": "For Those About To Rock We Salute You",
+      "genreId": 1,
+      "genre": "Rock",
+      "mediaTypeId": 1,
+      "mediaType": "MPEG audio file",
+      "milliseconds": 203102,
+      "price": 0.99
+    },
+    {
+      "id": "10",
+      "name": "Evil Walks",
+      "albumId": 1,
+      "album": "For Those About To Rock We Salute You",
+      "genreId": 1,
+      "genre": "Rock",
+      "mediaTypeId": 1,
+      "mediaType": "MPEG audio file",
+      "milliseconds": 263497,
+      "price": 0.99
+    },
+    {
+      "id": "11",
+      "name": "C.O.D.",
+      "albumId": 1,
+      "album": "For Those About To Rock We Salute You",
+      "genreId": 1,
+      "genre": "Rock",
+      "mediaTypeId": 1,
+      "mediaType": "MPEG audio file",
+      "milliseconds": 199836,
+      "price": 0.99
+    },
+    {
+      "id": "12",
+      "name": "Breaking The Rules",
+      "albumId": 1,
+      "album": "For Those About To Rock We Salute You",
+      "genreId": 1,
+      "genre": "Rock",
+      "mediaTypeId": 1,
+      "mediaType": "MPEG audio file",
+      "milliseconds": 263288,
+      "price": 0.99
+    },
+    {
+      "id": "13",
+      "name": "Night Of The Long Knives",
+      "albumId": 1,
+      "album": "For Those About To Rock We Salute You",
+      "genreId": 1,
+      "genre": "Rock",
+      "mediaTypeId": 1,
+      "mediaType": "MPEG audio file",
+      "milliseconds": 205688,
+      "price": 0.99
+    },
+    {
+      "id": "14",
+      "name": "Spellbound",
+      "albumId": 1,
+      "album": "For Those About To Rock We Salute You",
+      "genreId": 1,
+      "genre": "Rock",
+      "mediaTypeId": 1,
+      "mediaType": "MPEG audio file",
+      "milliseconds": 270863,
+      "price": 0.99
+    },
+    {
+      "id": "2",
+      "name": "Balls to the Wall",
+      "albumId": 2,
+      "album": "Balls to the Wall",
+      "genreId": 1,
+      "genre": "Rock",
+      "mediaTypeId": 2,
+      "mediaType": "Protected AAC audio file",
+      "milliseconds": 342562,
+      "price": 0.99
+    },
+    {
+      "id": "3",
+      "name": "Fast As a Shark",
+      "albumId": 3,
+      "album": "Restless and Wild",
+      "genreId": 1,
+      "genre": "Rock",
+      "mediaTypeId": 2,
+      "mediaType": "Protected AAC audio file",
+      "milliseconds": 230619,
+      "price": 0.99
+    },
+    {
+      "id": "4",
+      "name": "Restless and Wild",
+      "albumId": 3,
+      "album": "Restless and Wild",
+      "genreId": 1,
+      "genre": "Rock",
+      "mediaTypeId": 2,
+      "mediaType": "Protected AAC audio file",
+      "milliseconds": 252051,
+      "price": 0.99
+    },
+    {
+      "id": "5",
+      "name": "Princess of the Dawn",
+      "albumId": 3,
+      "album": "Restless and Wild",
+      "genreId": 1,
+      "genre": "Rock",
+      "mediaTypeId": 2,
+      "mediaType": "Protected AAC audio file",
+      "milliseconds": 375418,
+      "price": 0.99
+    }
+  ]
+}
