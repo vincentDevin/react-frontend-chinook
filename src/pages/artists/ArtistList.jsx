@@ -1,15 +1,72 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { artistApi } from '../../api/entitiesApi'; // Import the artistApi from the consolidated API file
+import { artistApi } from '../../api/entitiesApi';
+import ConfirmDeleteModal from '../../components/ConfirmDeleteModal';
 
 const ArtistList = () => {
     const [artists, setArtists] = useState([]);
-
-    useEffect(() => {
-        artistApi.getAll().then((artists) => setArtists(artists));
-    }, []);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [showModal, setShowModal] = useState(false);
+    const [selectedArtist, setSelectedArtist] = useState(null);
 
     const navigate = useNavigate();
+
+    useEffect(() => {
+        artistApi
+            .getAll()
+            .then((artists) => {
+                setArtists(artists);
+                setLoading(false);
+            })
+            .catch((err) => {
+                setError(err.message);
+                setLoading(false);
+            });
+    }, []);
+
+    const handleShowModal = (artist) => {
+        if (!artist.id) {
+            console.error("Invalid artist ID:", artist);
+            return;
+        }
+        setSelectedArtist(artist);
+        setShowModal(true);
+    };
+
+    const handleCloseModal = () => {
+        setShowModal(false);
+        setSelectedArtist(null);
+    };
+
+    const handleConfirmDelete = () => {
+        if (selectedArtist) {
+            artistApi
+                .delete(selectedArtist.id)
+                .then(() => {
+                    setArtists((prevArtists) =>
+                        prevArtists.filter((artist) => artist.id !== selectedArtist.id)
+                    );
+                    handleCloseModal();
+                })
+                .catch((err) => {
+                    setError(err.message);
+                });
+        }
+    };
+
+    if (loading)
+        return (
+            <div className="container mt-4" role="status">
+                Loading artists...
+            </div>
+        );
+    if (error)
+        return (
+            <div className="container mt-4 text-danger" role="alert">
+                Error: {error}
+            </div>
+        );
 
     return (
         <div className="container mt-4">
@@ -35,22 +92,47 @@ const ArtistList = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {artists.map((art) => (
-                        <tr key={art.id}>
-                            <td>{art.name}</td>
-                            <td className="text-end">
-                                <button
-                                    className="btn btn-secondary btn-sm"
-                                    onClick={() => navigate('/artists/' + art.id)}
-                                    aria-label={`Edit artist ${art.name}`}
-                                >
-                                    Edit
-                                </button>
+                    {artists.length > 0 ? (
+                        artists.map((artist) => (
+                            <tr key={artist.id}>
+                                <td>{artist.name}</td>
+                                <td className="text-end">
+                                    <div className="d-flex justify-content-end gap-2">
+                                        <button
+                                            className="btn btn-secondary btn-sm w-25"
+                                            onClick={() => navigate('/artists/' + artist.id)}
+                                            aria-label={`Edit artist ${artist.name}`}
+                                        >
+                                            Edit
+                                        </button>
+                                        <button
+                                            className="btn btn-danger btn-sm w-25"
+                                            onClick={() => handleShowModal(artist)}
+                                            aria-label={`Delete artist ${artist.name}`}
+                                        >
+                                            Delete
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        ))
+                    ) : (
+                        <tr>
+                            <td colSpan="2" className="text-center">
+                                No artists available.
                             </td>
                         </tr>
-                    ))}
+                    )}
                 </tbody>
             </table>
+
+            {/* Confirm Delete Modal */}
+            <ConfirmDeleteModal
+                show={showModal}
+                handleClose={handleCloseModal}
+                handleConfirm={handleConfirmDelete}
+                itemName={selectedArtist ? selectedArtist.name : ''}
+            />
         </div>
     );
 };

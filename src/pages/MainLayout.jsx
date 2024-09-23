@@ -26,7 +26,7 @@ const MainLayout = ({ children }) => {
                     <div className="col">
                     <AnimatePresence mode="wait">
                             <motion.main
-                                key={basePath} // Use base path to trigger animation only on main route change
+                                key={basePath}
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, y: 20 }}

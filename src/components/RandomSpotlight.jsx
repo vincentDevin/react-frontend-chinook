@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { artistApi, albumApi, trackApi } from '../api/entitiesApi'; // Import APIs
+import { artistApi, albumApi, trackApi } from '../api/entitiesApi';
 
 const RandomSpotlight = () => {
     const [spotlight, setSpotlight] = useState(null);

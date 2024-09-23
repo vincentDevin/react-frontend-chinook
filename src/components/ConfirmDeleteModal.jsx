@@ -1,6 +1,6 @@
 // eslint-disable-next-line react/prop-types
 const ConfirmDeleteModal = ({ show, handleClose, handleConfirm, itemName }) => {
-    if (!show) return null; // Render nothing if the modal is not visible
+    if (!show) return null;
 
     return (
         <div
@@ -15,7 +15,7 @@ const ConfirmDeleteModal = ({ show, handleClose, handleConfirm, itemName }) => {
                         <h5 className="modal-title">Confirm Delete</h5>
                         <button
                             type="button"
-                            className="btn-close" // Bootstrap 5 close button class
+                            className="btn-close"
                             aria-label="Close"
                             onClick={handleClose}
                             style={{
@@ -23,7 +23,7 @@ const ConfirmDeleteModal = ({ show, handleClose, handleConfirm, itemName }) => {
                                 background: 'transparent',
                                 fontSize: '1.25rem',
                                 marginRight: '-10px',
-                            }} // Additional styling
+                            }}
                         >
                             <span aria-hidden="true">&times;</span>
                         </button>
