@@ -97,14 +97,14 @@ const AlbumList = () => {
                                 <td className="text-end">
                                     <div className="d-flex justify-content-end gap-2">
                                         <button
-                                            className="btn btn-secondary btn-sm w-25"
+                                            className="btn btn-secondary btn-md"
                                             onClick={() => navigate('/albums/' + album.id)}
                                             aria-label={`Edit ${album.title} album`}
                                         >
                                             Edit
                                         </button>
                                         <button
-                                            className="btn btn-danger btn-sm w-25"
+                                            className="btn btn-danger btn-md"
                                             onClick={() => handleShowModal(album)}
                                             aria-label={`Delete ${album.title} album`}
                                         >

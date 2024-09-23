@@ -95,14 +95,14 @@ const GenreList = () => {
                                 <td className="text-end">
                                     <div className="d-flex justify-content-end gap-2">
                                         <button
-                                            className="btn btn-secondary btn-sm w-25"
+                                            className="btn btn-secondary btn-md"
                                             onClick={() => navigate('/genres/' + genre.id)}
                                             aria-label={`Edit genre ${genre.name}`}
                                         >
                                             Edit
                                         </button>
                                         <button
-                                            className="btn btn-danger btn-sm w-25"
+                                            className="btn btn-danger btn-md"
                                             onClick={() => handleShowModal(genre)}
                                             aria-label={`Delete genre ${genre.name}`}
                                         >
