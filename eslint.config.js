@@ -1,8 +1,10 @@
-import js from '@eslint/js'
-import globals from 'globals'
-import react from 'eslint-plugin-react'
-import reactHooks from 'eslint-plugin-react-hooks'
-import reactRefresh from 'eslint-plugin-react-refresh'
+// eslint.config.js
+import js from '@eslint/js';
+import globals from 'globals';
+import react from 'eslint-plugin-react';
+import reactHooks from 'eslint-plugin-react-hooks';
+import reactRefresh from 'eslint-plugin-react-refresh';
+import jest from 'eslint-plugin-jest';
 
 export default [
   { ignores: ['dist'] },
@@ -35,4 +37,31 @@ export default [
       ],
     },
   },
-]
+  {
+    // Override configuration for test files
+    files: ['**/__tests__/**/*.{js,jsx,ts,tsx}', '**/?(*.)+(spec|test).{js,jsx,ts,tsx}'],
+    languageOptions: {
+      ecmaVersion: 2020,
+      globals: {
+        ...globals.browser,
+        ...globals.jest, // Include Jest globals here
+      },
+      parserOptions: {
+        ecmaVersion: 'latest',
+        ecmaFeatures: { jsx: true },
+        sourceType: 'module',
+      },
+    },
+    plugins: {
+      jest, // Enable Jest plugin
+    },
+    rules: {
+      ...jest.configs.recommended.rules, // Recommended Jest rules
+    },
+    settings: {
+      jest: {
+        version: 28, // Explicitly set the Jest version to match your installed version
+      },
+    },
+  },
+];
