@@ -4,10 +4,12 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useNavigate, useParams } from 'react-router-dom';
 import { mediaTypeApi } from '../../api/entitiesApi';
 import mediaTypeValidationSchema from '../../validation/mediaTypeValidationSchema';
+import InputField from '../../components/InputField'; // Reusable input component
+import FormButtons from '../../components/FormButtons'; // Reusable form buttons component
 
 const MediaTypeForm = () => {
     const params = useParams();
-    const mediaTypeId = params.mediaTypeId || 0;
+    const mediaTypeId = params.mediaTypeId ? parseInt(params.mediaTypeId, 10) : 0; // Ensure mediaTypeId is a number
     const navigate = useNavigate();
 
     const {
@@ -30,7 +32,6 @@ const MediaTypeForm = () => {
         const requestData = mediaTypeId > 0 ? { ...data, id: mediaTypeId } : data;
         action(requestData).then(() => navigate('/media-types'));
     };
-    
 
     return (
         <div className="container mt-4">
@@ -39,39 +40,17 @@ const MediaTypeForm = () => {
                     <h3>{mediaTypeId > 0 ? 'Edit Media Type' : 'Add New Media Type'}</h3>
                 </div>
                 <div className="card-body">
-                    <form onSubmit={handleSubmit(onSubmit)} aria-labelledby="mediaTypeFormHeading">
-                        <div className="mb-3">
-                            <label htmlFor="mediaTypeName" className="form-label">
-                                Media Type Name:
-                            </label>
-                            <input
-                                type="text"
-                                id="mediaTypeName"
-                                className={`form-control ${errors.name ? 'is-invalid' : ''}`}
-                                {...register('name')}
-                                aria-describedby="mediaTypeNameHelp"
-                            />
-                            {errors.name && (
-                                <div id="mediaTypeNameHelp" className="invalid-feedback">
-                                    {errors.name.message}
-                                </div>
-                            )}
-                        </div>
-                        <button
-                            type="submit"
-                            className="btn btn-success"
-                            aria-label="Save media type"
-                        >
-                            SAVE
-                        </button>
-                        <button
-                            type="button"
-                            className="btn btn-secondary ms-2"
-                            onClick={() => navigate('/media-types')}
-                            aria-label="Cancel and go back to media types list"
-                        >
-                            CANCEL
-                        </button>
+                    <form onSubmit={handleSubmit(onSubmit)} aria-live="polite">
+                        {/* InputField Component for Media Type Name */}
+                        <InputField
+                            id="mediaTypeName"
+                            label="Media Type Name"
+                            register={register}
+                            error={errors.name}
+                        />
+                        
+                        {/* FormButtons Component for Save and Cancel */}
+                        <FormButtons onCancel={() => navigate('/media-types')} />
                     </form>
                 </div>
             </div>

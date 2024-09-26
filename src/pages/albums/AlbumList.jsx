@@ -1,35 +1,28 @@
-import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { albumApi } from '../../api/entitiesApi';
-import ConfirmDeleteModal from '../../components/ConfirmDeleteModal';
+import GenericActions from '../../components/GenericActions';
+import GenericTable from '../../components/GenericTable';
+import GenericPagination from '../../components/GenericPagination';
+import usePagination from '../../hooks/usePagination'; // Import the usePagination hook
 
 const AlbumList = () => {
-    const [albums, setAlbums] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const navigate = useNavigate();
+
+    // Use the custom pagination hook with the album API function
+    const {
+        items: albums = [], // Use albums from the hook, default to empty array
+        loading,
+        error,
+        currentPage,
+        totalPages,
+        handlePageChange,
+    } = usePagination(albumApi.getAll, 10, 'albums'); // Pass 'albums' as the dataKey for correct extraction
+
     const [showModal, setShowModal] = useState(false);
     const [selectedAlbum, setSelectedAlbum] = useState(null);
 
-    const navigate = useNavigate();
-
-    useEffect(() => {
-        albumApi
-            .getAll()
-            .then((albums) => {
-                setAlbums(albums);
-                setLoading(false);
-            })
-            .catch((err) => {
-                setError(err.message);
-                setLoading(false);
-            });
-    }, []);
-
     const handleShowModal = (album) => {
-        if (!album.id) {
-            console.error("Invalid album ID:", album);
-            return;
-        }
         setSelectedAlbum(album);
         setShowModal(true);
     };
@@ -42,94 +35,82 @@ const AlbumList = () => {
     const handleConfirmDelete = () => {
         if (selectedAlbum) {
             albumApi
-                .delete(selectedAlbum.id)
+                .delete(selectedAlbum.AlbumId) // Use AlbumId as key
                 .then(() => {
-                    setAlbums((prevAlbums) =>
-                        prevAlbums.filter((album) => album.id !== selectedAlbum.id)
-                    );
+                    handlePageChange(currentPage); // Refresh data after deleting an album
                     handleCloseModal();
                 })
                 .catch((err) => {
-                    setError(err.message);
+                    console.error('Error deleting album:', err.message);
                 });
         }
     };
 
-    if (loading)
+    const renderRow = (album) => (
+        <tr key={album.AlbumId}>
+            <td>{album.Title}</td>
+            <td>{album.ArtistName || 'Unknown Artist'}</td> {/* Use ArtistName from the backend response */}
+            <td className="text-end">
+                <div className="d-flex justify-content-end gap-2">
+                    <button
+                        className="btn btn-secondary btn-md"
+                        onClick={() => navigate('/albums/' + album.AlbumId)}
+                        aria-label={`Edit ${album.Title} album`}
+                    >
+                        Edit
+                    </button>
+                    <button
+                        className="btn btn-danger btn-md"
+                        onClick={() => handleShowModal(album)}
+                        aria-label={`Delete ${album.Title} album`}
+                    >
+                        Delete
+                    </button>
+                </div>
+            </td>
+        </tr>
+    );
+
+    if (loading) {
         return (
             <div className="container mt-4" role="status">
                 Loading albums...
             </div>
         );
-    if (error)
+    }
+
+    if (error) {
         return (
             <div className="container mt-4 text-danger" role="alert">
                 Error: {error}
             </div>
         );
+    }
 
     return (
         <div className="container mt-4">
-            <div className="d-flex justify-content-between align-items-center mb-3">
-                <h2 id="albumListTitle">Albums</h2>
-                <Link to="/albums/add">
-                    <button className="btn btn-primary" aria-label="Add new album">
-                        Add Album
-                    </button>
-                </Link>
-            </div>
-            <table className="table table-striped table-hover" aria-labelledby="albumListTitle">
-                <thead className="thead-dark">
-                    <tr>
-                        <th scope="col">Album</th>
-                        <th scope="col">Artist</th>
-                        <th scope="col" className="text-end">
-                            Actions
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {albums.length > 0 ? (
-                        albums.map((album) => (
-                            <tr key={album.id}>
-                                <td>{album.title}</td>
-                                <td>{album.artist || 'Unknown Artist'}</td>
-                                <td className="text-end">
-                                    <div className="d-flex justify-content-end gap-2">
-                                        <button
-                                            className="btn btn-secondary btn-md"
-                                            onClick={() => navigate('/albums/' + album.id)}
-                                            aria-label={`Edit ${album.title} album`}
-                                        >
-                                            Edit
-                                        </button>
-                                        <button
-                                            className="btn btn-danger btn-md"
-                                            onClick={() => handleShowModal(album)}
-                                            aria-label={`Delete ${album.title} album`}
-                                        >
-                                            Delete
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                        ))
-                    ) : (
-                        <tr>
-                            <td colSpan="3" className="text-center">
-                                No albums available.
-                            </td>
-                        </tr>
-                    )}
-                </tbody>
-            </table>
+            {/* Generic Actions Component */}
+            <GenericActions
+                onAdd={() => navigate('/albums/add')}
+                selectedItem={selectedAlbum}
+                onConfirmDelete={handleConfirmDelete}
+                onCancelDelete={handleCloseModal}
+                showModal={showModal}
+                addLink="/albums/add"
+            />
 
-            {/* Confirm Delete Modal */}
-            <ConfirmDeleteModal
-                show={showModal}
-                handleClose={handleCloseModal}
-                handleConfirm={handleConfirmDelete}
-                itemName={selectedAlbum ? selectedAlbum.title : ''}
+            {/* Generic Table Component */}
+            <GenericTable
+                headers={['Album', 'Artist', 'Actions']}
+                rows={albums} // Use albums from the usePagination hook
+                renderRow={renderRow}
+            />
+
+            {/* Generic Pagination Component */}
+            <GenericPagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
             />
         </div>
     );

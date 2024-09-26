@@ -4,11 +4,12 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useNavigate, useParams } from 'react-router-dom';
 import { artistApi } from '../../api/entitiesApi';
 import artistValidationSchema from '../../validation/artistValidationSchema';
+import InputField from '../../components/InputField'; // Reusable input component
+import FormButtons from '../../components/FormButtons'; // Reusable form buttons component
 
 const ArtistForm = () => {
     const params = useParams();
-    const artistId = params.artistId || 0;
-
+    const artistId = params.artistId ? parseInt(params.artistId, 10) : 0; // Ensure artistId is a number
     const navigate = useNavigate();
 
     const {
@@ -31,7 +32,7 @@ const ArtistForm = () => {
         const requestData = artistId > 0 ? { ...data, id: artistId } : data;
         action(requestData).then(() => navigate('/artists'));
     };
-    
+
     return (
         <div className="container mt-4">
             <div className="card">
@@ -40,35 +41,16 @@ const ArtistForm = () => {
                 </div>
                 <div className="card-body">
                     <form onSubmit={handleSubmit(onSubmit)} aria-labelledby="artistFormTitle">
-                        <div className="mb-3">
-                            <label htmlFor="artistName" className="form-label">
-                                Artist Name:
-                            </label>
-                            <input
-                                type="text"
-                                id="artistName"
-                                className={`form-control ${errors.name ? 'is-invalid' : ''}`}
-                                {...register('name')}
-                                aria-invalid={errors.name ? 'true' : 'false'}
-                                aria-describedby={errors.name ? 'artistNameError' : undefined}
-                            />
-                            {errors.name && (
-                                <div id="artistNameError" className="invalid-feedback">
-                                    {errors.name.message}
-                                </div>
-                            )}
-                        </div>
-                        <button type="submit" className="btn btn-success">
-                            SAVE
-                        </button>
-                        <button
-                            type="button"
-                            className="btn btn-secondary ms-2"
-                            onClick={() => navigate('/artists')}
-                            aria-label="Cancel and go back to artist list"
-                        >
-                            CANCEL
-                        </button>
+                        {/* InputField Component for Artist Name */}
+                        <InputField
+                            id="artistName"
+                            label="Artist Name"
+                            register={register}
+                            error={errors.name}
+                        />
+
+                        {/* FormButtons Component for Save and Cancel */}
+                        <FormButtons onCancel={() => navigate('/artists')} />
                     </form>
                 </div>
             </div>

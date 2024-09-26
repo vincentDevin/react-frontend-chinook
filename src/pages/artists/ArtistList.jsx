@@ -1,35 +1,28 @@
-import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { artistApi } from '../../api/entitiesApi';
-import ConfirmDeleteModal from '../../components/ConfirmDeleteModal';
+import GenericActions from '../../components/GenericActions';
+import GenericTable from '../../components/GenericTable';
+import GenericPagination from '../../components/GenericPagination';
+import usePagination from '../../hooks/usePagination'; // Import usePagination hook
 
 const ArtistList = () => {
-    const [artists, setArtists] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const navigate = useNavigate();
+
+    // Use the custom pagination hook with the artist API function
+    const {
+        items: artists = [], // Default to empty array if no data
+        loading,
+        error,
+        currentPage,
+        totalPages,
+        handlePageChange,
+    } = usePagination(artistApi.getAll, 10, 'artists'); // Pass the API function, items per page, and data key
+
     const [showModal, setShowModal] = useState(false);
     const [selectedArtist, setSelectedArtist] = useState(null);
 
-    const navigate = useNavigate();
-
-    useEffect(() => {
-        artistApi
-            .getAll()
-            .then((artists) => {
-                setArtists(artists);
-                setLoading(false);
-            })
-            .catch((err) => {
-                setError(err.message);
-                setLoading(false);
-            });
-    }, []);
-
     const handleShowModal = (artist) => {
-        if (!artist.id) {
-            console.error("Invalid artist ID:", artist);
-            return;
-        }
         setSelectedArtist(artist);
         setShowModal(true);
     };
@@ -42,96 +35,81 @@ const ArtistList = () => {
     const handleConfirmDelete = () => {
         if (selectedArtist) {
             artistApi
-                .delete(selectedArtist.id)
+                .delete(selectedArtist.ArtistId) // Use ArtistId instead of id
                 .then(() => {
-                    setArtists((prevArtists) =>
-                        prevArtists.filter((artist) => artist.id !== selectedArtist.id)
-                    );
+                    handlePageChange(currentPage); // Refresh data after deleting an artist
                     handleCloseModal();
                 })
                 .catch((err) => {
-                    setError(err.message);
+                    console.error('Error deleting artist:', err.message);
                 });
         }
     };
 
-    if (loading)
+    const renderRow = (artist) => (
+        <tr key={artist.ArtistId}>
+            <td>{artist.Name}</td>
+            <td className="text-end">
+                <div className="d-flex justify-content-end gap-2">
+                    <button
+                        className="btn btn-secondary btn-md"
+                        onClick={() => navigate('/artists/' + artist.ArtistId)}
+                        aria-label={`Edit ${artist.Name}`}
+                    >
+                        Edit
+                    </button>
+                    <button
+                        className="btn btn-danger btn-md"
+                        onClick={() => handleShowModal(artist)}
+                        aria-label={`Delete ${artist.Name}`}
+                    >
+                        Delete
+                    </button>
+                </div>
+            </td>
+        </tr>
+    );    
+
+    if (loading) {
         return (
             <div className="container mt-4" role="status">
                 Loading artists...
             </div>
         );
-    if (error)
+    }
+
+    if (error) {
         return (
             <div className="container mt-4 text-danger" role="alert">
                 Error: {error}
             </div>
         );
+    }
 
     return (
         <div className="container mt-4">
-            <div className="d-flex justify-content-between align-items-center mb-3">
-                <h2>Artists</h2>
-                <Link to="/artists/add">
-                    <button className="btn btn-primary" aria-label="Add a new artist">
-                        Add Artist
-                    </button>
-                </Link>
-            </div>
-            <table
-                className="table table-striped table-hover"
-                role="table"
-                aria-label="List of Artists"
-            >
-                <thead className="thead-dark">
-                    <tr>
-                        <th scope="col">Artist</th>
-                        <th scope="col" className="text-end">
-                            Actions
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {artists.length > 0 ? (
-                        artists.map((artist) => (
-                            <tr key={artist.id}>
-                                <td>{artist.name}</td>
-                                <td className="text-end">
-                                    <div className="d-flex justify-content-end gap-2">
-                                        <button
-                                            className="btn btn-secondary btn-md"
-                                            onClick={() => navigate('/artists/' + artist.id)}
-                                            aria-label={`Edit artist ${artist.name}`}
-                                        >
-                                            Edit
-                                        </button>
-                                        <button
-                                            className="btn btn-danger btn-md"
-                                            onClick={() => handleShowModal(artist)}
-                                            aria-label={`Delete artist ${artist.name}`}
-                                        >
-                                            Delete
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                        ))
-                    ) : (
-                        <tr>
-                            <td colSpan="2" className="text-center">
-                                No artists available.
-                            </td>
-                        </tr>
-                    )}
-                </tbody>
-            </table>
+            {/* Generic Actions Component */}
+            <GenericActions
+                onAdd={() => navigate('/artists/add')}
+                selectedItem={selectedArtist}
+                onConfirmDelete={handleConfirmDelete}
+                onCancelDelete={handleCloseModal}
+                showModal={showModal}
+                addLink="/artists/add"
+            />
 
-            {/* Confirm Delete Modal */}
-            <ConfirmDeleteModal
-                show={showModal}
-                handleClose={handleCloseModal}
-                handleConfirm={handleConfirmDelete}
-                itemName={selectedArtist ? selectedArtist.name : ''}
+            {/* Generic Table Component */}
+            <GenericTable
+                headers={['Artist', 'Actions']}
+                rows={artists} // Use artists from the usePagination hook
+                renderRow={renderRow}
+            />
+
+            {/* Generic Pagination Component */}
+            <GenericPagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
             />
         </div>
     );

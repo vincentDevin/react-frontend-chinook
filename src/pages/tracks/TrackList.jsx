@@ -1,7 +1,10 @@
+import { useNavigate } from 'react-router-dom';
+import { trackApi, albumApi, genreApi, mediaTypeApi } from '../../api/entitiesApi';
+import GenericActions from '../../components/GenericActions';
+import GenericTable from '../../components/GenericTable';
+import GenericPagination from '../../components/GenericPagination';
+import usePagination from '../../hooks/usePagination';
 import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { trackApi } from '../../api/entitiesApi';
-import ConfirmDeleteModal from '../../components/ConfirmDeleteModal';
 
 // Duration formatter function
 function formatDuration(milliseconds) {
@@ -11,32 +14,44 @@ function formatDuration(milliseconds) {
 }
 
 const TrackList = () => {
-    const [tracks, setTracks] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const navigate = useNavigate();
+
+    // Use the custom pagination hook with the track API function
+    const {
+        items: tracks = [],
+        loading,
+        error,
+        currentPage,
+        totalPages,
+        handlePageChange,
+    } = usePagination(trackApi.getAll, 10, 'tracks'); // Pass 'tracks' as the dataKey
+
+    const [albums, setAlbums] = useState([]);
+    const [genres, setGenres] = useState([]);
+    const [mediaTypes, setMediaTypes] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [selectedTrack, setSelectedTrack] = useState(null);
 
-    const navigate = useNavigate();
-
     useEffect(() => {
-        trackApi
-            .getAll()
-            .then((tracks) => {
-                setTracks(tracks);
-                setLoading(false);
-            })
-            .catch((err) => {
-                setError(err.message);
-                setLoading(false);
-            });
+        const fetchRelatedData = async () => {
+            try {
+                const [albumResponse, genreResponse, mediaTypeResponse] = await Promise.all([
+                    albumApi.getAll(),
+                    genreApi.getAll(),
+                    mediaTypeApi.getAll(),
+                ]);
+                setAlbums(albumResponse.albums || albumResponse); // Ensure albums is an array
+                setGenres(genreResponse.genres || genreResponse); // Ensure genres is an array
+                setMediaTypes(mediaTypeResponse.mediaTypes || mediaTypeResponse); // Ensure mediaTypes is an array
+            } catch (err) {
+                console.error('Error fetching related data:', err);
+            }
+        };
+
+        fetchRelatedData();
     }, []);
 
     const handleShowModal = (track) => {
-        if (!track.id) {
-            console.error("Invalid track ID:", track);
-            return;
-        }
         setSelectedTrack(track);
         setShowModal(true);
     };
@@ -49,134 +64,97 @@ const TrackList = () => {
     const handleConfirmDelete = () => {
         if (selectedTrack) {
             trackApi
-                .delete(selectedTrack.id)
+                .delete(selectedTrack.TrackId)
                 .then(() => {
-                    setTracks((prevTracks) =>
-                        prevTracks.filter((track) => track.id !== selectedTrack.id)
-                    );
+                    handlePageChange(currentPage); // Refresh data after deleting a track
                     handleCloseModal();
                 })
                 .catch((err) => {
-                    setError(err.message);
+                    console.error(err.message);
                 });
         }
     };
 
-    if (loading)
+    const getAlbumTitle = (albumId) => {
+        const album = albums.find((a) => a.AlbumId === albumId);
+        return album ? album.Title : 'Unknown Album';
+    };
+
+    const getGenreName = (genreId) => {
+        const genre = genres.find((g) => g.GenreId === genreId);
+        return genre ? genre.Name : 'Unknown Genre';
+    };
+
+    const getMediaTypeName = (mediaTypeId) => {
+        const mediaType = mediaTypes.find((m) => m.MediaTypeId === mediaTypeId);
+        return mediaType ? mediaType.Name : 'Unknown Media Type';
+    };
+
+    const renderRow = (track) => (
+        <tr key={track.TrackId}>
+            <td>{track.Name}</td>
+            <td>{getAlbumTitle(track.AlbumId)}</td>
+            <td>{getGenreName(track.GenreId)}</td>
+            <td>{getMediaTypeName(track.MediaTypeId)}</td>
+            <td>{track.Composer || 'Unknown'}</td>
+            <td>{formatDuration(track.Milliseconds)}</td>
+            <td>{track.UnitPrice !== undefined ? `$${parseFloat(track.UnitPrice).toFixed(2)}` : 'N/A'}</td>
+            <td className="text-end">
+                <div className="d-flex justify-content-end gap-2">
+                    <button
+                        className="btn btn-secondary btn-sm"
+                        onClick={() => navigate('/tracks/' + track.TrackId)}
+                    >
+                        Edit
+                    </button>
+                    <button
+                        className="btn btn-danger btn-sm"
+                        onClick={() => handleShowModal(track)}
+                    >
+                        Delete
+                    </button>
+                </div>
+            </td>
+        </tr>
+    );
+
+    if (loading) {
         return (
             <div className="container mt-4" role="status">
                 Loading tracks...
             </div>
         );
-    if (error)
+    }
+
+    if (error) {
         return (
             <div className="container mt-4 text-danger" role="alert">
                 Error: {error}
             </div>
         );
+    }
 
     return (
         <div className="container mt-4">
-            <div className="d-flex justify-content-between align-items-center mb-3">
-                <h2>Tracks</h2>
-                <Link to="/tracks/add" aria-label="Add new track">
-                    <button className="btn btn-primary">Add Track</button>
-                </Link>
-            </div>
+            <GenericActions
+                onAdd={() => navigate('/tracks/add')}
+                selectedItem={selectedTrack}
+                onConfirmDelete={handleConfirmDelete}
+                onCancelDelete={handleCloseModal}
+                showModal={showModal}
+                addLink="/tracks/add"
+            />
 
-            {/* Table for larger screens */}
-            <div className="d-none d-lg-block table-responsive">
-                <table className="table table-striped table-hover" aria-label="Track list">
-                    <thead className="thead-dark">
-                        <tr>
-                            <th scope="col">Track</th>
-                            <th scope="col">Album</th>
-                            <th scope="col">Genre</th>
-                            <th scope="col">Media Type</th>
-                            <th scope="col">Duration (mm:ss)</th>
-                            <th scope="col">Price ($)</th>
-                            <th scope="col" className="text-end">
-                                Actions
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {tracks.map((track) => (
-                            <tr key={track.id}>
-                                <td>{track.name}</td>
-                                <td>{track.album}</td>
-                                <td>{track.genre}</td>
-                                <td>{track.mediaType}</td>
-                                <td>{formatDuration(track.milliseconds)}</td>
-                                <td>{track.price.toFixed(2)}</td>
-                                <td className="text-end">
-                                    <div className="d-flex justify-content-end gap-2">
-                                        <button
-                                            className="btn btn-secondary btn-sm w-50"
-                                            onClick={() => navigate('/tracks/' + track.id)}
-                                            aria-label={`Edit ${track.name}`}
-                                        >
-                                            Edit
-                                        </button>
-                                        <button
-                                            className="btn btn-danger btn-sm w-50"
-                                            onClick={() => handleShowModal(track)}
-                                            aria-label={`Delete ${track.name}`}
-                                        >
-                                            Delete
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
+            <GenericTable
+                headers={['Track', 'Album', 'Genre', 'Media Type', 'Composer', 'Duration (mm:ss)', 'Price ($)', 'Actions']}
+                rows={tracks} // Ensure rows is passed correctly from the hook
+                renderRow={renderRow}
+            />
 
-            {/* Card view for mobile screens */}
-            <div className="d-lg-none">
-                {tracks.map((track) => (
-                    <div key={track.id} className="card mb-3 shadow-sm">
-                        <div className="card-body">
-                            <h5 className="card-title">{track.name}</h5>
-                            <p className="card-text">
-                                <strong>Album:</strong> {track.album}
-                                <br />
-                                <strong>Genre:</strong> {track.genre}
-                                <br />
-                                <strong>Media Type:</strong> {track.mediaType}
-                                <br />
-                                <strong>Duration:</strong> {formatDuration(track.milliseconds)}
-                                <br />
-                                <strong>Price:</strong> ${track.price.toFixed(2)}
-                            </p>
-                            <div className="d-flex justify-content-end gap-2">
-                                <button
-                                    className="btn btn-secondary btn-sm w-50"
-                                    onClick={() => navigate('/tracks/' + track.id)}
-                                    aria-label={`Edit ${track.name}`}
-                                >
-                                    Edit
-                                </button>
-                                <button
-                                    className="btn btn-danger btn-sm w-50"
-                                    onClick={() => handleShowModal(track)}
-                                    aria-label={`Delete ${track.name}`}
-                                >
-                                    Delete
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                ))}
-            </div>
-
-            {/* Confirm Delete Modal */}
-            <ConfirmDeleteModal
-                show={showModal}
-                handleClose={handleCloseModal}
-                handleConfirm={handleConfirmDelete}
-                itemName={selectedTrack ? selectedTrack.name : ''}
+            <GenericPagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
             />
         </div>
     );

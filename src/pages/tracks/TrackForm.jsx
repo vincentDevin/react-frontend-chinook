@@ -1,24 +1,31 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useNavigate, useParams } from 'react-router-dom';
-import { trackApi } from '../../api/entitiesApi';
+import { trackApi, albumApi, genreApi, mediaTypeApi } from '../../api/entitiesApi';
 import * as Yup from 'yup';
+import InputField from '../../components/InputField';
+import SelectField from '../../components/SelectField';
+import FormButtons from '../../components/FormButtons';
 
 const TrackForm = () => {
     const params = useParams();
-    const trackId = params.trackId || 0;
+    const trackId = params.trackId ? parseInt(params.trackId, 10) : 0;
     const navigate = useNavigate();
 
+    const [albums, setAlbums] = useState([]);
+    const [genres, setGenres] = useState([]);
+    const [mediaTypes, setMediaTypes] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
     const trackValidationSchema = Yup.object().shape({
-        name: Yup.string().required('Track name is required'),
-        album: Yup.string().required('Album is required'),
-        genre: Yup.string().required('Genre is required'),
-        mediaType: Yup.string().required('Media type is required'),
-        milliseconds: Yup.number()
-            .min(1, 'Duration must be positive')
-            .required('Duration is required'),
-        price: Yup.number().min(0.01, 'Price must be at least 0.01').required('Price is required'),
+        Name: Yup.string().required('Track name is required'),
+        AlbumId: Yup.number().required('Album ID is required').positive('Album ID must be positive'),
+        GenreId: Yup.number().required('Genre ID is required').positive('Genre ID must be positive'),
+        MediaTypeId: Yup.number().required('Media type ID is required').positive('Media type ID must be positive'),
+        Milliseconds: Yup.number().min(1, 'Duration must be positive').required('Duration is required'),
+        UnitPrice: Yup.number().min(0.01, 'Price must be at least 0.01').required('Price is required'),
     });
 
     const {
@@ -31,23 +38,61 @@ const TrackForm = () => {
     });
 
     useEffect(() => {
-        if (trackId > 0) {
-            trackApi.getById(trackId).then((track) => {
-                setValue('name', track.name);
-                setValue('album', track.album);
-                setValue('genre', track.genre);
-                setValue('mediaType', track.mediaType);
-                setValue('milliseconds', track.milliseconds);
-                setValue('price', track.price);
-            });
-        }
+        const fetchData = async () => {
+            try {
+                const [albumsData, genresData, mediaTypesData] = await Promise.all([
+                    albumApi.getAll(),
+                    genreApi.getAll(),
+                    mediaTypeApi.getAll(),
+                ]);
+
+                setAlbums(albumsData);
+                setGenres(genresData);
+                setMediaTypes(mediaTypesData);
+
+                if (trackId > 0) {
+                    const track = await trackApi.getById(trackId);
+                    setValue('Name', track.Name);
+                    setValue('AlbumId', track.AlbumId);
+                    setValue('GenreId', track.GenreId);
+                    setValue('MediaTypeId', track.MediaTypeId);
+                    setValue('Milliseconds', track.Milliseconds);
+                    setValue('UnitPrice', parseFloat(track.UnitPrice));
+                }
+            } catch (err) {
+                setError(err.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchData();
     }, [trackId, setValue]);
 
     const onSubmit = (data) => {
         const action = trackId > 0 ? trackApi.update : trackApi.insert;
-        const requestData = trackId > 0 ? { ...data, id: trackId } : data;
-        action(requestData).then(() => navigate('/tracks'));
+        const requestData = trackId > 0 ? { ...data, TrackId: trackId } : data;
+
+        action(requestData)
+            .then(() => navigate('/tracks'))
+            .catch((err) => setError(err.message));
     };
+
+    if (loading) {
+        return (
+            <div className="container mt-4" role="status">
+                Loading form data...
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="container mt-4 text-danger" role="alert">
+                Error: {error}
+            </div>
+        );
+    }
 
     return (
         <div className="container mt-4">
@@ -57,123 +102,63 @@ const TrackForm = () => {
                 </div>
                 <div className="card-body">
                     <form onSubmit={handleSubmit(onSubmit)} aria-live="polite">
-                        <div className="mb-3">
-                            <label htmlFor="trackName" className="form-label">
-                                Track Name:
-                            </label>
-                            <input
-                                type="text"
-                                id="trackName"
-                                className="form-control"
-                                {...register('name')}
-                                aria-invalid={errors.name ? 'true' : 'false'}
-                            />
-                            {errors.name && (
-                                <div className="text-danger" aria-live="polite">
-                                    {errors.name.message}
-                                </div>
-                            )}
-                        </div>
-                        <div className="mb-3">
-                            <label htmlFor="trackAlbum" className="form-label">
-                                Album:
-                            </label>
-                            <input
-                                type="text"
-                                id="trackAlbum"
-                                className="form-control"
-                                {...register('album')}
-                                aria-invalid={errors.album ? 'true' : 'false'}
-                            />
-                            {errors.album && (
-                                <div className="text-danger" aria-live="polite">
-                                    {errors.album.message}
-                                </div>
-                            )}
-                        </div>
-                        <div className="mb-3">
-                            <label htmlFor="trackGenre" className="form-label">
-                                Genre:
-                            </label>
-                            <input
-                                type="text"
-                                id="trackGenre"
-                                className="form-control"
-                                {...register('genre')}
-                                aria-invalid={errors.genre ? 'true' : 'false'}
-                            />
-                            {errors.genre && (
-                                <div className="text-danger" aria-live="polite">
-                                    {errors.genre.message}
-                                </div>
-                            )}
-                        </div>
-                        <div className="mb-3">
-                            <label htmlFor="trackMediaType" className="form-label">
-                                Media Type:
-                            </label>
-                            <input
-                                type="text"
-                                id="trackMediaType"
-                                className="form-control"
-                                {...register('mediaType')}
-                                aria-invalid={errors.mediaType ? 'true' : 'false'}
-                            />
-                            {errors.mediaType && (
-                                <div className="text-danger" aria-live="polite">
-                                    {errors.mediaType.message}
-                                </div>
-                            )}
-                        </div>
-                        <div className="mb-3">
-                            <label htmlFor="trackMilliseconds" className="form-label">
-                                Duration (ms):
-                            </label>
-                            <input
-                                type="number"
-                                id="trackMilliseconds"
-                                className="form-control"
-                                {...register('milliseconds')}
-                                aria-invalid={errors.milliseconds ? 'true' : 'false'}
-                                aria-describedby="durationHelp"
-                            />
-                            <small id="durationHelp" className="form-text text-muted">
-                                Enter the duration in milliseconds.
-                            </small>
-                            {errors.milliseconds && (
-                                <div className="text-danger" aria-live="polite">
-                                    {errors.milliseconds.message}
-                                </div>
-                            )}
-                        </div>
-                        <div className="mb-3">
-                            <label htmlFor="trackPrice" className="form-label">
-                                Price ($):
-                            </label>
-                            <input
-                                type="number"
-                                step="0.01"
-                                id="trackPrice"
-                                className="form-control"
-                                {...register('price')}
-                                aria-invalid={errors.price ? 'true' : 'false'}
-                            />
-                            {errors.price && (
-                                <div className="text-danger" aria-live="polite">
-                                    {errors.price.message}
-                                </div>
-                            )}
-                        </div>
-                        <button type="submit" className="btn btn-success">
-                            SAVE
-                        </button>
-                        <button
-                            type="button"
-                            className="btn btn-secondary ms-2"
-                            onClick={() => navigate('/tracks')}
-                        >
-                            CANCEL
-                        </button>
+                        <InputField
+                            id="Name"
+                            label="Track Name"
+                            register={register}
+                            error={errors.Name}
+                        />
+                        <SelectField
+                            id="AlbumId"
+                            label="Album"
+                            options={albums.map((album) => ({
+                                value: album.AlbumId,
+                                label: album.Title,
+                            }))}
+                            register={register}
+                            error={errors.AlbumId}
+                        />
+                        <SelectField
+                            id="GenreId"
+                            label="Genre"
+                            options={genres.map((genre) => ({
+                                value: genre.GenreId,
+                                label: genre.Name,
+                            }))}
+                            register={register}
+                            error={errors.GenreId}
+                        />
+                        <SelectField
+                            id="MediaTypeId"
+                            label="Media Type"
+                            options={mediaTypes.map((mediaType) => ({
+                                value: mediaType.MediaTypeId,
+                                label: mediaType.Name,
+                            }))}
+                            register={register}
+                            error={errors.MediaTypeId}
+                        />
+                        <InputField
+                            id="Milliseconds"
+                            label="Duration (ms)"
+                            type="number"
+                            register={register}
+                            error={errors.Milliseconds}
+                            aria-describedby="durationHelp"
+                        />
+                        <small id="durationHelp" className="form-text text-muted">
+                            Enter the duration in milliseconds.
+                        </small>
+                        <InputField
+                            id="UnitPrice"
+                            label="Price ($)"
+                            type="number"
+                            step="0.01"
+                            register={register}
+                            error={errors.UnitPrice}
+                        />
+
+                        <FormButtons onCancel={() => navigate('/tracks')} />
                     </form>
                 </div>
             </div>

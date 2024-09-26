@@ -1,7 +1,6 @@
 import MainLayout from './MainLayout';
 import HeroSection from '../components/HeroSection';
-import FeatureHighlights from '../components/FeatureHighlights';
-import RandomSpotlight from '../components/RandomSpotlight';
+import RandomHighlights from '../components/RandomHighlights';
 import { useDocTitle } from '../useDocTitle';
 
 const HomePage = () => {
@@ -10,8 +9,7 @@ const HomePage = () => {
     return (
         <MainLayout>
             <HeroSection />
-            <FeatureHighlights />
-            <RandomSpotlight />
+            <RandomHighlights />
         </MainLayout>
     );
 };

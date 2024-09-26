@@ -4,11 +4,12 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useNavigate, useParams } from 'react-router-dom';
 import { genreApi } from '../../api/entitiesApi';
 import genreValidationSchema from '../../validation/genreValidationSchema';
+import InputField from '../../components/InputField'; // Reusable input component
+import FormButtons from '../../components/FormButtons'; // Reusable form buttons component
 
 const GenreForm = () => {
     const params = useParams();
-    const genreId = params.genreId || 0;
-
+    const genreId = params.genreId ? parseInt(params.genreId, 10) : 0; // Ensure genreId is a number
     const navigate = useNavigate();
 
     const {
@@ -39,47 +40,17 @@ const GenreForm = () => {
                     <h3>{genreId > 0 ? 'Edit Genre' : 'Add New Genre'}</h3>
                 </div>
                 <div className="card-body">
-                    <form onSubmit={handleSubmit(onSubmit)} aria-labelledby="genreFormHeading">
-                        <fieldset>
-                            <legend id="genreFormHeading">
-                                {genreId > 0 ? 'Edit Genre Form' : 'Add New Genre Form'}
-                            </legend>
-                            <div className="mb-3">
-                                <label htmlFor="genreName" className="form-label">
-                                    Genre Name:
-                                </label>
-                                <input
-                                    type="text"
-                                    id="genreName"
-                                    className={`form-control ${errors.name ? 'is-invalid' : ''}`}
-                                    aria-invalid={errors.name ? 'true' : 'false'}
-                                    aria-describedby={errors.name ? 'genreNameError' : undefined}
-                                    {...register('name')}
-                                />
-                                {errors.name && (
-                                    <div id="genreNameError" className="invalid-feedback">
-                                        {errors.name.message}
-                                    </div>
-                                )}
-                            </div>
-                            <div>
-                                <button
-                                    type="submit"
-                                    className="btn btn-success"
-                                    aria-label="Save genre"
-                                >
-                                    SAVE
-                                </button>
-                                <button
-                                    type="button"
-                                    className="btn btn-secondary ms-2"
-                                    onClick={() => navigate('/genres')}
-                                    aria-label="Cancel and go back to genres list"
-                                >
-                                    CANCEL
-                                </button>
-                            </div>
-                        </fieldset>
+                    <form onSubmit={handleSubmit(onSubmit)} aria-live="polite">
+                        {/* InputField Component for Genre Name */}
+                        <InputField
+                            id="genreName"
+                            label="Genre Name"
+                            register={register}
+                            error={errors.name}
+                        />
+                        
+                        {/* FormButtons Component for Save and Cancel */}
+                        <FormButtons onCancel={() => navigate('/genres')} />
                     </form>
                 </div>
             </div>

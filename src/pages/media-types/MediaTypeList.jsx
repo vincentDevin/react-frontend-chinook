@@ -1,129 +1,127 @@
-import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { mediaTypeApi } from '../../api/entitiesApi';
-import ConfirmDeleteModal from '../../components/ConfirmDeleteModal';
+import GenericActions from '../../components/GenericActions';
+import GenericTable from '../../components/GenericTable';
+import GenericPagination from '../../components/GenericPagination';
+import usePagination from '../../hooks/usePagination';
 
 const MediaTypeList = () => {
-    const [mediaTypes, setMediaTypes] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const navigate = useNavigate();
+
+    // Use the custom pagination hook with the media type API function
+    const {
+        items: mediaTypes = [],
+        loading,
+        error,
+        currentPage,
+        totalPages,
+        handlePageChange,
+    } = usePagination(mediaTypeApi.getAll, 10, 'mediaTypes'); // Pass 'mediaTypes' as the dataKey
+    
     const [showModal, setShowModal] = useState(false);
     const [selectedMediaType, setSelectedMediaType] = useState(null);
 
-    const navigate = useNavigate();
-
-    useEffect(() => {
-        mediaTypeApi
-            .getAll()
-            .then((mediaTypes) => {
-                setMediaTypes(mediaTypes);
-                setLoading(false);
-            })
-            .catch((err) => {
-                setError(err.message);
-                setLoading(false);
-            });
-    }, []);
-
+    // Show delete confirmation modal
     const handleShowModal = (mediaType) => {
-        if (!mediaType.id) {
-            console.error("Invalid media type ID:", mediaType);
-            return;
-        }
         setSelectedMediaType(mediaType);
         setShowModal(true);
     };
 
+    // Close delete confirmation modal
     const handleCloseModal = () => {
         setShowModal(false);
         setSelectedMediaType(null);
     };
 
+    // Confirm deletion and refresh data if successful
     const handleConfirmDelete = () => {
         if (selectedMediaType) {
             mediaTypeApi
-                .delete(selectedMediaType.id)
+                .delete(selectedMediaType.MediaTypeId) // Use MediaTypeId as key
                 .then(() => {
-                    setMediaTypes((prevMediaTypes) =>
-                        prevMediaTypes.filter((mediaType) => mediaType.id !== selectedMediaType.id)
-                    );
-                    handleCloseModal();
+                    // Check if the current page has items left, if not, move to the previous page
+                    const newPage = currentPage > 1 && mediaTypes.length === 1 ? currentPage - 1 : currentPage;
+                    handlePageChange(newPage); // Refresh data after deleting a media type
+                    handleCloseModal(); // Close the modal after successful delete
                 })
                 .catch((err) => {
-                    setError(err.message);
+                    console.error('Error deleting media type:', err.message);
                 });
         }
     };
 
-    if (loading)
+    // Function to render each table row
+    const renderRow = (mediaType) => (
+        <tr key={mediaType.MediaTypeId}>
+            <td>{mediaType.Name}</td>
+            <td className="text-end">
+                <div className="d-flex justify-content-end gap-2">
+                    <button
+                        className="btn btn-secondary btn-md"
+                        onClick={() => navigate('/media-types/' + mediaType.MediaTypeId)}
+                        aria-label={`Edit ${mediaType.Name}`}
+                    >
+                        Edit
+                    </button>
+                    <button
+                        className="btn btn-danger btn-md"
+                        onClick={() => handleShowModal(mediaType)}
+                        aria-label={`Delete ${mediaType.Name}`}
+                    >
+                        Delete
+                    </button>
+                </div>
+            </td>
+        </tr>
+    );
+
+    // Render loading state
+    if (loading) {
         return (
             <div className="container mt-4" role="status">
                 Loading media types...
             </div>
         );
-    if (error)
+    }
+
+    // Render error state
+    if (error) {
         return (
             <div className="container mt-4 text-danger" role="alert">
                 Error: {error}
             </div>
         );
+    }
 
+    // Render the main table and pagination
     return (
         <div className="container mt-4">
-            <div className="d-flex justify-content-between align-items-center mb-3">
-                <h2>Media Types</h2>
-                <Link to="/media-types/add">
-                    <button className="btn btn-primary" aria-label="Add a new media type">
-                        Add Media Type
-                    </button>
-                </Link>
-            </div>
-            <table className="table table-striped table-hover" aria-labelledby="mediaTypesHeading">
-                <caption id="mediaTypesHeading" className="sr-only">
-                    List of media types
-                </caption>
-                <thead className="thead-dark">
-                    <tr>
-                        <th scope="col">Media Type</th>
-                        <th scope="col" className="text-end">
-                            Actions
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {mediaTypes.map((mediaType) => (
-                        <tr key={mediaType.id}>
-                            <td>{mediaType.name}</td>
-                            <td className="text-end">
-                                <div className="d-flex justify-content-end gap-2">
-                                    <button
-                                        className="btn btn-secondary btn-md"
-                                        onClick={() => navigate('/media-types/' + mediaType.id)}
-                                        aria-label={`Edit ${mediaType.name}`}
-                                    >
-                                        Edit
-                                    </button>
-                                    <button
-                                        className="btn btn-danger btn-md"
-                                        onClick={() => handleShowModal(mediaType)}
-                                        aria-label={`Delete ${mediaType.name}`}
-                                    >
-                                        Delete
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-
-            {/* Confirm Delete Modal */}
-            <ConfirmDeleteModal
-                show={showModal}
-                handleClose={handleCloseModal}
-                handleConfirm={handleConfirmDelete}
-                itemName={selectedMediaType ? selectedMediaType.name : ''}
+            {/* Generic Actions Component */}
+            <GenericActions
+                onAdd={() => navigate('/media-types/add')}
+                selectedItem={selectedMediaType}
+                onConfirmDelete={handleConfirmDelete}
+                onCancelDelete={handleCloseModal}
+                showModal={showModal}
+                addLink="/media-types/add"
             />
+
+            {/* Generic Table Component */}
+            <GenericTable
+                headers={['Media Type', 'Actions']}
+                rows={mediaTypes} // Use mediaTypes from the usePagination hook
+                renderRow={renderRow}
+            />
+
+            {/* Generic Pagination Component */}
+            {totalPages > 1 && (
+                <GenericPagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={handlePageChange}
+                />
+            )}
         </div>
     );
 };

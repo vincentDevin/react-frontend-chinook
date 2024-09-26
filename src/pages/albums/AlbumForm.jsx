@@ -4,11 +4,12 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useNavigate, useParams } from 'react-router-dom';
 import { albumApi } from '../../api/entitiesApi';
 import albumValidationSchema from '../../validation/albumValidationSchema';
+import InputField from '../../components/InputField'; // Reusable input component
+import FormButtons from '../../components/FormButtons'; // Reusable form buttons component
 
 const AlbumForm = () => {
     const params = useParams();
-    const albumId = params.albumId || 0;
-
+    const albumId = params.albumId ? parseInt(params.albumId, 10) : 0; // Ensure albumId is a number
     const navigate = useNavigate();
 
     const {
@@ -34,63 +35,33 @@ const AlbumForm = () => {
         const requestData = albumId > 0 ? { ...data, id: albumId } : data;
         action(requestData).then(() => navigate('/albums'));
     };
-    
 
     return (
         <div className="container mt-4">
             <div className="card">
                 <div className="card-header">
-                    <h3>{albumId > 0 ? 'Edit Album' : 'Add New Album'}</h3>
+                    <h3 id="albumFormTitle">{albumId > 0 ? 'Edit Album' : 'Add New Album'}</h3>
                 </div>
                 <div className="card-body">
                     <form onSubmit={handleSubmit(onSubmit)} aria-labelledby="albumFormTitle">
-                        <div className="mb-3">
-                            <label htmlFor="albumName" className="form-label">
-                                <span className="visually-hidden">Required</span> Album Name:
-                            </label>
-                            <input
-                                type="text"
-                                id="albumName"
-                                aria-describedby="albumNameHelp"
-                                className={`form-control ${errors.name ? 'is-invalid' : ''}`}
-                                {...register('name')}
-                                aria-invalid={errors.name ? 'true' : 'false'}
-                            />
-                            {errors.name && (
-                                <div className="invalid-feedback" id="albumNameHelp">
-                                    {errors.name.message}
-                                </div>
-                            )}
-                        </div>
-                        <div className="mb-3">
-                            <label htmlFor="albumArtist" className="form-label">
-                                <span className="visually-hidden">Required</span> Artist:
-                            </label>
-                            <input
-                                type="text"
-                                id="albumArtist"
-                                aria-describedby="albumArtistHelp"
-                                className={`form-control ${errors.artist ? 'is-invalid' : ''}`}
-                                {...register('artist')}
-                                aria-invalid={errors.artist ? 'true' : 'false'}
-                            />
-                            {errors.artist && (
-                                <div className="invalid-feedback" id="albumArtistHelp">
-                                    {errors.artist.message}
-                                </div>
-                            )}
-                        </div>
-                        <button type="submit" className="btn btn-success" aria-label="Save album">
-                            SAVE
-                        </button>
-                        <button
-                            type="button"
-                            className="btn btn-secondary ms-2"
-                            onClick={() => navigate('/albums')}
-                            aria-label="Cancel and go back to albums list"
-                        >
-                            CANCEL
-                        </button>
+                        {/* InputField Component for Album Name */}
+                        <InputField
+                            id="albumName"
+                            label="Album Name"
+                            register={register}
+                            error={errors.name}
+                        />
+
+                        {/* InputField Component for Artist Name */}
+                        <InputField
+                            id="albumArtist"
+                            label="Artist"
+                            register={register}
+                            error={errors.artist}
+                        />
+
+                        {/* FormButtons Component for Save and Cancel */}
+                        <FormButtons onCancel={() => navigate('/albums')} />
                     </form>
                 </div>
             </div>

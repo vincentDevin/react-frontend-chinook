@@ -4,37 +4,75 @@ import { artistApi, albumApi, trackApi } from '../api/entitiesApi';
 
 const RandomSpotlight = () => {
     const [spotlight, setSpotlight] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
-        // Fetch data from all APIs
-        Promise.all([artistApi.getAll(), albumApi.getAll(), trackApi.getAll()])
-            .then(([artists, albums, tracks]) => {
+        const fetchRandomItem = async () => {
+            try {
+                setLoading(true);
+                
+                // Fetch random items for artist, album, and track
+                const [randomArtist, randomAlbum, randomTrack] = await Promise.all([
+                    artistApi.getRandom(),
+                    albumApi.getRandom(),
+                    trackApi.getRandom()
+                ]);
+    
+                // Collect the items into an array with types
                 const allItems = [
-                    ...artists.map((artist) => ({
-                        type: 'artist',
-                        data: artist,
-                    })),
-                    ...albums.map((album) => ({ type: 'album', data: album })),
-                    ...tracks.map((track) => ({ type: 'track', data: track })),
-                ];
-                // Pick a random item from the combined list
+                    randomArtist && { type: 'artist', data: randomArtist },
+                    randomAlbum && { type: 'album', data: randomAlbum },
+                    randomTrack && { type: 'track', data: randomTrack }
+                ].filter(Boolean); // Remove any null entries
+    
+                if (allItems.length === 0) {
+                    setError('No spotlight items available.');
+                    return;
+                }
+    
+                // Randomly select one item from the list
                 const randomItem = allItems[Math.floor(Math.random() * allItems.length)];
                 setSpotlight(randomItem);
-            })
-            .catch((err) => console.error('Failed to fetch data:', err));
-    }, []);
+            } catch (err) {
+                console.error('Failed to fetch data:', err);
+                setError('Failed to fetch spotlight items.');
+            } finally {
+                setLoading(false);
+            }
+        };
+    
+        fetchRandomItem();
+    }, []);    
 
-    if (!spotlight) return <div className="text-center">Loading...</div>;
+    if (loading) {
+        return (
+            <div className="text-center py-5">
+                <div className="spinner-border" role="status">
+                    <span className="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="text-center py-5 text-danger">
+                {error}
+            </div>
+        );
+    }
 
     const renderSpotlight = () => {
+        if (!spotlight) return null; // Safety check if no spotlight item is selected
+
         switch (spotlight.type) {
             case 'artist':
                 return (
                     <div className="card shadow-sm text-center">
                         <div className="card-body">
-                            <h5 className="card-title">Spotlight Artist: {spotlight.data.name}</h5>
-                            <p className="card-text">Genre: {spotlight.data.genre}</p>
-                            <Link to={`/artists/${spotlight.data.id}`} className="btn btn-primary">
+                            <h5 className="card-title">Spotlight Artist: {spotlight.data.Name}</h5>
+                            <Link to={`/artists/${spotlight.data.ArtistId}`} className="btn btn-primary">
                                 View Artist
                             </Link>
                         </div>
@@ -44,9 +82,9 @@ const RandomSpotlight = () => {
                 return (
                     <div className="card shadow-sm text-center">
                         <div className="card-body">
-                            <h5 className="card-title">Spotlight Album: {spotlight.data.title}</h5>
-                            <p className="card-text">By: {spotlight.data.artist}</p>
-                            <Link to={`/albums/${spotlight.data.id}`} className="btn btn-primary">
+                            <h5 className="card-title">Spotlight Album: {spotlight.data.Title}</h5>
+                            <p className="card-text">By: {spotlight.data.ArtistName || 'Unknown Artist'}</p>
+                            <Link to={`/albums/${spotlight.data.AlbumId}`} className="btn btn-primary">
                                 View Album
                             </Link>
                         </div>
@@ -56,9 +94,9 @@ const RandomSpotlight = () => {
                 return (
                     <div className="card shadow-sm text-center">
                         <div className="card-body">
-                            <h5 className="card-title">Spotlight Track: {spotlight.data.name}</h5>
-                            <p className="card-text">Album: {spotlight.data.album}</p>
-                            <Link to={`/tracks/${spotlight.data.id}`} className="btn btn-primary">
+                            <h5 className="card-title">Spotlight Track: {spotlight.data.Name}</h5>
+                            <p className="card-text">Album: {spotlight.data.AlbumTitle || 'Unknown Album'}</p>
+                            <Link to={`/tracks/${spotlight.data.TrackId}`} className="btn btn-primary">
                                 View Track
                             </Link>
                         </div>
