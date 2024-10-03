@@ -2,7 +2,7 @@ import { Outlet, Route, Routes } from 'react-router-dom';
 import MainLayout from '../MainLayout';
 import MediaTypeList from './MediaTypeList';
 import MediaTypeForm from './MediaTypeForm';
-import { useDocTitle } from '../../useDocTitle';
+import { useDocTitle } from '../../hooks/useDocTitle';
 
 const MediaTypePage = () => {
     useDocTitle('Media Types - Music Database App');

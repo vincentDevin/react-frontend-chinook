@@ -2,7 +2,7 @@ import { Outlet, Route, Routes } from 'react-router-dom';
 import MainLayout from '../MainLayout';
 import GenreList from './GenreList';
 import GenreForm from './GenreForm';
-import { useDocTitle } from '../../useDocTitle';
+import { useDocTitle } from '../../hooks/useDocTitle';
 
 const GenrePage = () => {
     useDocTitle('Genres - Music Database App');

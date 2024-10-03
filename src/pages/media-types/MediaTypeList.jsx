@@ -1,13 +1,23 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { mediaTypeApi } from '../../api/entitiesApi';
 import GenericActions from '../../components/GenericActions';
 import GenericTable from '../../components/GenericTable';
 import GenericPagination from '../../components/GenericPagination';
 import usePagination from '../../hooks/usePagination';
+import { getUserRoleFromToken } from '../../api/authUtils'; // Import utility function to check admin status
 
 const MediaTypeList = () => {
     const navigate = useNavigate();
+    const [isAdmin, setIsAdmin] = useState(false); // State to check if the user is an admin
+
+    // Check if the user is an admin
+    useEffect(() => {
+        const userRoleId = getUserRoleFromToken(); // Get the role ID from the JWT token
+        if (userRoleId === 3) {
+            setIsAdmin(true); // If role ID is 3, the user is an admin
+        }
+    }, []);
 
     // Use the custom pagination hook with the media type API function
     const {
@@ -56,22 +66,24 @@ const MediaTypeList = () => {
         <tr key={mediaType.MediaTypeId}>
             <td>{mediaType.Name}</td>
             <td className="text-end">
-                <div className="d-flex justify-content-end gap-2">
-                    <button
-                        className="btn btn-secondary btn-md"
-                        onClick={() => navigate('/media-types/' + mediaType.MediaTypeId)}
-                        aria-label={`Edit ${mediaType.Name}`}
-                    >
-                        Edit
-                    </button>
-                    <button
-                        className="btn btn-danger btn-md"
-                        onClick={() => handleShowModal(mediaType)}
-                        aria-label={`Delete ${mediaType.Name}`}
-                    >
-                        Delete
-                    </button>
-                </div>
+                {isAdmin && (
+                    <div className="d-flex justify-content-end gap-2">
+                        <button
+                            className="btn btn-secondary btn-md"
+                            onClick={() => navigate('/media-types/' + mediaType.MediaTypeId)}
+                            aria-label={`Edit ${mediaType.Name}`}
+                        >
+                            Edit
+                        </button>
+                        <button
+                            className="btn btn-danger btn-md"
+                            onClick={() => handleShowModal(mediaType)}
+                            aria-label={`Delete ${mediaType.Name}`}
+                        >
+                            Delete
+                        </button>
+                    </div>
+                )}
             </td>
         </tr>
     );
@@ -97,19 +109,20 @@ const MediaTypeList = () => {
     // Render the main table and pagination
     return (
         <div className="container mt-4">
-            {/* Generic Actions Component */}
-            <GenericActions
-                onAdd={() => navigate('/media-types/add')}
-                selectedItem={selectedMediaType}
-                onConfirmDelete={handleConfirmDelete}
-                onCancelDelete={handleCloseModal}
-                showModal={showModal}
-                addLink="/media-types/add"
-            />
+            {isAdmin && (
+                <GenericActions
+                    onAdd={() => navigate('/media-types/add')}
+                    selectedItem={selectedMediaType}
+                    onConfirmDelete={handleConfirmDelete}
+                    onCancelDelete={handleCloseModal}
+                    showModal={showModal}
+                    addLink="/media-types/add"
+                />
+            )}
 
             {/* Generic Table Component */}
             <GenericTable
-                headers={['Media Type', 'Actions']}
+                headers={['Media Type', ...(isAdmin ? ['Actions'] : [])]}
                 rows={mediaTypes} // Use mediaTypes from the usePagination hook
                 renderRow={renderRow}
             />

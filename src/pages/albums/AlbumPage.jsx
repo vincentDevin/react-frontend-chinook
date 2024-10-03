@@ -2,7 +2,7 @@ import { Outlet, Route, Routes } from 'react-router-dom';
 import MainLayout from '../MainLayout';
 import AlbumList from './AlbumList';
 import AlbumForm from './AlbumForm';
-import { useDocTitle } from '../../useDocTitle';
+import { useDocTitle } from '../../hooks/useDocTitle';
 
 const AlbumPage = () => {
     useDocTitle('Albums - Music Database App');

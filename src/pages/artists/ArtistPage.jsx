@@ -2,7 +2,7 @@ import { Outlet, Route, Routes } from 'react-router-dom';
 import MainLayout from '../MainLayout';
 import ArtistList from './ArtistList';
 import ArtistForm from './ArtistForm';
-import { useDocTitle } from '../../useDocTitle';
+import { useDocTitle } from '../../hooks/useDocTitle';
 
 const ArtistPage = () => {
     useDocTitle('Artists - Music Database App');

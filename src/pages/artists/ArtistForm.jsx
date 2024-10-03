@@ -1,56 +1,99 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useNavigate, useParams } from 'react-router-dom';
-import { artistApi } from '../../api/entitiesApi';
-import artistValidationSchema from '../../validation/artistValidationSchema';
-import InputField from '../../components/InputField'; // Reusable input component
-import FormButtons from '../../components/FormButtons'; // Reusable form buttons component
+import { artistApi } from '../../api/entitiesApi'; // Adjust to the correct API
+import * as Yup from 'yup';
+import InputField from '../../components/InputField';
+import FormButtons from '../../components/FormButtons';
+import { getUserRoleFromToken } from '../../api/authUtils'; // Import the utility function
 
 const ArtistForm = () => {
     const params = useParams();
-    const artistId = params.artistId ? parseInt(params.artistId, 10) : 0; // Ensure artistId is a number
+    const artistId = params.artistId ? parseInt(params.artistId, 10) : 0;
     const navigate = useNavigate();
 
-    const {
-        register,
-        handleSubmit,
-        setValue,
-        formState: { errors },
-    } = useForm({
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [isAdmin, setIsAdmin] = useState(false); // State to store if the user is an admin
+
+    const artistValidationSchema = Yup.object().shape({
+        Name: Yup.string().required('Artist name is required'),
+    });
+
+    const { register, handleSubmit, setValue, formState: { errors } } = useForm({
         resolver: yupResolver(artistValidationSchema),
     });
 
     useEffect(() => {
-        if (artistId > 0) {
-            artistApi.getById(artistId).then((artist) => setValue('name', artist.name));
-        }
+        const fetchData = async () => {
+            try {
+                const userRoleId = getUserRoleFromToken(); // Get the user's role ID from the JWT token
+                if (userRoleId === 3) {
+                    setIsAdmin(true); // Set admin if roleId is 3
+                }
+
+                if (artistId > 0) {
+                    const artist = await artistApi.getById(artistId);
+                    setValue('Name', artist.Name);
+                }
+            } catch (err) {
+                setError(err.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchData();
     }, [artistId, setValue]);
 
     const onSubmit = (data) => {
+        if (!isAdmin) {
+            setError('Only admins can edit or delete artists.');
+            return;
+        }
+
         const action = artistId > 0 ? artistApi.update : artistApi.insert;
-        const requestData = artistId > 0 ? { ...data, id: artistId } : data;
-        action(requestData).then(() => navigate('/artists'));
+        const requestData = artistId > 0 ? { ...data, ArtistId: artistId } : data;
+
+        action(requestData)
+            .then(() => navigate('/artists'))
+            .catch((err) => setError(err.message));
     };
+
+    if (loading) {
+        return (
+            <div className="container mt-4" role="status">
+                Loading form data...
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="container mt-4 text-danger" role="alert">
+                Error: {error}
+            </div>
+        );
+    }
 
     return (
         <div className="container mt-4">
             <div className="card">
                 <div className="card-header">
-                    <h3 id="artistFormTitle">{artistId > 0 ? 'Edit Artist' : 'Add New Artist'}</h3>
+                    <h3>{artistId > 0 ? 'Edit Artist' : 'Add New Artist'}</h3>
                 </div>
                 <div className="card-body">
-                    <form onSubmit={handleSubmit(onSubmit)} aria-labelledby="artistFormTitle">
-                        {/* InputField Component for Artist Name */}
+                    <form onSubmit={handleSubmit(onSubmit)} aria-live="polite">
                         <InputField
-                            id="artistName"
+                            id="Name"
                             label="Artist Name"
                             register={register}
-                            error={errors.name}
+                            error={errors.Name}
                         />
-
-                        {/* FormButtons Component for Save and Cancel */}
-                        <FormButtons onCancel={() => navigate('/artists')} />
+                        {isAdmin && (
+                            <FormButtons onCancel={() => navigate('/artists')} />
+                        )}
                     </form>
                 </div>
             </div>

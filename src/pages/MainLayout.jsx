@@ -4,13 +4,9 @@ import Footer from '../components/Footer';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLocation } from 'react-router-dom';
 
-// Function to get the base path
-const getBasePath = (pathname) => pathname.split('/')[1] || '/';
-
 // eslint-disable-next-line react/prop-types
 const MainLayout = ({ children }) => {
     const location = useLocation();
-    const basePath = getBasePath(location.pathname);
     
     return (
         <div className="d-flex flex-column min-vh-100">
@@ -24,9 +20,9 @@ const MainLayout = ({ children }) => {
             <div className="container my-4 flex-grow-1">
                 <div className="row">
                     <div className="col">
-                    <AnimatePresence mode="wait">
+                        <AnimatePresence mode="wait">
                             <motion.main
-                                key={basePath}
+                                key={location.pathname} // Keyed by full pathname for more granular control
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, y: 20 }}
@@ -39,15 +35,8 @@ const MainLayout = ({ children }) => {
                 </div>
             </div>
 
-            {/* Footer Section with Animation */}
-            <motion.footer
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 20 }}
-                transition={{ duration: 0.5 }}
-            >
-                <Footer />
-            </motion.footer>
+            {/* Static Footer (no animation) */}
+            <Footer />
         </div>
     );
 };

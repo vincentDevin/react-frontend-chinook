@@ -1,13 +1,23 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { genreApi } from '../../api/entitiesApi';
 import GenericActions from '../../components/GenericActions';
 import GenericTable from '../../components/GenericTable';
 import GenericPagination from '../../components/GenericPagination';
 import usePagination from '../../hooks/usePagination';
+import { getUserRoleFromToken } from '../../api/authUtils'; // Import the utility function to check admin
 
 const GenreList = () => {
     const navigate = useNavigate();
+    const [isAdmin, setIsAdmin] = useState(false); // State to check if the user is an admin
+
+    // Check if the user is an admin
+    useEffect(() => {
+        const userRoleId = getUserRoleFromToken(); // Get the role ID from the JWT token
+        if (userRoleId === 3) {
+            setIsAdmin(true); // If role ID is 3, the user is an admin
+        }
+    }, []);
 
     // Use the custom pagination hook with the genre API function
     const {
@@ -51,20 +61,24 @@ const GenreList = () => {
             <td>{genre.Name}</td>
             <td className="text-end">
                 <div className="d-flex justify-content-end gap-2">
-                    <button
-                        className="btn btn-secondary btn-md"
-                        onClick={() => navigate('/genres/' + genre.GenreId)}
-                        aria-label={`Edit genre ${genre.Name}`}
-                    >
-                        Edit
-                    </button>
-                    <button
-                        className="btn btn-danger btn-md"
-                        onClick={() => handleShowModal(genre)}
-                        aria-label={`Delete genre ${genre.Name}`}
-                    >
-                        Delete
-                    </button>
+                    {isAdmin && (
+                        <>
+                            <button
+                                className="btn btn-secondary btn-md"
+                                onClick={() => navigate('/genres/' + genre.GenreId)}
+                                aria-label={`Edit genre ${genre.Name}`}
+                            >
+                                Edit
+                            </button>
+                            <button
+                                className="btn btn-danger btn-md"
+                                onClick={() => handleShowModal(genre)}
+                                aria-label={`Delete genre ${genre.Name}`}
+                            >
+                                Delete
+                            </button>
+                        </>
+                    )}
                 </div>
             </td>
         </tr>
@@ -88,19 +102,20 @@ const GenreList = () => {
 
     return (
         <div className="container mt-4">
-            {/* Generic Actions Component */}
-            <GenericActions
-                onAdd={() => navigate('/genres/add')}
-                selectedItem={selectedGenre}
-                onConfirmDelete={handleConfirmDelete}
-                onCancelDelete={handleCloseModal}
-                showModal={showModal}
-                addLink="/genres/add"
-            />
+            {isAdmin && (
+                <GenericActions
+                    onAdd={() => navigate('/genres/add')}
+                    selectedItem={selectedGenre}
+                    onConfirmDelete={handleConfirmDelete}
+                    onCancelDelete={handleCloseModal}
+                    showModal={showModal}
+                    addLink="/genres/add"
+                />
+            )}
 
             {/* Generic Table Component */}
             <GenericTable
-                headers={['Genre', 'Actions']}
+                headers={['Genre', ...(isAdmin ? ['Actions'] : [])]}
                 rows={genres} // Use genres from the usePagination hook
                 renderRow={renderRow}
             />

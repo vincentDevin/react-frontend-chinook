@@ -5,6 +5,7 @@ import TrackPage from './pages/tracks/TrackPage';
 import AlbumPage from './pages/albums/AlbumPage';
 import GenrePage from './pages/genres/GenrePage';
 import MediaTypePage from './pages/media-types/MediaTypePage';
+import LoginPage from './pages/login/LoginPage';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 
@@ -17,6 +18,7 @@ function App() {
             <Route path="/albums/*" element={<AlbumPage />} />
             <Route path="/genres/*" element={<GenrePage />} />
             <Route path="/media-types/*" element={<MediaTypePage />} />
+            <Route path="/login" element={<LoginPage />} />
         </Routes>
     );
 }

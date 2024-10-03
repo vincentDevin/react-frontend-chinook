@@ -1,7 +1,7 @@
 import MainLayout from './MainLayout';
 import HeroSection from '../components/HeroSection';
 import RandomHighlights from '../components/RandomHighlights';
-import { useDocTitle } from '../useDocTitle';
+import { useDocTitle } from '../hooks/useDocTitle';
 
 const HomePage = () => {
     useDocTitle('Home - Music Database App');

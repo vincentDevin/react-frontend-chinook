@@ -1,22 +1,12 @@
-import { useNavigate } from 'react-router-dom';
-import { trackApi, albumApi, genreApi, mediaTypeApi } from '../../api/entitiesApi';
-import GenericActions from '../../components/GenericActions';
+import { useState } from 'react';
+import { trackApi } from '../../api/entitiesApi';
 import GenericTable from '../../components/GenericTable';
 import GenericPagination from '../../components/GenericPagination';
 import usePagination from '../../hooks/usePagination';
-import { useEffect, useState } from 'react';
-
-// Duration formatter function
-function formatDuration(milliseconds) {
-    const minutes = Math.floor(milliseconds / 60000);
-    const seconds = Math.floor((milliseconds % 60000) / 1000);
-    return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-}
+import TrackRow from './TrackRow'; // Import TrackRow component
+import ConfirmDeleteModal from '../../components/ConfirmDeleteModal'; // Import ConfirmDeleteModal component
 
 const TrackList = () => {
-    const navigate = useNavigate();
-
-    // Use the custom pagination hook with the track API function
     const {
         items: tracks = [],
         loading,
@@ -26,135 +16,77 @@ const TrackList = () => {
         handlePageChange,
     } = usePagination(trackApi.getAll, 10, 'tracks'); // Pass 'tracks' as the dataKey
 
-    const [albums, setAlbums] = useState([]);
-    const [genres, setGenres] = useState([]);
-    const [mediaTypes, setMediaTypes] = useState([]);
-    const [showModal, setShowModal] = useState(false);
-    const [selectedTrack, setSelectedTrack] = useState(null);
+    const [selectedTrack, setSelectedTrack] = useState(null); // State for the selected track row
+    const [trackToDelete, setTrackToDelete] = useState(null); // State for the track to be deleted
+    const [showDeleteModal, setShowDeleteModal] = useState(false); // State for controlling the delete modal
 
-    useEffect(() => {
-        const fetchRelatedData = async () => {
+    // Handle row selection for expanding details
+    const handleRowClick = (track) => {
+        setSelectedTrack(track.TrackId === selectedTrack?.TrackId ? null : track);
+    };
+
+    // Handle delete button click in TrackRow
+    const handleDeleteClick = (track) => {
+        setTrackToDelete(track);
+        setShowDeleteModal(true);
+    };
+
+    // Handle confirm delete in modal
+    const handleDeleteConfirmed = async () => {
+        if (trackToDelete) {
             try {
-                const [albumResponse, genreResponse, mediaTypeResponse] = await Promise.all([
-                    albumApi.getAll(),
-                    genreApi.getAll(),
-                    mediaTypeApi.getAll(),
-                ]);
-                setAlbums(albumResponse.albums || albumResponse); // Ensure albums is an array
-                setGenres(genreResponse.genres || genreResponse); // Ensure genres is an array
-                setMediaTypes(mediaTypeResponse.mediaTypes || mediaTypeResponse); // Ensure mediaTypes is an array
+                await trackApi.delete(trackToDelete.TrackId); // Call the delete API function
+                handlePageChange(currentPage); // Refresh the data
+                setShowDeleteModal(false); // Close the modal after deleting
+                setTrackToDelete(null); // Reset the track to delete state
+                setSelectedTrack(null); // Reset the selected track
             } catch (err) {
-                console.error('Error fetching related data:', err);
+                console.error('Error deleting track:', err.message);
             }
-        };
-
-        fetchRelatedData();
-    }, []);
-
-    const handleShowModal = (track) => {
-        setSelectedTrack(track);
-        setShowModal(true);
-    };
-
-    const handleCloseModal = () => {
-        setShowModal(false);
-        setSelectedTrack(null);
-    };
-
-    const handleConfirmDelete = () => {
-        if (selectedTrack) {
-            trackApi
-                .delete(selectedTrack.TrackId)
-                .then(() => {
-                    handlePageChange(currentPage); // Refresh data after deleting a track
-                    handleCloseModal();
-                })
-                .catch((err) => {
-                    console.error(err.message);
-                });
         }
     };
 
-    const getAlbumTitle = (albumId) => {
-        const album = albums.find((a) => a.AlbumId === albumId);
-        return album ? album.Title : 'Unknown Album';
-    };
-
-    const getGenreName = (genreId) => {
-        const genre = genres.find((g) => g.GenreId === genreId);
-        return genre ? genre.Name : 'Unknown Genre';
-    };
-
-    const getMediaTypeName = (mediaTypeId) => {
-        const mediaType = mediaTypes.find((m) => m.MediaTypeId === mediaTypeId);
-        return mediaType ? mediaType.Name : 'Unknown Media Type';
+    // Handle modal close
+    const handleCloseModal = () => {
+        setShowDeleteModal(false);
+        setTrackToDelete(null); // Reset the track to delete state when closing the modal
     };
 
     const renderRow = (track) => (
-        <tr key={track.TrackId}>
-            <td>{track.Name}</td>
-            <td>{getAlbumTitle(track.AlbumId)}</td>
-            <td>{getGenreName(track.GenreId)}</td>
-            <td>{getMediaTypeName(track.MediaTypeId)}</td>
-            <td>{track.Composer || 'Unknown'}</td>
-            <td>{formatDuration(track.Milliseconds)}</td>
-            <td>{track.UnitPrice !== undefined ? `$${parseFloat(track.UnitPrice).toFixed(2)}` : 'N/A'}</td>
-            <td className="text-end">
-                <div className="d-flex justify-content-end gap-2">
-                    <button
-                        className="btn btn-secondary btn-sm"
-                        onClick={() => navigate('/tracks/' + track.TrackId)}
-                    >
-                        Edit
-                    </button>
-                    <button
-                        className="btn btn-danger btn-sm"
-                        onClick={() => handleShowModal(track)}
-                    >
-                        Delete
-                    </button>
-                </div>
-            </td>
-        </tr>
+        <TrackRow
+            key={track.TrackId}
+            track={track}
+            isSelected={track.TrackId === selectedTrack?.TrackId}
+            onRowClick={() => handleRowClick(track)}
+            onDeleteClick={() => handleDeleteClick(track)} // Pass the delete handler to TrackRow
+        />
     );
 
     if (loading) {
-        return (
-            <div className="container mt-4" role="status">
-                Loading tracks...
-            </div>
-        );
+        return <div className="container mt-4">Loading tracks...</div>;
     }
 
     if (error) {
-        return (
-            <div className="container mt-4 text-danger" role="alert">
-                Error: {error}
-            </div>
-        );
+        return <div className="container mt-4 text-danger">Error: {error}</div>;
     }
 
     return (
         <div className="container mt-4">
-            <GenericActions
-                onAdd={() => navigate('/tracks/add')}
-                selectedItem={selectedTrack}
-                onConfirmDelete={handleConfirmDelete}
-                onCancelDelete={handleCloseModal}
-                showModal={showModal}
-                addLink="/tracks/add"
-            />
-
             <GenericTable
-                headers={['Track', 'Album', 'Genre', 'Media Type', 'Composer', 'Duration (mm:ss)', 'Price ($)', 'Actions']}
-                rows={tracks} // Ensure rows is passed correctly from the hook
+                headers={['Track', 'Duration (mm:ss)', 'Price ($)']}
+                rows={tracks}
                 renderRow={renderRow}
             />
-
             <GenericPagination
                 currentPage={currentPage}
                 totalPages={totalPages}
-                onPageChange={handlePageChange}
+                onPageChange={handlePageChange} // Removed animation concerns from here
+            />
+            <ConfirmDeleteModal
+                show={showDeleteModal}
+                handleClose={handleCloseModal}
+                handleConfirm={handleDeleteConfirmed}
+                itemName={trackToDelete ? trackToDelete.Name : ''}
             />
         </div>
     );

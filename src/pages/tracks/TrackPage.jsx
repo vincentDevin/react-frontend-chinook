@@ -2,7 +2,7 @@ import { Outlet, Route, Routes } from 'react-router-dom';
 import MainLayout from '../MainLayout';
 import TrackList from './TrackList';
 import TrackForm from './TrackForm';
-import { useDocTitle } from '../../useDocTitle';
+import { useDocTitle } from '../../hooks/useDocTitle';
 
 const TrackPage = () => {
     useDocTitle('Tracks - Music Database App');
