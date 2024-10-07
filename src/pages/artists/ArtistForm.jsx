@@ -2,11 +2,11 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useNavigate, useParams } from 'react-router-dom';
-import { artistApi } from '../../api/entitiesApi'; // Adjust to the correct API
-import * as Yup from 'yup';
+import { artistApi } from '../../api/entitiesApi';
+import artistValidationSchema from '../../validation/artistValidationSchema';
 import InputField from '../../components/InputField';
 import FormButtons from '../../components/FormButtons';
-import { getUserRoleFromToken } from '../../api/authUtils'; // Import the utility function
+import { getUserRoleFromToken } from '../../api/authUtils';
 
 const ArtistForm = () => {
     const params = useParams();
@@ -15,27 +15,31 @@ const ArtistForm = () => {
 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [isAdmin, setIsAdmin] = useState(false); // State to store if the user is an admin
+    const [apiErrors, setApiErrors] = useState({}); // State for API errors
+    const [isAdmin, setIsAdmin] = useState(false);
 
-    const artistValidationSchema = Yup.object().shape({
-        Name: Yup.string().required('Artist name is required'),
-    });
-
-    const { register, handleSubmit, setValue, formState: { errors } } = useForm({
+    // Validation schema
+    const {
+        register,
+        handleSubmit,
+        setValue,
+        formState: { errors },
+    } = useForm({
         resolver: yupResolver(artistValidationSchema),
     });
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const userRoleId = getUserRoleFromToken(); // Get the user's role ID from the JWT token
+                const userRoleId = getUserRoleFromToken();
                 if (userRoleId === 3) {
-                    setIsAdmin(true); // Set admin if roleId is 3
+                    setIsAdmin(true);
                 }
 
                 if (artistId > 0) {
                     const artist = await artistApi.getById(artistId);
-                    setValue('Name', artist.Name);
+                    // Ensure the field names match the form field
+                    setValue('name', artist.Name);  // Set the field 'name' not 'Name'
                 }
             } catch (err) {
                 setError(err.message);
@@ -46,20 +50,40 @@ const ArtistForm = () => {
 
         fetchData();
     }, [artistId, setValue]);
-
-    const onSubmit = (data) => {
+    
+    const onSubmit = async (data) => {
         if (!isAdmin) {
             setError('Only admins can edit or delete artists.');
             return;
         }
-
-        const action = artistId > 0 ? artistApi.update : artistApi.insert;
-        const requestData = artistId > 0 ? { ...data, ArtistId: artistId } : data;
-
-        action(requestData)
-            .then(() => navigate('/artists'))
-            .catch((err) => setError(err.message));
+    
+        const requestData = {
+            Name: data.name,  // Use 'name' from form and map it to 'Name' for the backend
+            ...(artistId > 0 && { ArtistId: artistId }),  // Include ArtistId if editing
+        };
+    
+        console.log('Submitting form data:', requestData); // Log data being submitted
+    
+        try {
+            const action = artistId > 0 ? artistApi.update : artistApi.insert;
+            await action(requestData);
+            console.log('Form submitted successfully');
+            navigate('/artists');
+        } catch (err) {
+            console.error('Error submitting form:', err);
+            if (err.response && err.response.data && err.response.data.errors) {
+                setApiErrors(err.response.data.errors); // Handle API validation errors
+            } else {
+                setError(err.message);
+            }
+        }
     };
+    
+    
+    // Clear API errors when form changes
+    useEffect(() => {
+        setApiErrors({});
+    }, [register]);
 
     if (loading) {
         return (
@@ -86,14 +110,13 @@ const ArtistForm = () => {
                 <div className="card-body">
                     <form onSubmit={handleSubmit(onSubmit)} aria-live="polite">
                         <InputField
-                            id="Name"
+                            id="name"
                             label="Artist Name"
                             register={register}
-                            error={errors.Name}
+                            error={errors.name || apiErrors.name}  // Ensure lowercase 'name' is used
                         />
-                        {isAdmin && (
-                            <FormButtons onCancel={() => navigate('/artists')} />
-                        )}
+
+                        <FormButtons onCancel={() => navigate('/artists')} />
                     </form>
                 </div>
             </div>

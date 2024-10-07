@@ -111,6 +111,7 @@ const MediaTypeList = () => {
         <div className="container mt-4">
             {isAdmin && (
                 <GenericActions
+                    title="Media Types"
                     onAdd={() => navigate('/media-types/add')}
                     selectedItem={selectedMediaType}
                     onConfirmDelete={handleConfirmDelete}

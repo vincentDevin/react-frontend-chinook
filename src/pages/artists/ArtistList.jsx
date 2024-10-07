@@ -61,6 +61,13 @@ const ArtistList = () => {
             <td>{artist.Name}</td>
             <td className="text-end">
                 <div className="d-flex justify-content-end gap-2">
+                    <button
+                        className="btn btn-primary btn-md"
+                        onClick={() => navigate('/artists/' + artist.ArtistId)}
+                        aria-label={`View ${artist.Name}`}
+                    >
+                        View
+                    </button>
                     {isAdmin && (
                         <>
                             <button
@@ -104,18 +111,19 @@ const ArtistList = () => {
         <div className="container mt-4">
             {isAdmin && (
                 <GenericActions
+                    title="Artists" // Pass the title prop
                     onAdd={() => navigate('/artists/add')}
                     selectedItem={selectedArtist}
                     onConfirmDelete={handleConfirmDelete}
                     onCancelDelete={handleCloseModal}
                     showModal={showModal}
                     addLink="/artists/add"
-                />
+                />            
             )}
 
             {/* Generic Table Component */}
             <GenericTable
-                headers={['Artist', ...(isAdmin ? ['Actions'] : [])]}
+                headers={['Artist', ...(isAdmin ? ['Actions'] : ['View'])]} // Add 'View' header for non-admins
                 rows={artists} // Use artists from the usePagination hook
                 renderRow={renderRow}
             />

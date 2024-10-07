@@ -15,13 +15,23 @@ const TrackForm = () => {
 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [apiErrors, setApiErrors] = useState({}); // State for storing API response errors
     const [isAdmin, setIsAdmin] = useState(false);
 
     // Validation schema for the track form
     const trackValidationSchema = Yup.object().shape({
-        Name: Yup.string().required('Track name is required'),
-        Milliseconds: Yup.number().min(1, 'Duration must be positive').required('Duration is required'),
-        UnitPrice: Yup.number().min(0.01, 'Price must be at least 0.01').required('Price is required'),
+        Name: Yup.string()
+            .required('Track name is required')
+            .min(2, 'Track name must be at least 2 characters')
+            .max(100, 'Track name must be at most 100 characters'),
+        Milliseconds: Yup.number()
+            .min(1, 'Duration must be positive')
+            .max(600000, 'Duration cannot exceed 10 minutes')
+            .required('Duration is required'),
+        UnitPrice: Yup.number()
+            .min(0.01, 'Price must be at least 0.01')
+            .max(999.99, 'Price cannot exceed $999.99')
+            .required('Price is required'),
     });
 
     const {
@@ -57,19 +67,32 @@ const TrackForm = () => {
         fetchData();
     }, [trackId, setValue]);
 
-    const onSubmit = (data) => {
+    const onSubmit = async (data) => {
         if (!isAdmin) {
             setError('Only admins can edit or delete tracks.');
             return;
         }
-   
+
         const action = trackId > 0 ? trackApi.update : trackApi.insert;
         const requestData = { ...data, TrackId: trackId }; // Ensure trackId is included
-   
-        action(requestData)
-            .then(() => navigate('/tracks'))
-            .catch((err) => setError(err.message));
-    };   
+
+        try {
+            await action(requestData);
+            navigate('/tracks'); // Redirect to tracks list on success
+        } catch (err) {
+            // If API response contains validation errors, set them
+            if (err.response && err.response.data && err.response.data.errors) {
+                setApiErrors(err.response.data.errors);
+            } else {
+                setError(err.message);
+            }
+        }
+    };
+
+    // Clear API errors when form changes
+    useEffect(() => {
+        setApiErrors({});
+    }, [register]);
 
     if (loading) {
         return (
@@ -99,14 +122,14 @@ const TrackForm = () => {
                             id="Name"
                             label="Track Name"
                             register={register}
-                            error={errors.Name}
+                            error={errors.Name || apiErrors.Name} // Include both client and server-side errors
                         />
                         <InputField
                             id="Milliseconds"
                             label="Duration (ms)"
                             type="number"
                             register={register}
-                            error={errors.Milliseconds}
+                            error={errors.Milliseconds || apiErrors.Milliseconds} // Include both client and server-side errors
                             aria-describedby="durationHelp"
                         />
                         <small id="durationHelp" className="form-text text-muted">
@@ -118,7 +141,7 @@ const TrackForm = () => {
                             type="number"
                             step="0.01"
                             register={register}
-                            error={errors.UnitPrice}
+                            error={errors.UnitPrice || apiErrors.UnitPrice} // Include both client and server-side errors
                         />
 
                         {isAdmin && (

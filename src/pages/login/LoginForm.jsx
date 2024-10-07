@@ -9,8 +9,8 @@ const LoginForm = () => {
   const [message, setMessage] = useState('');
   const navigate = useNavigate(); // For redirection
 
-  // Hardcode role ID to 1 for regular users
-  const roleId = 3; // Regular users get role ID 1
+  // Hardcode role ID to 3 for admin users for testing purpose
+  const roleId = 3;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -36,35 +36,45 @@ const LoginForm = () => {
   };
 
   return (
-    <div>
-      <h2>{isRegister ? 'Register' : 'Login'}</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Email:</label>
+    <div className="container mt-4">
+      <h2 className="mb-4 text-center">{isRegister ? 'Register' : 'Login'}</h2>
+      <form onSubmit={handleSubmit} className="mx-auto" style={{ maxWidth: '400px' }}>
+        <div className="mb-3">
+          <label htmlFor="email" className="form-label">
+            Email
+          </label>
           <input
             type="email"
+            className="form-control"
+            id="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
         </div>
-        <div>
-          <label>Password:</label>
+        <div className="mb-3">
+          <label htmlFor="password" className="form-label">
+            Password
+          </label>
           <input
             type="password"
+            className="form-control"
+            id="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
         </div>
-        <button type="submit">{isRegister ? 'Register' : 'Login'}</button>
+        <button type="submit" className="btn btn-primary w-100">
+          {isRegister ? 'Register' : 'Login'}
+        </button>
       </form>
-      <div>
-        <button onClick={() => setIsRegister(!isRegister)}>
+      <div className="mt-3 text-center">
+        <button className="btn btn-link" onClick={() => setIsRegister(!isRegister)}>
           {isRegister ? 'Already have an account? Login' : "Don't have an account? Register"}
         </button>
       </div>
-      {message && <p>{message}</p>}
+      {message && <p className="mt-3 text-center text-danger">{message}</p>}
     </div>
   );
 };

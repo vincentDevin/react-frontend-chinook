@@ -1,12 +1,12 @@
 import Header from '../components/Header';
 import NavBar from '../components/NavBar';
 import Footer from '../components/Footer';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useLocation } from 'react-router-dom';
+//import { motion, AnimatePresence } from 'framer-motion';
+//import { useLocation } from 'react-router-dom';
 
 // eslint-disable-next-line react/prop-types
 const MainLayout = ({ children }) => {
-    const location = useLocation();
+    //const location = useLocation();
     
     return (
         <div className="d-flex flex-column min-vh-100">
@@ -20,17 +20,7 @@ const MainLayout = ({ children }) => {
             <div className="container my-4 flex-grow-1">
                 <div className="row">
                     <div className="col">
-                        <AnimatePresence mode="wait">
-                            <motion.main
-                                key={location.pathname} // Keyed by full pathname for more granular control
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, y: 20 }}
-                                transition={{ duration: 0.5 }}
-                            >
-                                {children}
-                            </motion.main>
-                        </AnimatePresence>
+                        {children}
                     </div>
                 </div>
             </div>

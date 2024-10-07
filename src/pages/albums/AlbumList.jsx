@@ -4,7 +4,7 @@ import { albumApi } from '../../api/entitiesApi';
 import GenericTable from '../../components/GenericTable';
 import GenericPagination from '../../components/GenericPagination';
 import usePagination from '../../hooks/usePagination';
-import ConfirmDeleteModal from '../../components/ConfirmDeleteModal';
+import GenericActions from '../../components/GenericActions'; // Import GenericActions
 import { getUserRoleFromToken } from '../../api/authUtils'; // Import the utility function
 
 const AlbumList = () => {
@@ -29,33 +29,32 @@ const AlbumList = () => {
         handlePageChange,
     } = usePagination(albumApi.getAll, 10, 'albums'); // Pass 'albums' as the dataKey for correct extraction
 
-    const [albumToDelete, setAlbumToDelete] = useState(null); // State for the album to be deleted
-    const [showDeleteModal, setShowDeleteModal] = useState(false); // State for controlling the delete modal
+    const [selectedAlbum, setSelectedAlbum] = useState(null); // State for selected album
+    const [showModal, setShowModal] = useState(false); // State for controlling the delete modal
 
-    // Handle row selection for deletion
-    const handleDeleteClick = (album) => {
-        setAlbumToDelete(album);
-        setShowDeleteModal(true);
+    // Handle showing the delete modal
+    const handleShowModal = (album) => {
+        setSelectedAlbum(album);
+        setShowModal(true);
     };
 
-    // Handle confirm delete in modal
-    const handleDeleteConfirmed = async () => {
-        if (albumToDelete) {
+    // Handle closing the delete modal
+    const handleCloseModal = () => {
+        setShowModal(false);
+        setSelectedAlbum(null); // Reset the selected album
+    };
+
+    // Handle confirm delete
+    const handleConfirmDelete = async () => {
+        if (selectedAlbum) {
             try {
-                await albumApi.delete(albumToDelete.AlbumId); // Call the delete API function
+                await albumApi.delete(selectedAlbum.AlbumId); // Delete the album
                 handlePageChange(currentPage); // Refresh the data
-                setShowDeleteModal(false); // Close the modal after deleting
-                setAlbumToDelete(null); // Reset the album to delete state
+                handleCloseModal(); // Close the modal
             } catch (err) {
                 console.error('Error deleting album:', err.message);
             }
         }
-    };
-
-    // Handle modal close
-    const handleCloseModal = () => {
-        setShowDeleteModal(false);
-        setAlbumToDelete(null); // Reset the album to delete state when closing the modal
     };
 
     // Render row for each album
@@ -65,18 +64,25 @@ const AlbumList = () => {
             <td>{album.ArtistName || 'Unknown Artist'}</td> {/* Use ArtistName from the backend response */}
             <td className="text-end">
                 <div className="d-flex justify-content-end gap-2">
+                    <button
+                        className="btn btn-primary btn-md"
+                        onClick={() => navigate(`/albums/${album.AlbumId}`)}
+                        aria-label={`View ${album.Title} album`}
+                    >
+                        View
+                    </button>
                     {isAdmin && (
                         <>
                             <button
                                 className="btn btn-secondary btn-md"
-                                onClick={() => navigate(`/albums/${album.AlbumId}`)}
+                                onClick={() => navigate(`/albums/${album.AlbumId}/edit`)}
                                 aria-label={`Edit ${album.Title} album`}
                             >
                                 Edit
                             </button>
                             <button
                                 className="btn btn-danger btn-md"
-                                onClick={() => handleDeleteClick(album)}
+                                onClick={() => handleShowModal(album)}
                                 aria-label={`Delete ${album.Title} album`}
                             >
                                 Delete
@@ -99,19 +105,20 @@ const AlbumList = () => {
     return (
         <div className="container mt-4">
             {isAdmin && (
-                <div className="mb-4">
-                    <button
-                        className="btn btn-primary"
-                        onClick={() => navigate('/albums/new')}
-                    >
-                        Add Album
-                    </button>
-                </div>
+                <GenericActions
+                    title="Albums"
+                    onAdd={() => navigate('/albums/new')}
+                    selectedItem={selectedAlbum}
+                    onConfirmDelete={handleConfirmDelete}
+                    onCancelDelete={handleCloseModal}
+                    showModal={showModal}
+                    addLink="/albums/new"
+                />
             )}
-            
+
             {/* Generic Table Component */}
             <GenericTable
-                headers={['Album', 'Artist', ...(isAdmin ? ['Actions'] : [])]}
+                headers={['Album', 'Artist', 'Actions']}
                 rows={albums.length > 0 ? albums : []}
                 renderRow={renderRow}
             />
@@ -121,14 +128,6 @@ const AlbumList = () => {
                 currentPage={currentPage}
                 totalPages={totalPages}
                 onPageChange={handlePageChange} // Handle page changes
-            />
-
-            {/* Confirm Delete Modal */}
-            <ConfirmDeleteModal
-                show={showDeleteModal} // Control modal visibility
-                handleClose={handleCloseModal} // Handle closing the modal
-                handleConfirm={handleDeleteConfirmed} // Handle confirm delete
-                itemName={albumToDelete ? albumToDelete.Title : ''} // Show the album name in modal
             />
         </div>
     );

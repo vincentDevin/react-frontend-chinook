@@ -11,14 +11,15 @@ const GenericActions = ({
     onCancelDelete,
     showModal,
     addLink,
+    title, // New prop to accept the title for the section
 }) => {
     return (
         <>
             <div className="d-flex justify-content-between align-items-center mb-3">
-                <h2>Items</h2>
-                <Link to={addLink} aria-label="Add new item">
+                <h2>{title}</h2> {/* Use the title prop here */}
+                <Link to={addLink} aria-label={`Add new ${title}`}>
                     <button className="btn btn-primary" onClick={onAdd}>
-                        Add Item
+                        Add {title.slice(0, -1)} {/* Singular form */}
                     </button>
                 </Link>
             </div>

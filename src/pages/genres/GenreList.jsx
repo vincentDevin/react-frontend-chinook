@@ -61,6 +61,13 @@ const GenreList = () => {
             <td>{genre.Name}</td>
             <td className="text-end">
                 <div className="d-flex justify-content-end gap-2">
+                    <button
+                        className="btn btn-primary btn-md"
+                        onClick={() => navigate(`/genres/${genre.GenreId}/tracks`)}
+                        aria-label={`View tracks for genre ${genre.Name}`}
+                    >
+                        View Tracks
+                    </button>
                     {isAdmin && (
                         <>
                             <button
@@ -104,6 +111,7 @@ const GenreList = () => {
         <div className="container mt-4">
             {isAdmin && (
                 <GenericActions
+                    title="Genres"
                     onAdd={() => navigate('/genres/add')}
                     selectedItem={selectedGenre}
                     onConfirmDelete={handleConfirmDelete}
@@ -115,7 +123,7 @@ const GenreList = () => {
 
             {/* Generic Table Component */}
             <GenericTable
-                headers={['Genre', ...(isAdmin ? ['Actions'] : [])]}
+                headers={['Genre', 'Actions']}
                 rows={genres} // Use genres from the usePagination hook
                 renderRow={renderRow}
             />

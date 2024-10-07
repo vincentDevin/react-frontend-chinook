@@ -1,16 +1,30 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useNavigate, useParams } from 'react-router-dom';
 import { mediaTypeApi } from '../../api/entitiesApi';
-import mediaTypeValidationSchema from '../../validation/mediaTypeValidationSchema';
+import * as Yup from 'yup'; // Import Yup for validation
 import InputField from '../../components/InputField'; // Reusable input component
 import FormButtons from '../../components/FormButtons'; // Reusable form buttons component
+import { getUserRoleFromToken } from '../../api/authUtils'; // Import auth utility to check for admin
 
 const MediaTypeForm = () => {
     const params = useParams();
-    const mediaTypeId = params.mediaTypeId ? parseInt(params.mediaTypeId, 10) : 0; // Ensure mediaTypeId is a number
+    const mediaTypeId = params.mediaTypeId ? parseInt(params.mediaTypeId, 10) : 0;
     const navigate = useNavigate();
+
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [apiErrors, setApiErrors] = useState({}); // State for storing API response errors
+    const [isAdmin, setIsAdmin] = useState(false);
+
+    // Validation schema for the media type form
+    const mediaTypeValidationSchema = Yup.object().shape({
+        name: Yup.string()
+            .required('Media Type name is required')
+            .min(2, 'Media Type name must be at least 2 characters')
+            .max(100, 'Media Type name must be at most 100 characters'),
+    });
 
     const {
         register,
@@ -21,17 +35,75 @@ const MediaTypeForm = () => {
         resolver: yupResolver(mediaTypeValidationSchema),
     });
 
+    // Fetch data for editing if mediaTypeId is greater than 0
     useEffect(() => {
-        if (mediaTypeId > 0) {
-            mediaTypeApi.getById(mediaTypeId).then((mediaType) => setValue('name', mediaType.name));
-        }
+        const fetchData = async () => {
+            try {
+                const userRoleId = getUserRoleFromToken();
+                if (userRoleId === 3) {
+                    setIsAdmin(true);
+                }
+
+                if (mediaTypeId > 0) {
+                    const mediaType = await mediaTypeApi.getById(mediaTypeId);
+                    setValue('name', mediaType.Name); // Ensure field matches the API response
+                }
+            } catch (err) {
+                setError(err.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchData();
     }, [mediaTypeId, setValue]);
 
-    const onSubmit = (data) => {
-        const action = mediaTypeId > 0 ? mediaTypeApi.update : mediaTypeApi.insert;
-        const requestData = mediaTypeId > 0 ? { ...data, id: mediaTypeId } : data;
-        action(requestData).then(() => navigate('/media-types'));
+    const onSubmit = async (data) => {
+        if (!isAdmin) {
+            setError('Only admins can edit or delete media types.');
+            return;
+        }
+    
+        // Explicitly setting the correct field name
+        const requestData = {
+            Name: data.name, // Capital 'N' to match server-side field name
+            ...(mediaTypeId > 0 && { MediaTypeId: mediaTypeId }), // Include mediaTypeId if editing
+        };
+    
+        try {
+            const action = mediaTypeId > 0 ? mediaTypeApi.update : mediaTypeApi.insert;
+            await action(requestData);
+            navigate('/media-types'); // Redirect to media types list on success
+        } catch (err) {
+            if (err.response && err.response.data && err.response.data.errors) {
+                setApiErrors(err.response.data.errors);
+            } else {
+                setError(err.message);
+            }
+        }
     };
+    
+
+    // Clear API errors when form changes
+    useEffect(() => {
+        setApiErrors({});
+    }, [register]);
+
+    if (loading) {
+        return (
+            <div className="container mt-4" role="status">
+                Loading form data...
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="container mt-4 text-danger" role="alert">
+                Error: {error}
+            </div>
+        );
+    }
 
     return (
         <div className="container mt-4">
@@ -41,16 +113,16 @@ const MediaTypeForm = () => {
                 </div>
                 <div className="card-body">
                     <form onSubmit={handleSubmit(onSubmit)} aria-live="polite">
-                        {/* InputField Component for Media Type Name */}
                         <InputField
-                            id="mediaTypeName"
+                            id="name"
                             label="Media Type Name"
                             register={register}
-                            error={errors.name}
+                            error={errors.name || apiErrors.name} // Include both client and server-side errors
                         />
-                        
-                        {/* FormButtons Component for Save and Cancel */}
-                        <FormButtons onCancel={() => navigate('/media-types')} />
+
+                        {isAdmin && (
+                            <FormButtons onCancel={() => navigate('/media-types')} />
+                        )}
                     </form>
                 </div>
             </div>
