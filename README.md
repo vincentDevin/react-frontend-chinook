@@ -1,6 +1,8 @@
 
 # React Final Project
 
+**Note:** This project requires the backend to be set up and running for full functionality. You can find the backend project [here](https://github.com/your-repo/chinook-backend). Please ensure the backend is running before starting the frontend.
+
 This project is a frontend web application built with React, Vite, and several other libraries, including Bootstrap for styling, React Hook Form for form handling, and Axios for making HTTP requests. This README provides the necessary instructions to set up and run the project.
 
 ## Prerequisites
