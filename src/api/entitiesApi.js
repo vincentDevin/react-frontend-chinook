@@ -43,7 +43,11 @@ export const albumApi = {
     insert: (album) => api.post(`/albums`, album).then((resp) => resp.data).catch(errorHandler),
     update: (album) => api.put(`/albums/${album.AlbumId}`, album).then((resp) => resp.data).catch(errorHandler),
     delete: (id) => deleteEntity('albums', id),
+
+    // Fetch all albums by artist
+    getAllByArtistId: (artistId) => api.get(`/albums/byArtist/${artistId}`).then((resp) => resp.data).catch(errorHandler),
 };
+
 
 // Artist API
 export const artistApi = {

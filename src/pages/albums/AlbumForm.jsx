@@ -51,6 +51,7 @@ const AlbumForm = () => {
     }, [albumId, setValue]);
 
     const onSubmit = async (data) => {
+        data.preventDefault();
         if (!isAdmin) {
             setError('Only admins can edit or delete albums.');
             return;

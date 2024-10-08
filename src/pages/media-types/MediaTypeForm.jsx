@@ -59,6 +59,7 @@ const MediaTypeForm = () => {
     }, [mediaTypeId, setValue]);
 
     const onSubmit = async (data) => {
+        data.preventDefault();
         if (!isAdmin) {
             setError('Only admins can edit or delete media types.');
             return;

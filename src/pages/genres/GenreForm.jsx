@@ -23,6 +23,9 @@ const GenreForm = () => {
         formState: { errors },
     } = useForm({
         resolver: yupResolver(genreValidationSchema),
+        defaultValues: {
+            Name: '' // Set a default value to avoid "undefined" issues
+        }
     });
 
     // Fetch genre data if editing
@@ -30,10 +33,15 @@ const GenreForm = () => {
         if (genreId > 0) {
             genreApi.getById(genreId)
                 .then((genre) => {
-                    // Ensure we set the value of the field correctly from the response
-                    setValue('name', genre.Name); // Match the key in the API response (use `Name` if that's what your API returns)
+                    if (genre) {
+                        // Log to ensure the data is correctly fetched
+                        console.log('Fetched genre data:', genre);
+                        // Ensure we set the value of the field correctly from the response
+                        setValue('Name', genre.Name); // Match the key in the API response (use `Name` if that's what your API returns)
+                    }
                 })
-                .catch(() => {
+                .catch((err) => {
+                    console.error('Error loading genre:', err);
                     setError('Error loading genre'); // Handle error
                 })
                 .finally(() => setLoading(false)); // Stop loading
@@ -45,6 +53,8 @@ const GenreForm = () => {
     const onSubmit = async (data) => {
         const action = genreId > 0 ? genreApi.update : genreApi.insert;
         const requestData = genreId > 0 ? { ...data, GenreId: genreId } : data; // Ensure the correct ID field is used
+        
+        console.log('Submitting data:', requestData, 'Action:', genreId > 0 ? 'Update' : 'Create');
 
         try {
             await action(requestData);
@@ -54,6 +64,7 @@ const GenreForm = () => {
                 setApiErrors(err.response.data.errors); // Set API validation errors
             } else {
                 setError('Error submitting the form'); // Handle general errors
+                console.error('Error submitting form:', err);
             }
         }
     };
@@ -69,7 +80,7 @@ const GenreForm = () => {
     if (error) {
         return (
             <div className="container mt-4 text-danger" role="alert">
-                Error: {error}
+                {error}
             </div>
         );
     }
@@ -84,7 +95,7 @@ const GenreForm = () => {
                     <form onSubmit={handleSubmit(onSubmit)} aria-live="polite">
                         {/* InputField Component for Genre Name */}
                         <InputField
-                            id="name" // Ensure the ID matches the schema field
+                            id="Name" // Ensure the ID matches the schema field
                             label="Genre Name"
                             register={register}
                             error={errors.name || apiErrors.name} // Include both client-side and API validation errors
