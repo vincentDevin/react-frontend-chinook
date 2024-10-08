@@ -19,7 +19,7 @@ Before setting up the project, ensure you have the following installed:
 First, clone the project repository:
 
 ```bash
-git clone https://github.com/your-repo/react-final-project.git
+git clone https://github.com/vincentDevin/react-final-project.git
 cd react-final-project
 ```
 
