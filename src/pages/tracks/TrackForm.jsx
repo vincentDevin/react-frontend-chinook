@@ -5,8 +5,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { trackApi, artistApi, albumApi, mediaTypeApi, genreApi } from '../../api/entitiesApi';
 import * as Yup from 'yup';
 import InputField from '../../components/InputField';
-import FormButtons from '../../components/FormButtons';
 import SelectField from '../../components/SelectField';
+import FormButtons from '../../components/FormButtons';
 import { getUserRoleFromToken } from '../../api/authUtils';
 
 const TrackForm = () => {
@@ -22,10 +22,11 @@ const TrackForm = () => {
     const [error, setError] = useState(null);
     const [apiErrors, setApiErrors] = useState({});
     const [isAdmin, setIsAdmin] = useState(false);
+    const [track, setTrack] = useState(null);
 
     const artistLimit = 50;
 
-    // Validation schema for the track form
+    // Validation schema
     const trackValidationSchema = Yup.object().shape({
         Name: Yup.string()
             .required('Track name is required')
@@ -44,7 +45,7 @@ const TrackForm = () => {
             .max(999.99, 'Price cannot exceed $999.99')
             .required('Price is required'),
         ArtistId: Yup.number().required('Artist is required'),
-        AlbumId: Yup.number().required('Album is required'),
+        AlbumId: Yup.number().nullable(), // Album can be null
         MediaTypeId: Yup.number().required('Media Type is required'),
         GenreId: Yup.number().required('Genre is required'),
     });
@@ -62,7 +63,7 @@ const TrackForm = () => {
     };
 
     const fetchAlbums = async (artistId) => {
-        if (!artistId || isNaN(artistId)) return;
+        if (!artistId || isNaN(artistId) || artistId === 0) return; // Skip if ArtistId is invalid
         try {
             const response = await albumApi.getAllByArtistId(artistId);
             setAlbums(response || []);
@@ -92,16 +93,24 @@ const TrackForm = () => {
                 if (trackId > 0) {
                     // Fetch track by ID
                     const track = await trackApi.getById(trackId);
+                    setTrack(track);
 
                     // Map names to their respective IDs for pre-selecting values
                     const artistId = findIdByName(
                         artistResponse.artists.map(artist => ({ value: artist.ArtistId, label: artist.Name })),
                         track.ArtistName
                     );
-                    const albumId = findIdByName(
-                        (await albumApi.getAllByArtistId(artistId)).map(album => ({ value: album.AlbumId, label: album.Title })),
-                        track.AlbumTitle
-                    );
+
+                    // Fetch albums only if artistId is valid
+                    if (artistId) {
+                        const albumId = findIdByName(
+                            (await albumApi.getAllByArtistId(artistId)).map(album => ({ value: album.AlbumId, label: album.Title })),
+                            track.AlbumTitle
+                        );
+                        setValue('AlbumId', albumId);
+                        await fetchAlbums(artistId);
+                    }
+
                     const mediaTypeId = findIdByName(
                         mediaTypeResponse.mediaTypes.map(mediaType => ({ value: mediaType.MediaTypeId, label: mediaType.Name })),
                         track.MediaTypeName
@@ -118,11 +127,8 @@ const TrackForm = () => {
                     setValue('Bytes', track.Bytes);
                     setValue('UnitPrice', parseFloat(track.UnitPrice));
                     setValue('ArtistId', artistId);
-                    setValue('AlbumId', albumId);
                     setValue('MediaTypeId', mediaTypeId);
                     setValue('GenreId', genreId);
-
-                    await fetchAlbums(artistId);
                 }
             } finally {
                 setLoading(false);
@@ -132,7 +138,6 @@ const TrackForm = () => {
         loadArtistsAndTrackData();
     }, [trackId, setValue, artistLimit]);
 
-    // Track field changes and update values dynamically
     useEffect(() => {
         if (selectedArtist && !isNaN(selectedArtist)) {
             fetchAlbums(selectedArtist);
@@ -145,18 +150,16 @@ const TrackForm = () => {
             setError('Only admins can edit or delete tracks.');
             return;
         }
-    
+
         const currentValues = getValues();
         const updatedData = {
             ...currentValues,
             TrackId: trackId > 0 ? trackId : undefined,
         };
-    
-        console.log('Updated Data:', updatedData); // Ensure AlbumId is in the payload
-    
+
         const action = trackId > 0 ? trackApi.update : trackApi.insert;
         const requestData = { ...updatedData };
-    
+
         try {
             await action(requestData);
             navigate('/tracks');
@@ -167,7 +170,7 @@ const TrackForm = () => {
                 setError(err.message);
             }
         }
-    };    
+    };
 
     if (loading) {
         return (
@@ -234,7 +237,7 @@ const TrackForm = () => {
                             options={artists.map(artist => ({ value: artist.ArtistId, label: artist.Name }))}
                             register={register}
                             error={errors.ArtistId}
-                            defaultValue=""
+                            defaultValue={track?.ArtistId || ''}
                         />
 
                         <SelectField
@@ -243,7 +246,7 @@ const TrackForm = () => {
                             options={albums.map(album => ({ value: album.AlbumId, label: album.Title }))}
                             register={register}
                             error={errors.AlbumId}
-                            defaultValue=""
+                            defaultValue={track?.AlbumId || ''}
                         />
 
                         <SelectField
@@ -252,7 +255,7 @@ const TrackForm = () => {
                             options={mediaTypes.map(mediaType => ({ value: mediaType.MediaTypeId, label: mediaType.Name }))}
                             register={register}
                             error={errors.MediaTypeId}
-                            defaultValue=""
+                            defaultValue={track?.MediaTypeId || ''}
                         />
 
                         <SelectField
@@ -261,7 +264,7 @@ const TrackForm = () => {
                             options={genres.map(genre => ({ value: genre.GenreId, label: genre.Name }))}
                             register={register}
                             error={errors.GenreId}
-                            defaultValue=""
+                            defaultValue={track?.GenreId || ''}
                         />
 
                         {isAdmin && <FormButtons onCancel={() => navigate('/tracks')} />}
