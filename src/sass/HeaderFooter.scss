@@ -1,0 +1,48 @@
+// Footer section
+footer {
+    background-color: $primary;
+    color: $white;
+    padding: 2rem;
+    text-align: center;
+
+    .footer-links {
+        a {
+            color: $white !important;
+            &:hover {
+                color: $hover-white !important;
+            }
+        }
+    }
+}
+
+
+// Header styles for the Music Database App
+
+header {
+    background-color: $primary; // Dark brown background
+    color: $white; // White text color
+    padding: 1rem 0; // Add padding on top and bottom for spacing
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); // Subtle shadow for depth
+
+    .container {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start; // Align content to the left
+    }
+
+    // Icon styling
+    .bi-database-check {
+        font-size: 2rem; // Larger icon size for emphasis
+        margin-right: 1rem; // Space between icon and text
+        color: $accent; // Accent color for the icon
+    }
+
+    // Title styling
+    h1 {
+        font-size: 1.75rem; // Font size for the title
+        margin-bottom: 0; // Remove default margin on the bottom
+        font-weight: 600; // Make the title bold
+        letter-spacing: 0.05rem; // Slight letter spacing for readability
+    }
+}
+

@@ -1,0 +1,60 @@
+// TrackCard component styles
+.track-card {
+    background-color: $light-bg; // Light background for the card
+    border: 1px solid $lighten-primary; // Subtle border with a light primary color
+    border-radius: 8px; // Rounded corners for the card
+    padding: 1.5rem; // Padding inside the card for spacing
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); // Subtle shadow for depth
+    margin-bottom: 1.5rem; // Spacing between cards
+
+    p {
+        margin-bottom: 0.5rem;
+        font-size: 1rem;
+        color: $dark-bg; // Dark text color for content
+
+        strong {
+            color: $primary; // Primary color for the labels (Track, Album, etc.)
+            margin-right: 0.25rem; // Small spacing after the label
+        }
+    }
+
+    // File size and duration formatting
+    .file-size, .duration {
+        font-weight: 600; // Bold text for file size and duration
+    }
+
+    // Admin buttons (Edit & Delete)
+    .btn-container {
+        display: flex;
+        justify-content: flex-end;
+        gap: 1rem; // Space between buttons
+        margin-top: 1rem;
+    }
+
+    .btn {
+        &-secondary {
+            background-color: $secondary; // Background for Edit button
+            border-color: $secondary;
+            color: $white;
+
+            &:hover {
+                background-color: lighten($secondary, 10%); // Lighter secondary on hover
+            }
+        }
+
+        &-danger {
+            background-color: $accent; // Accent color for Delete button
+            border-color: $accent;
+            color: $white;
+
+            &:hover {
+                background-color: darken($accent, 10%); // Darker accent on hover
+            }
+        }
+
+        &-sm {
+            padding: 0.25rem 0.5rem; // Smaller padding for small buttons
+            font-size: 0.875rem; // Smaller font size for the buttons
+        }
+    }
+}

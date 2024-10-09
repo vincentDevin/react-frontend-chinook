@@ -14,7 +14,7 @@ const TrackPage = () => {
     const isAdmin = userRoleId === 3; // Only role ID 3 is admin
 
     return (
-        <MainLayout>
+        <MainLayout className="track-page">
             <Routes>
                 <Route index element={<TrackList />} />
 

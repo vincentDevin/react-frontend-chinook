@@ -63,7 +63,7 @@ const AlbumView = () => {
     }
 
     return (
-        <div className="container mt-4">
+        <div className="container mt-4 album-view">
             <div className="card">
                 <div className="card-header">
                     <h1 className="card-title">{album.Title}</h1>

@@ -13,7 +13,7 @@ const TrackCard = ({ track, onEditClick, onDeleteClick }) => {
     const isAdmin = userRoleId === 3; // Only role ID 3 is admin
 
     return (
-        <div className="p-3 bg-light border rounded">
+        <div className="p-3 track-card">
             <p><strong>Track:</strong> {track.Name}</p>
             <p><strong>Album:</strong> {track.AlbumTitle || 'Unknown Album'}</p>
             <p><strong>Genre:</strong> {track.GenreName || 'Unknown Genre'}</p>

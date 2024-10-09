@@ -1,0 +1,94 @@
+// Base Button Styles
+.btn {
+    padding: 0.75rem 1.5rem; // Base padding for buttons
+    font-size: 1rem; // Standard font size for buttons
+    font-weight: 600; // Slightly bolder text
+    border-radius: 5px; // Rounded corners for a modern look
+    text-align: center;
+    display: inline-block;
+    transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+
+    &:focus {
+        outline: none;
+        box-shadow: 0 0 0 0.2rem rgba($primary, 0.25); // Subtle focus outline for accessibility
+    }
+
+    &:disabled {
+        background-color: $lighten-primary;
+        border-color: $lighten-primary;
+        cursor: not-allowed;
+        opacity: 0.65;
+    }
+}
+
+// Primary Button
+.btn-primary {
+    background-color: $primary; // Dark brown background
+    border-color: $primary;
+    color: $white; // White text for primary button
+
+    &:hover {
+        background-color: $darken-primary; // Darker primary color on hover
+        border-color: $darken-primary;
+    }
+}
+
+// Secondary Button
+.btn-secondary {
+    background-color: $secondary; // Medium brown/red background
+    border-color: $secondary;
+    color: $white; // White text for secondary button
+
+    &:hover {
+        background-color: $lighten-secondary; // Lighten secondary color on hover
+        border-color: $lighten-secondary;
+    }
+}
+
+// Accent Button
+.btn-accent {
+    background-color: $accent; // Light brown/tan background
+    border-color: $accent;
+    color: $dark-bg; // Dark text for accent button
+
+    &:hover {
+        background-color: darken($accent, 10%); // Darken accent on hover
+        border-color: darken($accent, 10%);
+    }
+}
+
+// Outline Button (Light Version)
+.btn-outline-light {
+    background-color: transparent;
+    border: 2px solid $white; // White border for outline button
+    color: $white; // White text for outline button
+
+    &:hover {
+        background-color: $white; // Fill with white on hover
+        color: $primary; // Dark text on hover
+    }
+}
+
+// Outline Button (Dark Version)
+.btn-outline-dark {
+    background-color: transparent;
+    border: 2px solid $primary; // Primary border for outline button
+    color: $primary; // Primary color text for outline button
+
+    &:hover {
+        background-color: $primary; // Fill with primary on hover
+        color: $white; // White text on hover
+    }
+}
+
+// Button Size Variants
+.btn-sm {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+}
+
+.btn-lg {
+    padding: 1rem 2rem;
+    font-size: 1.25rem;
+}

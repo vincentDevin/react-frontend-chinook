@@ -72,7 +72,7 @@ const GenreTracksView = () => {
     }
 
     return (
-        <div className="container mt-4">
+        <div className="container mt-4 genre-tracks-view">
             <h1>Tracks for {genreName}</h1> {/* Display the genre name */}
             <ul className="list-group">
                 {tracks.map((track) => (

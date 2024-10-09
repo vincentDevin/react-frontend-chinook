@@ -1,0 +1,26 @@
+// Album section
+.album-page {
+    padding: 2rem;
+    background-color: $light-bg;
+
+    .album-card {
+        background-color: $white;
+        padding: 1.5rem;
+        border-radius: 12px;
+        box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+
+        &:hover {
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .album-title {
+            font-size: 1.5rem;
+            color: $primary;
+        }
+
+        .album-artist {
+            color: $secondary;
+            margin-top: 0.5rem;
+        }
+    }
+}

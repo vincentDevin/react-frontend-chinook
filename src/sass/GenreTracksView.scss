@@ -1,0 +1,61 @@
+// GenreTracksView component styles
+.genre-tracks-view {
+    .container {
+        margin-top: 2rem;
+
+        // Genre name header
+        h1 {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 2rem; // Space below the genre title
+            color: $primary; // Primary color for genre title
+        }
+
+        // List group for tracks
+        .list-group-item {
+            background-color: $white; // White background for track list items
+            border: 1px solid $light-bg; // Light border for track list items
+            border-radius: 8px;
+            margin-bottom: 1rem; // Space between tracks
+            padding: 1rem;
+
+            &:hover {
+                background-color: $lighten-primary; // Hover effect for track items
+                cursor: pointer;
+            }
+
+            // Flexbox for track name and button
+            .d-flex {
+                justify-content: space-between;
+                align-items: center;
+
+                button {
+                    background-color: $primary; // Primary color for "View" button
+                    border: none;
+                    color: $white;
+                    padding: 0.25rem 0.5rem;
+                    font-size: 0.875rem;
+                    border-radius: 5px;
+                    transition: background-color 0.2s ease;
+
+                    &:hover {
+                        background-color: $darken-primary; // Darker primary on hover
+                    }
+                }
+            }
+        }
+
+        // If no tracks are available
+        p {
+            font-size: 1rem;
+            color: $dark-bg; // Dark color for "No tracks available" message
+        }
+    }
+
+    // Pagination component
+    .pagination {
+        margin-top: 2rem;
+        display: flex;
+        justify-content: center;
+    }
+}

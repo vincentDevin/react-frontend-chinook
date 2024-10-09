@@ -66,7 +66,7 @@ const TrackView = () => {
     };
 
     return (
-        <div className="container mt-4">
+        <div className="container mt-4 track-view">
             {/* Header Section */}
             <div className="mb-4 p-3 bg-primary text-white rounded">
                 <h1 className="mb-3">{track.Name}</h1>

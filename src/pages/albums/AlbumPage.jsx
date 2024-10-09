@@ -14,7 +14,7 @@ const AlbumPage = () => {
     const isAdmin = userRoleId === 3; // Only role ID 3 is admin
 
     return (
-        <MainLayout>
+        <MainLayout className="album-page">
             <Routes>
                 <Route index element={<AlbumList />} />
 

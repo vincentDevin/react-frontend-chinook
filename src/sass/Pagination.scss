@@ -1,0 +1,72 @@
+// Pagination styles for GenericPagination component
+.pagination {
+    display: inline-flex;
+    padding-left: 0;
+    list-style: none;
+    border-radius: 8px;
+    background-color: $white; // Background for pagination container
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); // Subtle shadow for depth
+    margin: 0;
+}
+
+.page-item {
+    &:not(.disabled):hover {
+        .page-link {
+            background-color: $lighten-primary; // Lighter primary for hover
+            color: $white; // White text on hover
+        }
+    }
+
+    &.active {
+        .page-link {
+            background-color: $primary; // Active page background color
+            color: $white; // White text for active page
+            border-color: $primary; // Border matches background for active state
+        }
+    }
+
+    &.disabled {
+        .page-link {
+            color: $light-bg; // Light gray for disabled page numbers
+            background-color: $white;
+            border-color: $light-bg; // Light border for disabled state
+            cursor: not-allowed;
+        }
+    }
+}
+
+.page-link {
+    position: relative;
+    display: block;
+    padding: 0.75rem 1.25rem;
+    margin-left: -1px;
+    line-height: 1.25;
+    color: $primary; // Default text color for pagination links
+    background-color: $white;
+    border: 1px solid $light-bg; // Subtle border for pagination links
+    border-radius: 4px;
+
+    &:hover {
+        background-color: $lighten-primary; // Lighter background on hover
+        color: $white; // White text on hover
+    }
+
+    &:focus {
+        z-index: 2;
+        outline: 0;
+        box-shadow: 0 0 0 0.2rem rgba($primary, 0.25); // Focus state shadow
+    }
+}
+
+.mt-4 {
+    margin-top: 2rem !important;
+}
+
+// Center the pagination controls with flexbox
+.d-flex {
+    display: flex !important;
+}
+
+.justify-content-center {
+    justify-content: center !important;
+}

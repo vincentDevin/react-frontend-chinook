@@ -6,7 +6,7 @@ const ArtistCard = ({ artist, onEditClick, onDeleteClick }) => {
     const isAdmin = userRoleId === 3; // Only role ID 3 is admin
 
     return (
-        <div className="p-3 bg-light border rounded">
+        <div className="p-3">
             <p><strong>Artist:</strong> {artist.Name}</p>
             <p><strong>Genre:</strong> {artist.Genre || 'Unknown Genre'}</p>
             <p><strong>Number of Albums:</strong> {artist.AlbumCount || 0}</p>

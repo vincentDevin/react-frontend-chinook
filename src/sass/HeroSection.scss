@@ -1,0 +1,39 @@
+// HeroSection component styles
+.hero-section {
+    background-color: $primary; // Dark brown background for the hero section
+    color: $white; // White text color
+    text-align: center; // Center-align the text
+    padding: 4rem 0; // Padding for top and bottom for larger space
+
+    .container {
+        max-width: 800px; // Limit the width of the container for better readability
+        margin: 0 auto;
+    }
+
+    h1 {
+        font-size: 3rem; // Larger font size for the hero title
+        font-weight: bold; // Make the title bold
+        margin-bottom: 1.5rem; // Space below the title
+        color: $white; // Ensure the text color remains white
+    }
+
+    .lead {
+        font-size: 1.25rem; // Slightly larger font size for the lead text
+        margin-bottom: 2rem; // Space below the lead paragraph
+        color: $accent; // Accent color for the lead text
+    }
+
+    .btn {
+        background-color: $accent; // Use accent color for the "Get Started" button
+        border: none;
+        padding: 0.75rem 1.5rem;
+        font-size: 1.25rem; // Larger font size for the button
+        border-radius: 5px; // Rounded corners for the button
+        transition: background-color 0.3s ease; // Smooth transition on hover
+
+        &:hover {
+            background-color: $darken-primary; // Darken primary color on hover
+            color: $white; // White text on hover
+        }
+    }
+}

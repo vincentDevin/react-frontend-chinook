@@ -5,7 +5,7 @@ const GenericRow = ({ item, isSelected, onRowClick, renderDetails }) => (
     <>
         <tr
             onClick={onRowClick}
-            className={`cursor-pointer ${isSelected ? 'bg-primary text-white' : ''}`}>
+            className={`cursor-pointer ${isSelected ? 'generic-row' : ''}`}>
             {Object.values(item).map((value, index) => (
                 <td key={index}>{value}</td>
             ))}

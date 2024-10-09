@@ -1,0 +1,38 @@
+// GenericRow component styles
+.generic-row {
+    tr {
+        cursor: pointer; // Make the row clickable
+        transition: background-color 0.3s ease, color 0.3s ease; // Smooth transitions
+
+        &:hover {
+            background-color: $lighten-primary; // Lighter background on hover
+            color: $white; // White text on hover
+        }
+
+        // Selected row styling
+        &.bg-primary {
+            background-color: $primary !important; // Dark brown background for selected row
+            color: $white !important; // White text for selected row
+
+            td {
+                font-weight: bold; // Make text bold in the selected row
+            }
+        }
+
+        td {
+            padding: 0.75rem;
+            border-bottom: 1px solid $light-bg; // Light border for cells
+            vertical-align: middle; // Align text in the middle of the row
+        }
+    }
+
+    // Expanded details row
+    tr + tr {
+        td {
+            background-color: $accent; // Accent color for detail row background
+            color: $dark-bg; // Dark text color for readability
+            padding: 1rem;
+            border-top: 1px solid $primary; // Add border between main row and details
+        }
+    }
+}

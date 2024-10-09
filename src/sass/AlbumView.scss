@@ -1,0 +1,98 @@
+// AlbumView component styles
+.album-view {
+    .card {
+        background-color: $light-bg; // Light background for the album card
+        border: 1px solid $lighten-primary; // Subtle border with light primary color
+        border-radius: 8px; // Rounded corners for the card
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); // Soft shadow for depth
+        padding: 1.5rem; // Padding for card content
+        margin-bottom: 2rem; // Spacing below the card
+
+        .card-header {
+            background-color: $primary; // Primary color for the header
+            color: $white; // White text color in the header
+            padding: 1rem;
+            border-radius: 8px 8px 0 0; // Rounded top corners for the header
+
+            .card-title {
+                font-size: 1.75rem;
+                font-weight: bold;
+                margin-bottom: 0.5rem;
+            }
+
+            p {
+                font-size: 1rem;
+                margin-bottom: 0;
+                strong {
+                    color: $accent; // Accent color for the artist label
+                }
+            }
+        }
+
+        .card-body {
+            padding: 1.5rem;
+
+            h2 {
+                font-size: 1.5rem;
+                margin-bottom: 1.5rem;
+                color: $primary; // Primary color for the heading
+            }
+
+            .list-group-item {
+                background-color: $white; // White background for track list items
+                border: 1px solid $light-bg; // Light border for track list items
+                border-radius: 8px;
+                margin-bottom: 1rem; // Space between tracks
+                padding: 1rem;
+
+                &:hover {
+                    background-color: $lighten-primary; // Hover effect for track items
+                    cursor: pointer;
+                }
+
+                .d-flex {
+                    justify-content: space-between;
+                    align-items: center;
+
+                    button {
+                        background-color: $primary; // Primary color for view/collapse button
+                        border: none;
+                        color: $white;
+                        padding: 0.25rem 0.5rem;
+                        font-size: 0.875rem;
+                        border-radius: 5px;
+                        transition: background-color 0.2s ease;
+
+                        &:hover {
+                            background-color: $darken-primary; // Darker primary on hover
+                        }
+                    }
+                }
+            }
+
+            p {
+                font-size: 1rem;
+                color: $dark-bg; // Dark text color for the "No tracks available" message
+            }
+        }
+    }
+
+    // Loading and Error Alerts
+    .alert {
+        font-size: 1rem;
+        padding: 1rem;
+        border-radius: 5px;
+        &.alert-info {
+            background-color: $light-bg;
+            color: $dark-bg;
+        }
+        &.alert-danger {
+            background-color: $secondary;
+            color: $white;
+        }
+        &.alert-warning {
+            background-color: $accent;
+            color: $dark-bg;
+        }
+    }
+}

@@ -3,7 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Footer = () => {
     return (
-        <footer className="mt-auto bg-dark text-white py-3">
+        <footer className="mt-auto py-3 footer">
             <div className="container">
                 <div className="row">
                     {/* About Us Section */}

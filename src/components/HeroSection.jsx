@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 
 const HeroSection = () => {
     return (
-        <section className="bg-dark text-white text-center py-5">
+        <section className="text-center py-5">
             <div className="container">
                 <h1 className="display-4">Welcome to Music Database</h1>
                 <p className="lead">Explore artists, albums, tracks, and more!</p>

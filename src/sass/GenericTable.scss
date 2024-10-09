@@ -1,0 +1,69 @@
+
+// Table styles for GenericTable component
+.table-responsive {
+    margin-top: 2rem;
+    background-color: $white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+
+    .table {
+        margin-bottom: 0;
+        border-collapse: separate;
+        border-spacing: 0;
+
+        thead {
+            background-color: $primary; // Header background color
+            color: $white; // Header text color
+
+            th {
+                padding: 1rem;
+                text-transform: uppercase;
+                letter-spacing: 0.05rem;
+                font-size: 0.9rem;
+                font-weight: 600;
+                border-bottom: 2px solid $accent; // Accent color for table header border
+            }
+        }
+
+        tbody {
+            tr {
+                &:nth-child(even) {
+                    background-color: $lighten-primary; // Alternate row background color
+                }
+
+                &:hover {
+                    background-color: $accent; // Hover background color for rows
+                }
+
+                td {
+                    padding: 1rem;
+                    font-size: 0.875rem;
+                    color: $dark-bg; // Dark brown text color
+                    border-top: 1px solid $light-bg; // Light background for borders
+                }
+
+                .text-center {
+                    text-align: center;
+                }
+            }
+        }
+
+        .thead-dark th {
+            background-color: $primary;
+            color: $white;
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: $accent; // Lighter hover background
+        }
+    }
+
+    .no-data {
+        padding: 2rem;
+        color: $dark-gray;
+        text-align: center;
+        font-size: 1rem;
+        font-weight: 500;
+    }
+}

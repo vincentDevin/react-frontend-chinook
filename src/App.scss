@@ -1,0 +1,52 @@
+// Import Bootstrap's main Sass file to extend and override styles
+@import 'bootstrap/scss/bootstrap';
+
+// Correct import for Bootstrap Icons
+@import 'bootstrap-icons/font/bootstrap-icons'; // Correct path to import Bootstrap Icons
+
+// Define color variables based on the new palette
+$primary: #4b3832; // Dark brown
+$secondary: #854442; // Medium brown/red
+$accent: #be9b7b; // Light brown/tan
+$light-bg: #fff4e6; // Very light background (off-white)
+$dark-bg: #3c2f2f; // Dark brown background
+
+// Neutral colors
+$white: #ffffff;
+$dark-gray: #333333;
+$nav-text: #3c2f2f; // Dark color for nav links
+$nav-text-hover: darken($nav-text, 15%); // Even darker on hover
+
+// Hover/Lightened shades
+$lighten-primary: lighten($primary, 10%);
+$darken-primary: darken($primary, 5%);
+$lighten-secondary: lighten($secondary, 10%);
+$hover-white: lighten($white, 15%);
+
+// Global overrides for Bootstrap variables
+$font-family-base: 'Poppins', sans-serif;
+$font-size-base: 16px;
+
+// Body and Global Styles
+body {
+    background-color: $light-bg; // Very light background
+    font-family: $font-family-base;
+    font-size: $font-size-base;
+    color: $dark-bg; // Dark brown text color
+}
+
+// Import custom component styles
+@import './sass/Header.scss';
+@import './sass/HeaderFooter.scss';
+@import './sass/MainLayout.scss';
+@import './sass/NavBar.scss';
+@import './sass/Buttons.scss';
+@import './sass/HomePage.scss';
+@import './sass/Tracks.scss';
+@import './sass/GenericTable.scss';
+@import  './sass/TableRow.scss';
+@import './sass/TrackCard.scss';
+@import './sass/Pagination.scss';
+@import './sass/AlbumPage.scss';
+@import './sass/AlbumView.scss';
+@import './sass/HeroSection.scss';
