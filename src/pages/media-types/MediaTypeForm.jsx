@@ -59,7 +59,6 @@ const MediaTypeForm = () => {
     }, [mediaTypeId, setValue]);
 
     const onSubmit = async (data) => {
-        data.preventDefault();
         if (!isAdmin) {
             setError('Only admins can edit or delete media types.');
             return;
@@ -83,7 +82,6 @@ const MediaTypeForm = () => {
             }
         }
     };
-    
 
     // Clear API errors when form changes
     useEffect(() => {

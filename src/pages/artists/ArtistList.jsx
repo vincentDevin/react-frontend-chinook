@@ -72,7 +72,7 @@ const ArtistList = () => {
                         <>
                             <button
                                 className="btn btn-secondary btn-md"
-                                onClick={() => navigate('/artists/' + artist.ArtistId)}
+                                onClick={() => navigate('/artists/' + artist.ArtistId + '/edit')}
                                 aria-label={`Edit ${artist.Name}`}
                             >
                                 Edit

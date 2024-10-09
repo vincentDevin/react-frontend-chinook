@@ -52,9 +52,8 @@ const ArtistForm = () => {
     }, [artistId, setValue]);
     
     const onSubmit = async (data) => {
-        data.preventDefault();
         if (!isAdmin) {
-            setError('Only admins can edit or delete artists.');
+            setError('Only admins can create or edit artists.');
             return;
         }
     
@@ -63,24 +62,19 @@ const ArtistForm = () => {
             ...(artistId > 0 && { ArtistId: artistId }),  // Include ArtistId if editing
         };
     
-        console.log('Submitting form data:', requestData); // Log data being submitted
-    
         try {
             const action = artistId > 0 ? artistApi.update : artistApi.insert;
             await action(requestData);
-            console.log('Form submitted successfully');
             navigate('/artists');
         } catch (err) {
-            console.error('Error submitting form:', err);
             if (err.response && err.response.data && err.response.data.errors) {
                 setApiErrors(err.response.data.errors); // Handle API validation errors
             } else {
                 setError(err.message);
             }
         }
-    };
-    
-    
+    };    
+
     // Clear API errors when form changes
     useEffect(() => {
         setApiErrors({});
@@ -114,7 +108,7 @@ const ArtistForm = () => {
                             id="name"
                             label="Artist Name"
                             register={register}
-                            error={errors.name || apiErrors.name}  // Ensure lowercase 'name' is used
+                            error={errors.Name || apiErrors.Name}  // Ensure lowercase 'name' is used
                         />
 
                         <FormButtons onCancel={() => navigate('/artists')} />
