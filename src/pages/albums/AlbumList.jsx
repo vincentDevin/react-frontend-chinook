@@ -107,12 +107,12 @@ const AlbumList = () => {
             {isAdmin && (
                 <GenericActions
                     title="Albums"
-                    onAdd={() => navigate('/albums/new')}
+                    onAdd={() => navigate('/albums/add')}
                     selectedItem={selectedAlbum}
                     onConfirmDelete={handleConfirmDelete}
                     onCancelDelete={handleCloseModal}
                     showModal={showModal}
-                    addLink="/albums/new"
+                    addLink="/albums/add"
                 />
             )}
 

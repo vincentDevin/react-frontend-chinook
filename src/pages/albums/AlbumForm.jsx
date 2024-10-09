@@ -2,10 +2,11 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useNavigate, useParams } from 'react-router-dom';
-import { albumApi } from '../../api/entitiesApi';
+import { albumApi, artistApi } from '../../api/entitiesApi';
 import albumValidationSchema from '../../validation/albumValidationSchema';
 import InputField from '../../components/InputField';
 import FormButtons from '../../components/FormButtons';
+import SelectField from '../../components/SelectField';
 import { getUserRoleFromToken } from '../../api/authUtils';
 
 const AlbumForm = () => {
@@ -15,19 +16,16 @@ const AlbumForm = () => {
 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [apiErrors, setApiErrors] = useState({}); // State for API errors
+    const [artists, setArtists] = useState([]);  // State for artist options
+    const [apiErrors, setApiErrors] = useState({}); 
     const [isAdmin, setIsAdmin] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false); // Handle form submission state
 
-    // Validation schema
-    const {
-        register,
-        handleSubmit,
-        setValue,
-        formState: { errors },
-    } = useForm({
+    const { register, handleSubmit, setValue, formState: { errors } } = useForm({
         resolver: yupResolver(albumValidationSchema),
     });
 
+    // Fetch artist options and album data (if editing)
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -36,9 +34,15 @@ const AlbumForm = () => {
                     setIsAdmin(true);
                 }
 
+                // Fetch artist options
+                const artistResponse = await artistApi.getAll();
+                setArtists(artistResponse.artists || []);
+
                 if (albumId > 0) {
+                    // Fetch album data for editing
                     const album = await albumApi.getById(albumId);
-                    setValue('title', album.Title);  // Match field name in the form to 'title'
+                    setValue('title', album.Title);
+                    setValue('artistId', album.ArtistId);  // Set ArtistId for editing
                 }
             } catch (err) {
                 setError(err.message);
@@ -50,39 +54,35 @@ const AlbumForm = () => {
         fetchData();
     }, [albumId, setValue]);
 
+    // Handle form submission
     const onSubmit = async (data) => {
-        data.preventDefault();
         if (!isAdmin) {
-            setError('Only admins can edit or delete albums.');
+            setError('Only admins can create or edit albums.');
             return;
         }
 
+        setIsSubmitting(true); // Set the form as submitting
+
         const requestData = {
-            Title: data.title,  // Map 'title' from form to 'Title' for backend
+            Title: data.title,  // Map form field 'title' to backend 'Title'
+            ArtistId: data.artistId,  // Ensure ArtistId is passed
             ...(albumId > 0 && { AlbumId: albumId }),  // Include AlbumId if editing
         };
 
-        console.log('Submitting form data:', requestData); // Log data being submitted
-
         try {
-            const action = albumId > 0 ? albumApi.update : albumApi.insert;
+            const action = albumId > 0 ? albumApi.update : albumApi.insert;  // Decide if creating or updating
             await action(requestData);
-            console.log('Form submitted successfully');
             navigate('/albums');
         } catch (err) {
-            console.error('Error submitting form:', err);
             if (err.response && err.response.data && err.response.data.errors) {
                 setApiErrors(err.response.data.errors); // Handle API validation errors
             } else {
                 setError(err.message);
             }
+        } finally {
+            setIsSubmitting(false); // Reset submission state
         }
     };
-
-    // Clear API errors when form changes
-    useEffect(() => {
-        setApiErrors({});
-    }, [register]);
 
     if (loading) {
         return (
@@ -112,10 +112,19 @@ const AlbumForm = () => {
                             id="title"
                             label="Album Title"
                             register={register}
-                            error={errors.title || apiErrors.title}  // Ensure lowercase 'title' is used
+                            error={errors.title || apiErrors.title}
                         />
 
-                        <FormButtons onCancel={() => navigate('/albums')} />
+                        {/* Add SelectField for artist selection */}
+                        <SelectField
+                            id="artistId"
+                            label="Artist"
+                            options={artists.map(artist => ({ value: artist.ArtistId, label: artist.Name }))}
+                            register={register}
+                            error={errors.artistId || apiErrors.artistId}
+                        />
+
+                        <FormButtons onCancel={() => navigate('/albums')} isSubmitting={isSubmitting} />
                     </form>
                 </div>
             </div>

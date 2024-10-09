@@ -41,13 +41,18 @@ export const albumApi = {
     getAll: (params) => fetchAll('albums', params),
     getById: (id) => fetchById('albums', id),
     insert: (album) => api.post(`/albums`, album).then((resp) => resp.data).catch(errorHandler),
-    update: (album) => api.put(`/albums/${album.AlbumId}`, album).then((resp) => resp.data).catch(errorHandler),
+    update: ({ AlbumId, ...album }) => 
+        api.put(`/albums/${AlbumId}`, album)  // Ensure AlbumId is used in the URL
+           .then((resp) => resp.data)
+           .catch(errorHandler),
     delete: (id) => deleteEntity('albums', id),
 
     // Fetch all albums by artist
-    getAllByArtistId: (artistId) => api.get(`/albums/byArtist/${artistId}`).then((resp) => resp.data).catch(errorHandler),
+    getAllByArtistId: (artistId) => 
+        api.get(`/albums/byArtist/${artistId}`)
+           .then((resp) => resp.data)
+           .catch(errorHandler),
 };
-
 
 // Artist API
 export const artistApi = {
