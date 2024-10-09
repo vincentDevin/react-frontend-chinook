@@ -10,6 +10,9 @@ import { getUserRoleFromToken } from '../../api/authUtils'; // Import the utilit
 const AlbumList = () => {
     const navigate = useNavigate();
     const [isAdmin, setIsAdmin] = useState(false); // State to check if the user is an admin
+    const [albums, setAlbums] = useState([]); // Local state for album list
+    const [selectedAlbum, setSelectedAlbum] = useState(null); // State for selected album
+    const [showModal, setShowModal] = useState(false); // State for controlling the delete modal
 
     // Check if the user is an admin
     useEffect(() => {
@@ -21,7 +24,7 @@ const AlbumList = () => {
 
     // Use the custom pagination hook with the album API function
     const {
-        items: albums = [], // Use albums from the hook, default to empty array
+        items: paginatedAlbums = [],
         loading,
         error,
         currentPage,
@@ -29,8 +32,10 @@ const AlbumList = () => {
         handlePageChange,
     } = usePagination(albumApi.getAll, 10, 'albums'); // Pass 'albums' as the dataKey for correct extraction
 
-    const [selectedAlbum, setSelectedAlbum] = useState(null); // State for selected album
-    const [showModal, setShowModal] = useState(false); // State for controlling the delete modal
+    // Update albums state when paginatedAlbums changes
+    useEffect(() => {
+        setAlbums(paginatedAlbums);
+    }, [paginatedAlbums]);
 
     // Handle showing the delete modal
     const handleShowModal = (album) => {
@@ -49,7 +54,12 @@ const AlbumList = () => {
         if (selectedAlbum) {
             try {
                 await albumApi.delete(selectedAlbum.AlbumId); // Delete the album
-                handlePageChange(currentPage); // Refresh the data
+                
+                // Update the album list by removing the deleted album
+                setAlbums((prevAlbums) =>
+                    prevAlbums.filter((album) => album.AlbumId !== selectedAlbum.AlbumId)
+                );
+                
                 handleCloseModal(); // Close the modal
             } catch (err) {
                 console.error('Error deleting album:', err.message);

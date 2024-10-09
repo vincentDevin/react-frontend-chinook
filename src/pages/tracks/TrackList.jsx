@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { trackApi } from '../../api/entitiesApi';
 import GenericTable from '../../components/GenericTable';
 import GenericPagination from '../../components/GenericPagination';
@@ -8,7 +8,7 @@ import ConfirmDeleteModal from '../../components/ConfirmDeleteModal'; // Import 
 
 const TrackList = () => {
     const {
-        items: tracks = [],
+        items: paginatedTracks = [], // Tracks from pagination
         loading,
         error,
         currentPage,
@@ -16,9 +16,15 @@ const TrackList = () => {
         handlePageChange,
     } = usePagination(trackApi.getAll, 10, 'tracks'); // Pass 'tracks' as the dataKey
 
+    const [tracks, setTracks] = useState([]); // Local state for tracks list
     const [selectedTrack, setSelectedTrack] = useState(null); // State for the selected track row
     const [trackToDelete, setTrackToDelete] = useState(null); // State for the track to be deleted
     const [showDeleteModal, setShowDeleteModal] = useState(false); // State for controlling the delete modal
+
+    // Update tracks state when paginatedTracks changes
+    useEffect(() => {
+        setTracks(paginatedTracks);
+    }, [paginatedTracks]);
 
     // Handle row selection for expanding details
     const handleRowClick = (track) => {
@@ -36,7 +42,12 @@ const TrackList = () => {
         if (trackToDelete) {
             try {
                 await trackApi.delete(trackToDelete.TrackId); // Call the delete API function
-                handlePageChange(currentPage); // Refresh the data
+                
+                // Update the track list by removing the deleted track without page refresh
+                setTracks((prevTracks) =>
+                    prevTracks.filter((track) => track.TrackId !== trackToDelete.TrackId)
+                );
+                
                 setShowDeleteModal(false); // Close the modal after deleting
                 setTrackToDelete(null); // Reset the track to delete state
                 setSelectedTrack(null); // Reset the selected track

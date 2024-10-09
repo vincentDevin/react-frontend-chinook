@@ -5,11 +5,14 @@ import GenericActions from '../../components/GenericActions';
 import GenericTable from '../../components/GenericTable';
 import GenericPagination from '../../components/GenericPagination';
 import usePagination from '../../hooks/usePagination';
-import { getUserRoleFromToken } from '../../api/authUtils'; // Import utility function to check admin status
+import { getUserRoleFromToken } from '../../api/authUtils';
 
 const MediaTypeList = () => {
     const navigate = useNavigate();
     const [isAdmin, setIsAdmin] = useState(false); // State to check if the user is an admin
+    const [mediaTypes, setMediaTypes] = useState([]); // Local state for media type list
+    const [selectedMediaType, setSelectedMediaType] = useState(null); // State for selected media type
+    const [showModal, setShowModal] = useState(false); // State for controlling the delete modal
 
     // Check if the user is an admin
     useEffect(() => {
@@ -21,47 +24,50 @@ const MediaTypeList = () => {
 
     // Use the custom pagination hook with the media type API function
     const {
-        items: mediaTypes = [],
+        items: paginatedMediaTypes = [], // Use mediaTypes from the hook, default to an empty array
         loading,
         error,
         currentPage,
         totalPages,
         handlePageChange,
     } = usePagination(mediaTypeApi.getAll, 10, 'mediaTypes'); // Pass 'mediaTypes' as the dataKey
-    
-    const [showModal, setShowModal] = useState(false);
-    const [selectedMediaType, setSelectedMediaType] = useState(null);
 
-    // Show delete confirmation modal
+    // Update mediaTypes state when paginatedMediaTypes changes
+    useEffect(() => {
+        setMediaTypes(paginatedMediaTypes);
+    }, [paginatedMediaTypes]);
+
+    // Handle showing the delete modal
     const handleShowModal = (mediaType) => {
         setSelectedMediaType(mediaType);
         setShowModal(true);
     };
 
-    // Close delete confirmation modal
+    // Handle closing the delete modal
     const handleCloseModal = () => {
         setShowModal(false);
-        setSelectedMediaType(null);
+        setSelectedMediaType(null); // Reset the selected media type
     };
 
-    // Confirm deletion and refresh data if successful
-    const handleConfirmDelete = () => {
+    // Confirm deletion and update the list without refreshing the page
+    const handleConfirmDelete = async () => {
         if (selectedMediaType) {
-            mediaTypeApi
-                .delete(selectedMediaType.MediaTypeId) // Use MediaTypeId as key
-                .then(() => {
-                    // Check if the current page has items left, if not, move to the previous page
-                    const newPage = currentPage > 1 && mediaTypes.length === 1 ? currentPage - 1 : currentPage;
-                    handlePageChange(newPage); // Refresh data after deleting a media type
-                    handleCloseModal(); // Close the modal after successful delete
-                })
-                .catch((err) => {
-                    console.error('Error deleting media type:', err.message);
-                });
+            try {
+                await mediaTypeApi.delete(selectedMediaType.MediaTypeId); // Use MediaTypeId as key
+                
+                // Update the media type list by removing the deleted media type
+                setMediaTypes((prevMediaTypes) =>
+                    prevMediaTypes.filter((mediaType) => mediaType.MediaTypeId !== selectedMediaType.MediaTypeId)
+                );
+
+                handleCloseModal(); // Close the modal after successful delete
+            } catch (err) {
+                console.error('Error deleting media type:', err.message);
+            }
         }
     };
 
-    // Function to render each table row
+    // Render each table row
     const renderRow = (mediaType) => (
         <tr key={mediaType.MediaTypeId}>
             <td>{mediaType.Name}</td>
@@ -106,7 +112,7 @@ const MediaTypeList = () => {
         );
     }
 
-    // Render the main table and pagination
+    // Render main content
     return (
         <div className="container mt-4">
             {isAdmin && (
@@ -124,7 +130,7 @@ const MediaTypeList = () => {
             {/* Generic Table Component */}
             <GenericTable
                 headers={['Media Type', ...(isAdmin ? ['Actions'] : [])]}
-                rows={mediaTypes} // Use mediaTypes from the usePagination hook
+                rows={mediaTypes.length > 0 ? mediaTypes : []}
                 renderRow={renderRow}
             />
 

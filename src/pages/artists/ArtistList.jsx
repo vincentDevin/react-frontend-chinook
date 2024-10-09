@@ -10,6 +10,9 @@ import { getUserRoleFromToken } from '../../api/authUtils'; // Import the utilit
 const ArtistList = () => {
     const navigate = useNavigate();
     const [isAdmin, setIsAdmin] = useState(false); // State to check if the user is an admin
+    const [artists, setArtists] = useState([]); // Local state for artist list
+    const [selectedArtist, setSelectedArtist] = useState(null); // State for selected artist
+    const [showModal, setShowModal] = useState(false); // State for controlling the delete modal
 
     // Check if the user is an admin
     useEffect(() => {
@@ -21,7 +24,7 @@ const ArtistList = () => {
 
     // Use the custom pagination hook with the artist API function
     const {
-        items: artists = [], // Default to empty array if no data
+        items: paginatedArtists = [], // Default to empty array if no data
         loading,
         error,
         currentPage,
@@ -29,33 +32,42 @@ const ArtistList = () => {
         handlePageChange,
     } = usePagination(artistApi.getAll, 10, 'artists'); // Pass the API function, items per page, and data key
 
-    const [showModal, setShowModal] = useState(false);
-    const [selectedArtist, setSelectedArtist] = useState(null);
+    // Update artists state when paginatedArtists changes
+    useEffect(() => {
+        setArtists(paginatedArtists);
+    }, [paginatedArtists]);
 
+    // Handle showing the delete modal
     const handleShowModal = (artist) => {
         setSelectedArtist(artist);
         setShowModal(true);
     };
 
+    // Handle closing the delete modal
     const handleCloseModal = () => {
         setShowModal(false);
-        setSelectedArtist(null);
+        setSelectedArtist(null); // Reset the selected artist
     };
 
-    const handleConfirmDelete = () => {
+    // Handle confirm delete
+    const handleConfirmDelete = async () => {
         if (selectedArtist) {
-            artistApi
-                .delete(selectedArtist.ArtistId) // Use ArtistId instead of id
-                .then(() => {
-                    handlePageChange(currentPage); // Refresh data after deleting an artist
-                    handleCloseModal();
-                })
-                .catch((err) => {
-                    console.error('Error deleting artist:', err.message);
-                });
+            try {
+                await artistApi.delete(selectedArtist.ArtistId); // Delete the artist
+                
+                // Update the artist list by removing the deleted artist
+                setArtists((prevArtists) =>
+                    prevArtists.filter((artist) => artist.ArtistId !== selectedArtist.ArtistId)
+                );
+                
+                handleCloseModal(); // Close the modal
+            } catch (err) {
+                console.error('Error deleting artist:', err.message);
+            }
         }
     };
 
+    // Render row for each artist
     const renderRow = (artist) => (
         <tr key={artist.ArtistId}>
             <td>{artist.Name}</td>
@@ -63,7 +75,7 @@ const ArtistList = () => {
                 <div className="d-flex justify-content-end gap-2">
                     <button
                         className="btn btn-primary btn-md"
-                        onClick={() => navigate('/artists/' + artist.ArtistId)}
+                        onClick={() => navigate(`/artists/${artist.ArtistId}`)}
                         aria-label={`View ${artist.Name}`}
                     >
                         View
@@ -72,7 +84,7 @@ const ArtistList = () => {
                         <>
                             <button
                                 className="btn btn-secondary btn-md"
-                                onClick={() => navigate('/artists/' + artist.ArtistId + '/edit')}
+                                onClick={() => navigate(`/artists/${artist.ArtistId}/edit`)}
                                 aria-label={`Edit ${artist.Name}`}
                             >
                                 Edit
@@ -89,42 +101,34 @@ const ArtistList = () => {
                 </div>
             </td>
         </tr>
-    );    
+    );
 
     if (loading) {
-        return (
-            <div className="container mt-4" role="status">
-                Loading artists...
-            </div>
-        );
+        return <div className="container mt-4" role="status">Loading artists...</div>;
     }
 
     if (error) {
-        return (
-            <div className="container mt-4 text-danger" role="alert">
-                Error: {error}
-            </div>
-        );
+        return <div className="container mt-4 text-danger" role="alert">Error: {error}</div>;
     }
 
     return (
         <div className="container mt-4">
             {isAdmin && (
                 <GenericActions
-                    title="Artists" // Pass the title prop
+                    title="Artists"
                     onAdd={() => navigate('/artists/add')}
                     selectedItem={selectedArtist}
                     onConfirmDelete={handleConfirmDelete}
                     onCancelDelete={handleCloseModal}
                     showModal={showModal}
                     addLink="/artists/add"
-                />            
+                />
             )}
 
             {/* Generic Table Component */}
             <GenericTable
-                headers={['Artist', ...(isAdmin ? ['Actions'] : ['View'])]} // Add 'View' header for non-admins
-                rows={artists} // Use artists from the usePagination hook
+                headers={['Artist', 'Actions']}
+                rows={artists.length > 0 ? artists : []}
                 renderRow={renderRow}
             />
 
@@ -132,7 +136,7 @@ const ArtistList = () => {
             <GenericPagination
                 currentPage={currentPage}
                 totalPages={totalPages}
-                onPageChange={handlePageChange}
+                onPageChange={handlePageChange} // Handle page changes
             />
         </div>
     );

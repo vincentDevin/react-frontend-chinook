@@ -5,11 +5,14 @@ import GenericActions from '../../components/GenericActions';
 import GenericTable from '../../components/GenericTable';
 import GenericPagination from '../../components/GenericPagination';
 import usePagination from '../../hooks/usePagination';
-import { getUserRoleFromToken } from '../../api/authUtils'; // Import the utility function to check admin
+import { getUserRoleFromToken } from '../../api/authUtils';
 
 const GenreList = () => {
     const navigate = useNavigate();
     const [isAdmin, setIsAdmin] = useState(false); // State to check if the user is an admin
+    const [genres, setGenres] = useState([]); // Local state for genre list
+    const [selectedGenre, setSelectedGenre] = useState(null); // State for selected genre
+    const [showModal, setShowModal] = useState(false); // State for controlling the delete modal
 
     // Check if the user is an admin
     useEffect(() => {
@@ -21,7 +24,7 @@ const GenreList = () => {
 
     // Use the custom pagination hook with the genre API function
     const {
-        items: genres = [], // Use genres from the hook, default to an empty array
+        items: paginatedGenres = [], // Use genres from the hook, default to an empty array
         loading,
         error,
         currentPage,
@@ -29,30 +32,38 @@ const GenreList = () => {
         handlePageChange,
     } = usePagination(genreApi.getAll, 10, '', ''); // No dataKey or countKey since the response is a simple array
 
-    const [showModal, setShowModal] = useState(false);
-    const [selectedGenre, setSelectedGenre] = useState(null);
+    // Update genres state when paginatedGenres changes
+    useEffect(() => {
+        setGenres(paginatedGenres);
+    }, [paginatedGenres]);
 
+    // Handle showing the delete modal
     const handleShowModal = (genre) => {
         setSelectedGenre(genre);
         setShowModal(true);
     };
 
+    // Handle closing the delete modal
     const handleCloseModal = () => {
         setShowModal(false);
-        setSelectedGenre(null);
+        setSelectedGenre(null); // Reset the selected genre
     };
 
-    const handleConfirmDelete = () => {
+    // Confirm deletion and update the list without refreshing the page
+    const handleConfirmDelete = async () => {
         if (selectedGenre) {
-            genreApi
-                .delete(selectedGenre.GenreId) // Use GenreId as key
-                .then(() => {
-                    handlePageChange(currentPage); // Refresh data after deleting a genre
-                    handleCloseModal();
-                })
-                .catch((err) => {
-                    console.error('Error deleting genre:', err.message);
-                });
+            try {
+                await genreApi.delete(selectedGenre.GenreId); // Use GenreId as key
+                
+                // Update the genres list by removing the deleted genre
+                setGenres((prevGenres) =>
+                    prevGenres.filter((genre) => genre.GenreId !== selectedGenre.GenreId)
+                );
+
+                handleCloseModal(); // Close the modal after successful delete
+            } catch (err) {
+                console.error('Error deleting genre:', err.message);
+            }
         }
     };
 
@@ -124,7 +135,7 @@ const GenreList = () => {
             {/* Generic Table Component */}
             <GenericTable
                 headers={['Genre', 'Actions']}
-                rows={genres} // Use genres from the usePagination hook
+                rows={genres.length > 0 ? genres : []}
                 renderRow={renderRow}
             />
 
