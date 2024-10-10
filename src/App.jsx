@@ -6,8 +6,7 @@ import AlbumPage from './pages/albums/AlbumPage';
 import GenrePage from './pages/genres/GenrePage';
 import MediaTypePage from './pages/media-types/MediaTypePage';
 import LoginPage from './pages/login/LoginPage';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap-icons/font/bootstrap-icons.css';
+import './App.scss';
 
 function App() {
     return (

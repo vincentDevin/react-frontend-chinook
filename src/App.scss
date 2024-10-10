@@ -1,0 +1,43 @@
+// Import Bootstrap's functions and variables first
+@import 'node_modules/bootstrap/scss/functions';
+@import 'node_modules/bootstrap/scss/variables';
+
+// Define your custom color palette
+$primary: #ff71ce;    // Pink
+$secondary: #01cdfe;  // Blue
+$success: #05ffa1;    // Green
+$warning: #b967ff;    // Purple
+$info: #fffb96;       // Yellow
+$custom-dark-color: #041220; // Custom dark color to avoid conflicts with Bootstrap
+
+// Override Bootstrap theme colors
+$theme-colors: (
+  "primary": $primary,
+  "secondary": $secondary,
+  "success": $success,
+  "warning": $warning,
+  "info": $info,
+  "dark": $custom-dark-color  // Use the renamed variable
+);
+
+// Override component-specific variables
+$body-bg: $info;  // Background color for body
+$body-color: $custom-dark-color; // Text color
+$btn-primary-bg: $primary; // Primary button background
+$btn-primary-color: #ffffff; // Primary button text
+$card-bg: $success; // Card background
+$card-border-color: $primary; // Card border color
+
+// Customize Navbar styles
+$navbar-light-bg: $info;               // Navbar background color (light theme)
+$navbar-light-color: $custom-dark-color;      // Navbar text color (light theme)
+//$navbar-light-toggler-icon-bg: #000;  // Ensure this is a valid string or color (black here for contrast)
+$nav-link-color: $custom-dark-color;          // Navbar link text color
+$nav-link-hover-color: $primary;       // Navbar link hover color
+$btn-link-color: $primary;             // Button link color (for logout button)
+
+// Import Bootstrap core styles
+@import 'node_modules/bootstrap/scss/bootstrap';
+
+// Import Bootstrap Icons styles
+@import 'node_modules/bootstrap-icons/font/bootstrap-icons';

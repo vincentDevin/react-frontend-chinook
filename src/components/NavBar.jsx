@@ -19,7 +19,7 @@ const NavBar = () => {
     };
 
     return (
-        <nav className="navbar navbar-expand-lg navbar-light bg-light" role="navigation">
+        <nav className="navbar navbar-expand-lg navbar-light-bg" role="navigation">
             <div className="container">
                 <NavLink className="navbar-brand" to="/" aria-label="Music Database Home">
                     Music Database App
