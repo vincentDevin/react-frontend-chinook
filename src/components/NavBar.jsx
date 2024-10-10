@@ -38,40 +38,71 @@ const NavBar = () => {
                 <div className="collapse navbar-collapse" id="navbarNav">
                     <ul className="navbar-nav ms-auto">
                         <li className="nav-item">
-                            <NavLink className="nav-link" to="/">
+                            <NavLink
+                                className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}
+                                to="/"
+                            >
                                 Home
                             </NavLink>
                         </li>
                         <li className="nav-item">
-                            <NavLink className="nav-link" to="/tracks">
+                            <NavLink
+                                className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}
+                                to="/tracks"
+                            >
                                 Tracks
                             </NavLink>
                         </li>
                         <li className="nav-item">
-                            <NavLink className="nav-link" to="/artists">
+                            <NavLink
+                                className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}
+                                to="/artists"
+                            >
                                 Artists
                             </NavLink>
                         </li>
                         <li className="nav-item">
-                            <NavLink className="nav-link" to="/albums">
+                            <NavLink
+                                className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}
+                                to="/albums"
+                            >
                                 Albums
                             </NavLink>
                         </li>
                         <li className="nav-item">
-                            <NavLink className="nav-link" to="/genres">
+                            <NavLink
+                                className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}
+                                to="/genres"
+                            >
                                 Genres
                             </NavLink>
                         </li>
                         <li className="nav-item">
-                            <NavLink className="nav-link" to="/media-types">
+                            <NavLink
+                                className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}
+                                to="/media-types"
+                            >
                                 Media Types
                             </NavLink>
                         </li>
                         {isLoggedIn ? (
-                            <li className="nav-item">
-                                <button className="btn btn-link nav-link" onClick={handleLogout}>
-                                    Logout
+                            <li className="nav-item dropdown">
+                                <button className="btn btn-link nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                                    Profile
                                 </button>
+                                <ul className="dropdown-menu">
+                                    <li>
+                                        <NavLink className="dropdown-item" to="/profile">My Profile</NavLink>
+                                    </li>
+                                    <li>
+                                        <NavLink className="dropdown-item" to="/settings">Settings</NavLink>
+                                    </li>
+                                    <li>
+                                        <button className="dropdown-item" onClick={handleLogout}>
+                                            Logout
+                                        </button>
+                                    </li>
+                                </ul>
                             </li>
                         ) : (
                             <li className="nav-item">

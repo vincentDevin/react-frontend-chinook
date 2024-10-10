@@ -41,3 +41,200 @@ $btn-link-color: $primary;             // Button link color (for logout button)
 
 // Import Bootstrap Icons styles
 @import 'node_modules/bootstrap-icons/font/bootstrap-icons';
+
+
+
+.navbar {
+    background-color: $navbar-light-bg;
+    .navbar-brand {
+        color: $navbar-light-color;
+        font-size: 1.5rem;
+        font-weight: bold;
+        &:hover {
+            color: $primary;
+        }
+    }
+
+    .nav-link {
+        color: $navbar-light-color;
+        padding: 0.75rem 1.5rem;
+        transition: color 0.3s ease, background-color 0.3s ease;
+
+        &:hover {
+            color: $primary;
+            background-color: lighten($navbar-light-bg, 10%);
+        }
+
+        &.active {
+            color: $primary;
+            border-bottom: 2px solid $primary;
+        }
+    }
+
+    .dropdown-menu {
+        background-color: $navbar-light-bg;
+        .dropdown-item {
+            color: $navbar-light-color;
+            &:hover {
+                background-color: $primary;
+                color: white;
+            }
+        }
+    }
+}
+
+.pagination {
+    .page-item {
+        .page-link {
+            color: $primary;
+            transition: all 0.3s ease;
+
+            &:hover {
+                background-color: lighten($primary, 15%);
+                color: white;
+            }
+
+            &:focus {
+                box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+            }
+
+            &:disabled {
+                color: lighten($primary, 40%);
+                background-color: lighten($primary, 30%);
+                cursor: not-allowed;
+            }
+        }
+
+        &.active .page-link {
+            background-color: $primary;
+            color: white;
+            border-color: $primary;
+        }
+    }
+
+    .disabled .page-link {
+        cursor: not-allowed;
+        pointer-events: none;
+        opacity: 0.6;
+    }
+
+    .page-link {
+        padding: 0.5rem 1rem;
+        border: 1px solid $primary;
+        border-radius: 0.25rem;
+        margin: 0 0.25rem;
+    }
+}
+
+header {
+    background-color: $primary; // Use your custom dark color for the background
+    color: white;
+    padding: 1rem 0;
+
+    .container {
+        display: flex;
+        align-items: center;
+    }
+
+    h1 {
+        transition: color 0.3s ease; // Smooth transition for text color on hover
+        font-size: 1.25rem;
+        margin-bottom: 0;
+
+        &:hover {
+            color: $primary; // Change text color on hover
+        }
+    }
+
+    i {
+        font-size: 2rem;
+        margin-right: 1rem;
+        transition: transform 0.3s ease, color 0.3s ease; // Smooth hover transitions
+
+        &:hover {
+            transform: scale(1.2); // Slightly enlarge the icon on hover
+            color: $primary; // Change icon color on hover
+        }
+    }
+}
+
+
+.track-card {
+    background-color: $light; // Light background for the card
+    border: 1px solid $gray-300;
+    border-radius: 0.25rem; // Rounded corners for the card
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+
+    &:hover {
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); // Subtle shadow effect on hover
+        transform: translateY(-5px); // Slight lift effect on hover
+    }
+
+    p {
+        margin-bottom: 0.5rem;
+        font-size: 1rem;
+        color: $custom-dark-color;
+
+        strong {
+            color: $primary; // Highlight the label
+        }
+    }
+
+    .track-meta {
+        font-size: 0.875rem;
+        color: $gray-600; // Meta information in a lighter color
+    }
+
+    // Admin buttons for edit and delete actions
+    .admin-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.5rem;
+        margin-top: 1rem;
+
+        button {
+            font-size: 0.875rem;
+            padding: 0.5rem 1rem;
+            border-radius: 0.25rem;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+
+            &:hover {
+                transform: scale(1.05); // Slightly enlarge on hover
+            }
+
+            &.btn-secondary {
+                background-color: $secondary;
+                color: white;
+
+                &:hover {
+                    background-color: darken($secondary, 10%);
+                }
+            }
+
+            &.btn-danger {
+                background-color: $danger;
+                color: white;
+
+                &:hover {
+                    background-color: darken($danger, 10%);
+                }
+            }
+        }
+    }
+
+    // Responsive adjustments
+    @media (max-width: 768px) {
+        padding: 1rem;
+
+        p {
+            font-size: 0.9rem;
+        }
+
+        .admin-actions {
+            justify-content: center; // Center buttons on smaller screens
+        }
+    }
+}
+
