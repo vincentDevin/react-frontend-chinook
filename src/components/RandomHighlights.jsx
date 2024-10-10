@@ -74,7 +74,7 @@ const FeatureHighlights = () => {
     }
 
     return (
-        <section className="container my-5">
+        <section className="my-5 feature-highlights">
             <div className="row text-center">
                 {featured.artist && (
                     <div className="col-md-4 mb-4">

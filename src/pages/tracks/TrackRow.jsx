@@ -17,7 +17,6 @@ const TrackRow = ({ track, isSelected, onRowClick, onDeleteClick }) => {
             {/* Main row with custom style for selected */}
             <tr 
                 onClick={onRowClick} 
-                className={`cursor-pointer ${isSelected ? 'bg-primary text-white' : ''}`} // Apply Bootstrap classes for selected state
             >
                 <td className="fixed-width">{track.Name}</td>
                 <td className="fixed-width">{formatDuration(track.Milliseconds)}</td>

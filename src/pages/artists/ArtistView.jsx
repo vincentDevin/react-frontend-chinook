@@ -39,7 +39,7 @@ const ArtistView = () => {
     }
 
     return (
-        <div className="container mt-4 artist-view">
+        <div className="mt-4 artist-view">
             <div className="card">
                 <div className="card-header">
                     <h1 className="card-title">{artist.Name}</h1>

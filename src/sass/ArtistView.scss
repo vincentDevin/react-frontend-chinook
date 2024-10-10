@@ -1,105 +1,112 @@
 // ArtistView component styles
 .artist-view {
-    .container {
-        margin-top: 2rem;
+    margin-top: 2rem; // Add space at the top for separation
 
-        .card {
-            background-color: $light-bg; // Light background for the card
-            border: 1px solid $lighten-primary; // Subtle border with light primary color
-            border-radius: 8px; // Rounded corners for the card
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); // Soft shadow for depth
-            padding: 1.5rem;
-            margin-bottom: 2rem; // Space below the card
+    // Card layout for artist details
+    .card {
+        background-color: $white; // White background for the card
+        border: 1px solid $light-bg; // Light border to match the theme
+        border-radius: 8px; // Rounded corners for a modern look
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); // Subtle shadow for depth
+        overflow: hidden; // Ensure content doesn't overflow
 
-            // Header section
-            .card-header {
-                background-color: $primary; // Primary color for the header
-                color: $white; // White text color
-                padding: 1rem;
-                border-radius: 8px 8px 0 0; // Rounded top corners for the header
+        .card-header {
+            background-color: $primary; // Dark background for the header
+            color: $white; // White text in the header
+            padding: 1.5rem; // Padding for spacing in the header
+            border-bottom: 1px solid $light-bg; // Light border at the bottom of the header
 
-                .card-title {
-                    font-size: 1.75rem;
-                    font-weight: bold;
-                    margin-bottom: 0;
+            .card-title {
+                font-size: 2rem; // Larger font size for the artist's name
+                font-weight: bold; // Make the title bold
+                margin: 0; // Remove default margin
+            }
+        }
+
+        .card-body {
+            padding: 1.5rem; // Padding for the body content
+
+            p {
+                font-size: 1rem; // Standard font size for text
+                margin-bottom: 1.5rem; // Space between paragraphs
+
+                strong {
+                    color: $accent; // Accent color for the "Biography" label
                 }
             }
 
-            // Body section
-            .card-body {
-                padding: 1.5rem;
+            // Albums section
+            h2 {
+                font-size: 1.5rem; // Slightly larger font for section heading
+                margin-bottom: 1rem; // Space below the heading
+                color: $dark-bg; // Dark text color for album section heading
+            }
 
-                p {
-                    font-size: 1rem;
-                    margin-bottom: 1rem;
+            // Album list styles
+            .list-group {
+                margin-bottom: 2rem; // Space at the bottom of the list
 
-                    strong {
-                        color: $accent; // Accent color for the "Biography" label
-                    }
-                }
-
-                // Albums list
                 .list-group-item {
-                    background-color: $white; // White background for album items
-                    border: 1px solid $light-bg; // Light border for album items
-                    border-radius: 8px;
-                    margin-bottom: 1rem; // Space between album items
-                    padding: 1rem;
+                    background-color: $white; // White background for list items
+                    border: 1px solid $light-bg; // Light border for list items
+                    border-radius: 5px; // Rounded corners for list items
+                    padding: 1rem; // Padding inside the list item
+                    margin-bottom: 0.75rem; // Space between items
 
                     &:hover {
-                        background-color: $lighten-primary; // Hover effect for album items
-                        cursor: pointer;
+                        background-color: $lighten-primary; // Lighten background on hover
+                        cursor: pointer; // Change cursor to pointer on hover
                     }
 
-                    // Flexbox for album title and button
+                    // Flexbox for alignment of album title and button
                     .d-flex {
                         justify-content: space-between;
                         align-items: center;
 
-                        button {
-                            background-color: $primary; // Primary color for "View" button
-                            border: none;
-                            color: $white;
-                            padding: 0.25rem 0.5rem;
-                            font-size: 0.875rem;
+                        // Button for viewing the album
+                        .btn {
+                            background-color: $primary; // Primary color for the button
+                            border-color: $primary;
                             border-radius: 5px;
-                            transition: background-color 0.2s ease;
+                            padding: 0.25rem 0.5rem;
+                            transition: background-color 0.3s ease, border-color 0.3s ease;
 
                             &:hover {
-                                background-color: $darken-primary; // Darker primary on hover
+                                background-color: $darken-primary; // Darken on hover
+                                border-color: $darken-primary;
                             }
                         }
                     }
                 }
+            }
 
-                // If no albums are available
-                p {
-                    font-size: 1rem;
-                    color: $dark-bg; // Dark color for "No albums available" message
-                }
+            // If no albums available
+            p {
+                font-size: 1rem;
+                color: $dark-bg; // Dark color for "No albums available" message
             }
         }
+    }
 
-        // Alert messages (loading, error, etc.)
-        .alert {
-            font-size: 1rem;
-            padding: 1rem;
-            border-radius: 5px;
+    // Alerts for loading, error, and no artist
+    .alert {
+        font-size: 1rem;
+        padding: 1rem;
+        border-radius: 5px;
 
-            &.alert-info {
-                background-color: $light-bg; // Light background for loading state
-                color: $dark-bg; // Dark text for loading message
-            }
+        &.alert-info {
+            background-color: $light-bg; // Light background for loading state
+            color: $dark-bg; // Dark text for loading message
+        }
 
-            &.alert-danger {
-                background-color: $secondary; // Red background for error state
-                color: $white; // White text for error message
-            }
+        &.alert-danger {
+            background-color: $secondary; // Red background for error state
+            color: $white; // White text for error message
+        }
 
-            &.alert-warning {
-                background-color: $accent; // Accent color background for warning state
-                color: $dark-bg; // Dark text for warning message
-            }
+        &.alert-warning {
+            background-color: $accent; // Accent color background for no artist warning
+            color: $dark-bg; // Dark text for warning message
         }
     }
 }
