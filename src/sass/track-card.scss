@@ -1,0 +1,78 @@
+// Track card styling
+.track-card {
+    background-color: $background;
+    border: 1px solid $custom-dark-color;
+    border-radius: 0.25rem;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+
+    &:hover {
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        transform: translateY(-5px);
+    }
+
+    p {
+        margin-bottom: 0.5rem;
+        font-size: 1rem;
+        color: $custom-dark-color;
+
+        strong {
+            color: $custom-dark-color;
+        }
+    }
+
+    .track-meta {
+        font-size: 0.875rem;
+        color: $gray-600;
+    }
+
+    .admin-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.5rem;
+        margin-top: 1rem;
+
+        button {
+            font-size: 0.875rem;
+            padding: 0.5rem 1rem;
+            border-radius: 0.25rem;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+
+            &:hover {
+                transform: scale(1.05);
+            }
+
+            &.btn-secondary {
+                background-color: $secondary;
+                color: white;
+
+                &:hover {
+                    background-color: darken($secondary, 10%);
+                }
+            }
+
+            &.btn-danger {
+                background-color: $warning;
+                color: white;
+
+                &:hover {
+                    background-color: darken($warning, 10%);
+                }
+            }
+        }
+    }
+
+    // Responsive adjustments
+    @media (max-width: 768px) {
+        padding: 1rem;
+
+        p {
+            font-size: 0.9rem;
+        }
+
+        .admin-actions {
+            justify-content: center;
+        }
+    }
+}

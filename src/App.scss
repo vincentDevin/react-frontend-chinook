@@ -1,53 +1,66 @@
-// Import Bootstrap's main Sass file to extend and override styles
-@import 'bootstrap/scss/bootstrap';
+// Import Bootstrap's functions and variables first
+@import 'node_modules/bootstrap/scss/functions';
+@import 'node_modules/bootstrap/scss/variables';
 
-// Correct import for Bootstrap Icons
-@import 'bootstrap-icons/font/bootstrap-icons'; // Correct path to import Bootstrap Icons
+// Define a professional, modern color palette
+$primary: #b4132a;    // Muted Navy (for primary buttons or links)
+$secondary: #4a3a49;  // Soft Gold (for secondary accents, subtle highlights)
+$success: #559310;    // Deep Green (for success notifications, confirmations)
+$warning: #fb3e01;    // Muted Red (for warnings or alerts)
+$info: #478064;       // Cool Blue (for informational content)
+$background: #ffffff; // Soft Gray (clean, modern background)
+$text-dark: #006d7f;  // Deep Charcoal (for text, strong contrast)
+$text-light: #dbe2dc; // White (for text on dark elements)
+$custom-dark-color: #3b3f44; // Slate Gray (for dark headers or footers)
 
-// Define color variables based on the new palette
-$primary: #4b3832; // Dark brown
-$secondary: #854442; // Medium brown/red
-$accent: #be9b7b; // Light brown/tan
-$light-bg: #fff4e6; // Very light background (off-white)
-$dark-bg: #3c2f2f; // Dark brown background
+// Override Bootstrap theme colors
+$theme-colors: (
+  "primary": $primary,
+  "secondary": $secondary,
+  "success": $success,
+  "warning": $warning,
+  "info": $info,
+  "dark": $custom-dark-color  // Use the renamed variable
+);
 
-// Neutral colors
-$white: #ffffff;
-$dark-gray: #333333;
-$nav-text: #3c2f2f; // Dark color for nav links
-$nav-text-hover: darken($nav-text, 15%); // Even darker on hover
+// Override component-specific variables
+$body-bg: $background;  // Background color for body
+$body-color: $text-dark; // Text color
+$btn-primary-bg: $primary; // Primary button background
+$btn-primary-color: $text-light; // Primary button text
+$card-bg: $background; // Card background
+$card-border-color: $secondary; // Card border color
 
-// Hover/Lightened shades
-$lighten-primary: lighten($primary, 10%);
-$darken-primary: darken($primary, 5%);
-$lighten-secondary: lighten($secondary, 10%);
-$hover-white: lighten($white, 15%);
+// Customize Navbar styles
+$navbar-light-bg: $background;               // Navbar background color (light theme)
+$navbar-light-color: $secondary; // Navbar text color (light theme)
+$nav-link-color: $secondary;    // Navbar link text color
+$nav-link-hover-color: $primary;       // Navbar link hover color
+$btn-link-color: $primary;             // Button link color (for logout button)
 
-// Global overrides for Bootstrap variables
-$font-family-base: 'Poppins', sans-serif;
-$font-size-base: 16px;
+// Import Bootstrap core styles
+@import 'node_modules/bootstrap/scss/bootstrap';
 
-// Body and Global Styles
-body {
-    background-color: $light-bg; // Very light background
-    font-family: $font-family-base;
-    font-size: $font-size-base;
-    color: $dark-bg; // Dark brown text color
-}
+// Import Bootstrap Icons styles
+@import 'node_modules/bootstrap-icons/font/bootstrap-icons';
 
-// Import custom component styles
-@import './sass/Header.scss';
-@import './sass/HeaderFooter.scss';
-@import './sass/MainLayout.scss';
-@import './sass/NavBar.scss';
-@import './sass/Buttons.scss';
-@import './sass/HomePage.scss';
-@import './sass/Tracks.scss';
-@import './sass/GenericTable.scss';
-@import  './sass/TableRow.scss';
-@import './sass/TrackCard.scss';
-@import './sass/Pagination.scss';
-@import './sass/AlbumPage.scss';
-@import './sass/AlbumView.scss';
-@import './sass/HeroSection.scss';
-@import './sass/RandomHighlights.scss';
+//Import Custom Styles
+@import './sass/feature-highlights.scss';
+@import './sass/hero-section.scss';
+@import './sass/navbar.scss';
+@import './sass/pagination.scss';
+@import './sass/header.scss';
+@import './sass/track-card.scss';
+@import './sass/footer.scss';
+@import './sass/generic-table.scss';
+@import './sass/generic-row.scss';
+@import './sass/track-row.scss';
+@import './sass/album-list.scss';
+@import './sass/artist-list.scss';
+@import './sass/genre-list.scss';
+@import './sass/genre-tracks-view.scss';
+@import './sass/album-view.scss';
+@import './sass/artist-view.scss';
+//@import './sass/buttons.scss';
+@import './sass/confirm-delete-modal.scss';
+@import './sass/media-type-list.scss';

@@ -1,0 +1,61 @@
+.artist-view {
+    .artist-card {
+        background-color: $background;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 1.5rem;
+
+        .card-header {
+            background-color: $primary;
+            color: $text-light;
+            padding: 1rem;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .card-title {
+            margin: 0;
+            font-size: 1.75rem;
+            font-weight: bold;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+
+            p {
+                margin: 1rem 0;
+            }
+        }
+    }
+
+    .album-list {
+        list-style: none;
+        padding-left: 0;
+
+        .album-item {
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            padding: 1rem;
+            border: 1px solid $custom-dark-color;
+            margin-bottom: 0.5rem;
+            border-radius: 4px;
+
+            &:hover {
+                background-color: lighten($primary, 50%);
+                transform: translateY(-3px);
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            }
+
+            button {
+                background-color: $primary;
+                color: $text-light;
+                padding: 0.4rem 0.8rem;
+                border-radius: 4px;
+                transition: background-color 0.3s ease;
+
+                &:hover {
+                    background-color: darken($primary, 10%);
+                }
+            }
+        }
+    }
+}

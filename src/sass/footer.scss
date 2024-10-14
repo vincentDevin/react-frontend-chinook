@@ -1,0 +1,30 @@
+.footer {
+    background-color: $secondary;  // Slate gray for footer background
+    color: $text-light;  // White for text
+
+    h5 {
+        color: $primary;  // Use navy color for section headings
+    }
+
+    .footer-link {
+        color: $text-light;  // White for links
+        text-decoration: none;
+
+        &:hover {
+            color: $primary;  // Navy color for hover effect
+            text-decoration: underline;
+        }
+    }
+
+    .container {
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+    }
+    
+    .bi {
+        font-size: 1.5rem;  // Larger size for social media icons
+        &:hover {
+            color: $primary;  // Change icon color on hover
+        }
+    }
+}

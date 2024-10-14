@@ -13,7 +13,7 @@ const TrackCard = ({ track, onEditClick, onDeleteClick }) => {
     const isAdmin = userRoleId === 3; // Only role ID 3 is admin
 
     return (
-        <div className="p-3 track-card">
+        <div className="track-card p-3 border rounded">
             <p><strong>Track:</strong> {track.Name}</p>
             <p><strong>Album:</strong> {track.AlbumTitle || 'Unknown Album'}</p>
             <p><strong>Genre:</strong> {track.GenreName || 'Unknown Genre'}</p>
@@ -25,7 +25,7 @@ const TrackCard = ({ track, onEditClick, onDeleteClick }) => {
             
             {/* Only show edit and delete buttons if the user is an admin */}
             {isAdmin && (
-                <div className="d-flex justify-content-end gap-2 mt-3">
+                <div className="admin-actions d-flex justify-content-end gap-2 mt-3">
                     <button
                         className="btn btn-secondary btn-sm"
                         onClick={onEditClick}
