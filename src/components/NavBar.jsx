@@ -92,12 +92,6 @@ const NavBar = () => {
                                 </button>
                                 <ul className="dropdown-menu">
                                     <li>
-                                        <NavLink className="dropdown-item" to="/profile">My Profile</NavLink>
-                                    </li>
-                                    <li>
-                                        <NavLink className="dropdown-item" to="/settings">Settings</NavLink>
-                                    </li>
-                                    <li>
                                         <button className="dropdown-item" onClick={handleLogout}>
                                             Logout
                                         </button>

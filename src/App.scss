@@ -2,13 +2,16 @@
 @import 'node_modules/bootstrap/scss/functions';
 @import 'node_modules/bootstrap/scss/variables';
 
-// Define your custom color palette
-$primary: #ff71ce;    // Pink
-$secondary: #01cdfe;  // Blue
-$success: #05ffa1;    // Green
-$warning: #b967ff;    // Purple
-$info: #fffb96;       // Yellow
-$custom-dark-color: #041220; // Custom dark color to avoid conflicts with Bootstrap
+// Define a professional, modern color palette
+$primary: #b4132a;    // Muted Navy (for primary buttons or links)
+$secondary: #4a3a49;  // Soft Gold (for secondary accents, subtle highlights)
+$success: #559310;    // Deep Green (for success notifications, confirmations)
+$warning: #fb3e01;    // Muted Red (for warnings or alerts)
+$info: #478064;       // Cool Blue (for informational content)
+$background: #ffffff; // Soft Gray (clean, modern background)
+$text-dark: #006d7f;  // Deep Charcoal (for text, strong contrast)
+$text-light: #dbe2dc; // White (for text on dark elements)
+$custom-dark-color: #3b3f44; // Slate Gray (for dark headers or footers)
 
 // Override Bootstrap theme colors
 $theme-colors: (
@@ -21,18 +24,17 @@ $theme-colors: (
 );
 
 // Override component-specific variables
-$body-bg: $info;  // Background color for body
-$body-color: $custom-dark-color; // Text color
+$body-bg: $background;  // Background color for body
+$body-color: $text-dark; // Text color
 $btn-primary-bg: $primary; // Primary button background
-$btn-primary-color: #ffffff; // Primary button text
-$card-bg: $success; // Card background
-$card-border-color: $primary; // Card border color
+$btn-primary-color: $text-light; // Primary button text
+$card-bg: $background; // Card background
+$card-border-color: $secondary; // Card border color
 
 // Customize Navbar styles
-$navbar-light-bg: $info;               // Navbar background color (light theme)
-$navbar-light-color: $custom-dark-color;      // Navbar text color (light theme)
-//$navbar-light-toggler-icon-bg: #000;  // Ensure this is a valid string or color (black here for contrast)
-$nav-link-color: $custom-dark-color;          // Navbar link text color
+$navbar-light-bg: $background;               // Navbar background color (light theme)
+$navbar-light-color: $secondary; // Navbar text color (light theme)
+$nav-link-color: $secondary;    // Navbar link text color
 $nav-link-hover-color: $primary;       // Navbar link hover color
 $btn-link-color: $primary;             // Button link color (for logout button)
 
@@ -42,199 +44,23 @@ $btn-link-color: $primary;             // Button link color (for logout button)
 // Import Bootstrap Icons styles
 @import 'node_modules/bootstrap-icons/font/bootstrap-icons';
 
-
-
-.navbar {
-    background-color: $navbar-light-bg;
-    .navbar-brand {
-        color: $navbar-light-color;
-        font-size: 1.5rem;
-        font-weight: bold;
-        &:hover {
-            color: $primary;
-        }
-    }
-
-    .nav-link {
-        color: $navbar-light-color;
-        padding: 0.75rem 1.5rem;
-        transition: color 0.3s ease, background-color 0.3s ease;
-
-        &:hover {
-            color: $primary;
-            background-color: lighten($navbar-light-bg, 10%);
-        }
-
-        &.active {
-            color: $primary;
-            border-bottom: 2px solid $primary;
-        }
-    }
-
-    .dropdown-menu {
-        background-color: $navbar-light-bg;
-        .dropdown-item {
-            color: $navbar-light-color;
-            &:hover {
-                background-color: $primary;
-                color: white;
-            }
-        }
-    }
-}
-
-.pagination {
-    .page-item {
-        .page-link {
-            color: $primary;
-            transition: all 0.3s ease;
-
-            &:hover {
-                background-color: lighten($primary, 15%);
-                color: white;
-            }
-
-            &:focus {
-                box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-            }
-
-            &:disabled {
-                color: lighten($primary, 40%);
-                background-color: lighten($primary, 30%);
-                cursor: not-allowed;
-            }
-        }
-
-        &.active .page-link {
-            background-color: $primary;
-            color: white;
-            border-color: $primary;
-        }
-    }
-
-    .disabled .page-link {
-        cursor: not-allowed;
-        pointer-events: none;
-        opacity: 0.6;
-    }
-
-    .page-link {
-        padding: 0.5rem 1rem;
-        border: 1px solid $primary;
-        border-radius: 0.25rem;
-        margin: 0 0.25rem;
-    }
-}
-
-header {
-    background-color: $primary; // Use your custom dark color for the background
-    color: white;
-    padding: 1rem 0;
-
-    .container {
-        display: flex;
-        align-items: center;
-    }
-
-    h1 {
-        transition: color 0.3s ease; // Smooth transition for text color on hover
-        font-size: 1.25rem;
-        margin-bottom: 0;
-
-        &:hover {
-            color: $primary; // Change text color on hover
-        }
-    }
-
-    i {
-        font-size: 2rem;
-        margin-right: 1rem;
-        transition: transform 0.3s ease, color 0.3s ease; // Smooth hover transitions
-
-        &:hover {
-            transform: scale(1.2); // Slightly enlarge the icon on hover
-            color: $primary; // Change icon color on hover
-        }
-    }
-}
-
-
-.track-card {
-    background-color: $light; // Light background for the card
-    border: 1px solid $gray-300;
-    border-radius: 0.25rem; // Rounded corners for the card
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
-    transition: box-shadow 0.3s ease, transform 0.3s ease;
-
-    &:hover {
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); // Subtle shadow effect on hover
-        transform: translateY(-5px); // Slight lift effect on hover
-    }
-
-    p {
-        margin-bottom: 0.5rem;
-        font-size: 1rem;
-        color: $custom-dark-color;
-
-        strong {
-            color: $primary; // Highlight the label
-        }
-    }
-
-    .track-meta {
-        font-size: 0.875rem;
-        color: $gray-600; // Meta information in a lighter color
-    }
-
-    // Admin buttons for edit and delete actions
-    .admin-actions {
-        display: flex;
-        justify-content: flex-end;
-        gap: 0.5rem;
-        margin-top: 1rem;
-
-        button {
-            font-size: 0.875rem;
-            padding: 0.5rem 1rem;
-            border-radius: 0.25rem;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-
-            &:hover {
-                transform: scale(1.05); // Slightly enlarge on hover
-            }
-
-            &.btn-secondary {
-                background-color: $secondary;
-                color: white;
-
-                &:hover {
-                    background-color: darken($secondary, 10%);
-                }
-            }
-
-            &.btn-danger {
-                background-color: $danger;
-                color: white;
-
-                &:hover {
-                    background-color: darken($danger, 10%);
-                }
-            }
-        }
-    }
-
-    // Responsive adjustments
-    @media (max-width: 768px) {
-        padding: 1rem;
-
-        p {
-            font-size: 0.9rem;
-        }
-
-        .admin-actions {
-            justify-content: center; // Center buttons on smaller screens
-        }
-    }
-}
-
+//Import Custom Styles
+@import './sass/feature-highlights.scss';
+@import './sass/hero-section.scss';
+@import './sass/navbar.scss';
+@import './sass/pagination.scss';
+@import './sass/header.scss';
+@import './sass/track-card.scss';
+@import './sass/footer.scss';
+@import './sass/generic-table.scss';
+@import './sass/generic-row.scss';
+@import './sass/track-row.scss';
+@import './sass/album-list.scss';
+@import './sass/artist-list.scss';
+@import './sass/genre-list.scss';
+@import './sass/genre-tracks-view.scss';
+@import './sass/album-view.scss';
+@import './sass/artist-view.scss';
+//@import './sass/buttons.scss';
+@import './sass/confirm-delete-modal.scss';
+@import './sass/media-type-list.scss';

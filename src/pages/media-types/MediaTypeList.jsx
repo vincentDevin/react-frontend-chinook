@@ -9,28 +9,28 @@ import { getUserRoleFromToken } from '../../api/authUtils';
 
 const MediaTypeList = () => {
     const navigate = useNavigate();
-    const [isAdmin, setIsAdmin] = useState(false); // State to check if the user is an admin
-    const [mediaTypes, setMediaTypes] = useState([]); // Local state for media type list
-    const [selectedMediaType, setSelectedMediaType] = useState(null); // State for selected media type
-    const [showModal, setShowModal] = useState(false); // State for controlling the delete modal
+    const [isAdmin, setIsAdmin] = useState(false);
+    const [mediaTypes, setMediaTypes] = useState([]);
+    const [selectedMediaType, setSelectedMediaType] = useState(null);
+    const [showModal, setShowModal] = useState(false);
 
     // Check if the user is an admin
     useEffect(() => {
-        const userRoleId = getUserRoleFromToken(); // Get the role ID from the JWT token
+        const userRoleId = getUserRoleFromToken();
         if (userRoleId === 3) {
-            setIsAdmin(true); // If role ID is 3, the user is an admin
+            setIsAdmin(true);
         }
     }, []);
 
     // Use the custom pagination hook with the media type API function
     const {
-        items: paginatedMediaTypes = [], // Use mediaTypes from the hook, default to an empty array
+        items: paginatedMediaTypes = [],
         loading,
         error,
         currentPage,
         totalPages,
         handlePageChange,
-    } = usePagination(mediaTypeApi.getAll, 10, 'mediaTypes'); // Pass 'mediaTypes' as the dataKey
+    } = usePagination(mediaTypeApi.getAll, 10, 'mediaTypes');
 
     // Update mediaTypes state when paginatedMediaTypes changes
     useEffect(() => {
@@ -46,21 +46,20 @@ const MediaTypeList = () => {
     // Handle closing the delete modal
     const handleCloseModal = () => {
         setShowModal(false);
-        setSelectedMediaType(null); // Reset the selected media type
+        setSelectedMediaType(null);
     };
 
     // Confirm deletion and update the list without refreshing the page
     const handleConfirmDelete = async () => {
         if (selectedMediaType) {
             try {
-                await mediaTypeApi.delete(selectedMediaType.MediaTypeId); // Use MediaTypeId as key
-                
-                // Update the media type list by removing the deleted media type
+                await mediaTypeApi.delete(selectedMediaType.MediaTypeId);
+
                 setMediaTypes((prevMediaTypes) =>
                     prevMediaTypes.filter((mediaType) => mediaType.MediaTypeId !== selectedMediaType.MediaTypeId)
                 );
 
-                handleCloseModal(); // Close the modal after successful delete
+                handleCloseModal();
             } catch (err) {
                 console.error('Error deleting media type:', err.message);
             }
@@ -96,25 +95,17 @@ const MediaTypeList = () => {
 
     // Render loading state
     if (loading) {
-        return (
-            <div className="container mt-4" role="status">
-                Loading media types...
-            </div>
-        );
+        return <div className="container mt-4" role="status">Loading media types...</div>;
     }
 
     // Render error state
     if (error) {
-        return (
-            <div className="container mt-4 text-danger" role="alert">
-                Error: {error}
-            </div>
-        );
+        return <div className="container mt-4 text-danger" role="alert">Error: {error}</div>;
     }
 
     // Render main content
     return (
-        <div className="container mt-4">
+        <div className="container mt-4 media-type-list">
             {isAdmin && (
                 <GenericActions
                     title="Media Types"
@@ -127,14 +118,12 @@ const MediaTypeList = () => {
                 />
             )}
 
-            {/* Generic Table Component */}
             <GenericTable
                 headers={['Media Type', ...(isAdmin ? ['Actions'] : [])]}
                 rows={mediaTypes.length > 0 ? mediaTypes : []}
                 renderRow={renderRow}
             />
 
-            {/* Generic Pagination Component */}
             {totalPages > 1 && (
                 <GenericPagination
                     currentPage={currentPage}

@@ -1,0 +1,38 @@
+
+.hero-section {
+    background-color: $background; // Use white background
+    padding: 5rem 0;
+}
+
+.hero-title {
+    color: $primary; // Use muted red for the title text
+    font-size: 3rem;
+    font-weight: bold;
+}
+
+.hero-subtitle {
+    color: $text-dark; // Use deep teal for the subtitle
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.hero-btn {
+    background-color: $primary; // Use muted red for the button
+    color: $text-light; // Light text on the button
+    border: none;
+
+    &:hover {
+        background-color: darken($primary, 10%); // Darken the button on hover
+        color: $text-light;
+    }
+}
+
+@media (min-width: 768px) {
+    .hero-title {
+        font-size: 4rem;
+    }
+
+    .hero-subtitle {
+        font-size: 2rem;
+    }
+}

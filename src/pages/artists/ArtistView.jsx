@@ -1,21 +1,20 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { artistApi } from '../../api/entitiesApi'; // Only need artistApi
+import { artistApi } from '../../api/entitiesApi';
 
 const ArtistView = () => {
-    const { artistId } = useParams(); // Get artistId from the route
-    const navigate = useNavigate(); // To navigate to AlbumView
-    const [artist, setArtist] = useState(null); // State to store artist details
-    const [loading, setLoading] = useState(true); // Loading state
-    const [error, setError] = useState(null); // Error state
+    const { artistId } = useParams();
+    const navigate = useNavigate();
+    const [artist, setArtist] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-    // Fetch artist and album details when the component mounts
     useEffect(() => {
         const fetchArtistData = async () => {
             try {
                 setLoading(true);
-                const artistData = await artistApi.getById(artistId); // Fetch artist by ID (including albums)
-                setArtist(artistData); // Set the artist data, including albums
+                const artistData = await artistApi.getById(artistId);
+                setArtist(artistData);
                 setLoading(false);
             } catch {
                 setError('Failed to load artist and albums');
@@ -39,8 +38,8 @@ const ArtistView = () => {
     }
 
     return (
-        <div className="container mt-4">
-            <div className="card">
+        <div className="container mt-4 artist-view">
+            <div className="card artist-card">
                 <div className="card-header">
                     <h1 className="card-title">{artist.Name}</h1>
                 </div>
@@ -49,13 +48,13 @@ const ArtistView = () => {
                     
                     <h2 className="mt-4">Albums</h2>
                     {artist.albums && artist.albums.length > 0 ? (
-                        <ul className="list-group">
+                        <ul className="list-group album-list">
                             {artist.albums.map((album) => (
-                                <li key={album.AlbumId} className="list-group-item d-flex justify-content-between align-items-center">
+                                <li key={album.AlbumId} className="list-group-item album-item d-flex justify-content-between align-items-center">
                                     {album.Title}
                                     <button
                                         className="btn btn-primary btn-sm"
-                                        onClick={() => navigate(`/albums/${album.AlbumId}`)} // Route to AlbumView
+                                        onClick={() => navigate(`/albums/${album.AlbumId}`)}
                                     >
                                         View
                                     </button>

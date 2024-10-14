@@ -17,15 +17,15 @@ const TrackRow = ({ track, isSelected, onRowClick, onDeleteClick }) => {
             {/* Main row with custom style for selected */}
             <tr 
                 onClick={onRowClick} 
-                className={`cursor-pointer ${isSelected ? 'bg-primary text-white' : ''}`} // Apply Bootstrap classes for selected state
+                className={`track-row ${isSelected ? 'selected' : ''}`} // Apply custom class for selected state
             >
-                <td className="fixed-width">{track.Name}</td>
-                <td className="fixed-width">{formatDuration(track.Milliseconds)}</td>
-                <td className="fixed-width">{track.UnitPrice !== undefined ? `$${parseFloat(track.UnitPrice).toFixed(2)}` : 'N/A'}</td>
+                <td>{track.Name}</td>
+                <td>{formatDuration(track.Milliseconds)}</td>
+                <td>{track.UnitPrice !== undefined ? `$${parseFloat(track.UnitPrice).toFixed(2)}` : 'N/A'}</td>
             </tr>
             {/* Expanded view: TrackCard */}
             {isSelected && (
-                <tr>
+                <tr className="details-row">
                     <td colSpan="3">
                         <TrackCard 
                             track={track} // Pass the entire track object, including duration

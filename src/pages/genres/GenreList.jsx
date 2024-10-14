@@ -9,58 +9,49 @@ import { getUserRoleFromToken } from '../../api/authUtils';
 
 const GenreList = () => {
     const navigate = useNavigate();
-    const [isAdmin, setIsAdmin] = useState(false); // State to check if the user is an admin
-    const [genres, setGenres] = useState([]); // Local state for genre list
-    const [selectedGenre, setSelectedGenre] = useState(null); // State for selected genre
-    const [showModal, setShowModal] = useState(false); // State for controlling the delete modal
+    const [isAdmin, setIsAdmin] = useState(false); 
+    const [genres, setGenres] = useState([]); 
+    const [selectedGenre, setSelectedGenre] = useState(null); 
+    const [showModal, setShowModal] = useState(false); 
 
-    // Check if the user is an admin
     useEffect(() => {
-        const userRoleId = getUserRoleFromToken(); // Get the role ID from the JWT token
+        const userRoleId = getUserRoleFromToken(); 
         if (userRoleId === 3) {
-            setIsAdmin(true); // If role ID is 3, the user is an admin
+            setIsAdmin(true); 
         }
     }, []);
 
-    // Use the custom pagination hook with the genre API function
     const {
-        items: paginatedGenres = [], // Use genres from the hook, default to an empty array
+        items: paginatedGenres = [], 
         loading,
         error,
         currentPage,
         totalPages,
         handlePageChange,
-    } = usePagination(genreApi.getAll, 10, '', ''); // No dataKey or countKey since the response is a simple array
+    } = usePagination(genreApi.getAll, 10, 'genres');
 
-    // Update genres state when paginatedGenres changes
     useEffect(() => {
         setGenres(paginatedGenres);
     }, [paginatedGenres]);
 
-    // Handle showing the delete modal
     const handleShowModal = (genre) => {
         setSelectedGenre(genre);
         setShowModal(true);
     };
 
-    // Handle closing the delete modal
     const handleCloseModal = () => {
         setShowModal(false);
-        setSelectedGenre(null); // Reset the selected genre
+        setSelectedGenre(null);
     };
 
-    // Confirm deletion and update the list without refreshing the page
     const handleConfirmDelete = async () => {
         if (selectedGenre) {
             try {
-                await genreApi.delete(selectedGenre.GenreId); // Use GenreId as key
-                
-                // Update the genres list by removing the deleted genre
+                await genreApi.delete(selectedGenre.GenreId); 
                 setGenres((prevGenres) =>
                     prevGenres.filter((genre) => genre.GenreId !== selectedGenre.GenreId)
                 );
-
-                handleCloseModal(); // Close the modal after successful delete
+                handleCloseModal();
             } catch (err) {
                 console.error('Error deleting genre:', err.message);
             }
@@ -68,12 +59,12 @@ const GenreList = () => {
     };
 
     const renderRow = (genre) => (
-        <tr key={genre.GenreId}>
+        <tr key={genre.GenreId} className="genre-row">
             <td>{genre.Name}</td>
             <td className="text-end">
-                <div className="d-flex justify-content-end gap-2">
+                <div className="actions-container">
                     <button
-                        className="btn btn-primary btn-md"
+                        className="btn-view"
                         onClick={() => navigate(`/genres/${genre.GenreId}/tracks`)}
                         aria-label={`View tracks for genre ${genre.Name}`}
                     >
@@ -82,14 +73,14 @@ const GenreList = () => {
                     {isAdmin && (
                         <>
                             <button
-                                className="btn btn-secondary btn-md"
-                                onClick={() => navigate('/genres/' + genre.GenreId)}
+                                className="btn-edit"
+                                onClick={() => navigate(`/genres/${genre.GenreId}`)}
                                 aria-label={`Edit genre ${genre.Name}`}
                             >
                                 Edit
                             </button>
                             <button
-                                className="btn btn-danger btn-md"
+                                className="btn-delete"
                                 onClick={() => handleShowModal(genre)}
                                 aria-label={`Delete genre ${genre.Name}`}
                             >
@@ -132,14 +123,12 @@ const GenreList = () => {
                 />
             )}
 
-            {/* Generic Table Component */}
             <GenericTable
                 headers={['Genre', 'Actions']}
                 rows={genres.length > 0 ? genres : []}
                 renderRow={renderRow}
             />
 
-            {/* Generic Pagination Component */}
             <GenericPagination
                 currentPage={currentPage}
                 totalPages={totalPages}

@@ -1,0 +1,31 @@
+.generic-row {
+    cursor: pointer; // Show pointer on row hover to indicate interactivity
+    transition: background-color 0.3s ease, transform 0.3s ease; // Smooth transition for hover and animation
+
+    &:hover {
+        background-color: lighten($primary, 20%); // Lighten primary color on hover
+        transform: translateY(-3px); // Slight upward lift animation
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); // Shadow effect on hover
+    }
+}
+
+.selected {
+    background-color: $primary; // Muted red for selected row background
+    color: $text-light; // Light text color for better contrast when selected
+    font-weight: bold;
+
+    &:hover {
+        background-color: darken($primary, 10%); // Slightly darken selected color on hover
+    }
+}
+
+.details-row {
+    background-color: lighten($secondary, 40%); // Light soft gold for details row background
+    color: $text-dark; // Use text-dark for readability
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1); // Subtle inset shadow for a card-like appearance
+    transition: background-color 0.3s ease; // Smooth transition for the details row as well
+
+    td {
+        padding: 1rem; // Add padding to details for better spacing
+    }
+}

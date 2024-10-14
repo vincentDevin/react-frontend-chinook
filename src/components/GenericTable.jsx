@@ -8,7 +8,7 @@ const GenericTable = ({ headers = [], rows = [], renderRow }) => {
         } else {
             return (
                 <tr>
-                    <td colSpan={headers.length} className="text-center">
+                    <td colSpan={headers.length} className="text-center no-data">
                         No data available.
                     </td>
                 </tr>
@@ -17,18 +17,18 @@ const GenericTable = ({ headers = [], rows = [], renderRow }) => {
     };
 
     return (
-        <div className="table-responsive">
-            <table className="table table-striped table-hover" aria-label="Generic Table" role="table">
-                <thead className="thead-dark">
+        <div className="table-container table-responsive">
+            <table className="table" aria-label="Generic Table" role="table">
+                <thead className="table-header">
                     <tr>
                         {headers.length > 0
                             ? headers.map((header, index) => (
-                                <th key={index} scope="col" className="fixed-width">
+                                <th key={index} scope="col" className="table-header-cell">
                                     {header}
                                 </th>
                             ))
                             : (
-                                <th colSpan="100%" scope="col" className="text-center">
+                                <th colSpan="100%" scope="col" className="text-center no-headers">
                                     No headers available
                                 </th>
                             )}
