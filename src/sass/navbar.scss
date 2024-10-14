@@ -1,0 +1,44 @@
+// Navbar customization
+.navbar {
+    z-index: 1000;
+    background-color: $navbar-light-bg;
+
+    .navbar-brand {
+        color: $navbar-light-color;
+        font-size: 1.5rem;
+        font-weight: bold;
+
+        &:hover {
+            color: $primary;
+        }
+    }
+
+    .nav-link {
+        color: $nav-link-color;
+        padding: 0.75rem 1.5rem;
+        transition: color 0.3s ease, background-color 0.3s ease;
+
+        &:hover {
+            color: $nav-link-hover-color;
+            background-color: lighten($navbar-light-bg, 10%);
+        }
+
+        &.active {
+            color: $primary;
+            border-bottom: 2px solid $primary;
+        }
+    }
+
+    .dropdown-menu {
+        background-color: $navbar-light-bg;
+
+        .dropdown-item {
+            color: $navbar-light-color;
+
+            &:hover {
+                background-color: $primary;
+                color: white;
+            }
+        }
+    }
+}

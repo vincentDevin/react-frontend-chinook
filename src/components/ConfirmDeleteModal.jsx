@@ -4,13 +4,13 @@ const ConfirmDeleteModal = ({ show, handleClose, handleConfirm, itemName }) => {
 
     return (
         <div
-            className="modal fade show d-block"
+            className="modal-overlay fade show d-block"
             tabIndex="-1"
             role="dialog"
-            style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
+            style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
         >
             <div className="modal-dialog modal-dialog-centered" role="document">
-                <div className="modal-content">
+                <div className="modal-content modal-custom">
                     <div className="modal-header">
                         <h5 className="modal-title">Confirm Delete</h5>
                         <button
@@ -18,14 +18,8 @@ const ConfirmDeleteModal = ({ show, handleClose, handleConfirm, itemName }) => {
                             className="btn-close"
                             aria-label="Close"
                             onClick={handleClose}
-                            style={{
-                                border: 'none',
-                                background: 'transparent',
-                                fontSize: '1.25rem',
-                                marginRight: '-10px',
-                            }}
                         >
-                            <span aria-hidden="true">&times;</span>
+                            &times;
                         </button>
                     </div>
                     <div className="modal-body">

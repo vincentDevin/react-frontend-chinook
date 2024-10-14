@@ -1,10 +1,13 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { trackApi } from '../../api/entitiesApi';
 import GenericTable from '../../components/GenericTable';
 import GenericPagination from '../../components/GenericPagination';
 import usePagination from '../../hooks/usePagination';
 import TrackRow from './TrackRow'; // Import TrackRow component
 import ConfirmDeleteModal from '../../components/ConfirmDeleteModal'; // Import ConfirmDeleteModal component
+import { getUserRoleFromToken } from '../../api/authUtils';
+import GenericActions from '../../components/GenericActions';
 
 const TrackList = () => {
     const {
@@ -16,13 +19,18 @@ const TrackList = () => {
         handlePageChange,
     } = usePagination(trackApi.getAll, 10, 'tracks'); // Pass 'tracks' as the dataKey
 
+    const navigate = useNavigate();
+    const [isAdmin, setIsAdmin] = useState(false);
     const [tracks, setTracks] = useState([]); // Local state for tracks list
     const [selectedTrack, setSelectedTrack] = useState(null); // State for the selected track row
     const [trackToDelete, setTrackToDelete] = useState(null); // State for the track to be deleted
     const [showDeleteModal, setShowDeleteModal] = useState(false); // State for controlling the delete modal
 
-    // Update tracks state when paginatedTracks changes
     useEffect(() => {
+        const userRoleId = getUserRoleFromToken();
+        if (userRoleId === 3) {
+            setIsAdmin(true);
+        }
         setTracks(paginatedTracks);
     }, [paginatedTracks]);
 
@@ -83,6 +91,13 @@ const TrackList = () => {
 
     return (
         <div className="container mt-4">
+            {isAdmin && (
+                <GenericActions
+                    title="Tracks"
+                    onAdd={() => navigate('/tracks/add')}
+                    addLink="/tracks/add"
+                />
+            )}
             <GenericTable
                 headers={['Track', 'Duration (mm:ss)', 'Price ($)']}
                 rows={tracks}

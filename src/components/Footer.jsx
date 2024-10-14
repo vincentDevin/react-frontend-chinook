@@ -1,9 +1,8 @@
 import { Link } from 'react-router-dom';
-import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Footer = () => {
     return (
-        <footer className="mt-auto py-3 footer">
+        <footer className="footer mt-auto py-3">
             <div className="container">
                 <div className="row">
                     {/* About Us Section */}
@@ -20,22 +19,22 @@ const Footer = () => {
                         <h5>Quick Links</h5>
                         <ul className="list-unstyled">
                             <li>
-                                <Link to="/" className="text-white text-decoration-none">
+                                <Link to="/" className="footer-link">
                                     Home
                                 </Link>
                             </li>
                             <li>
-                                <Link to="/artists" className="text-white text-decoration-none">
+                                <Link to="/artists" className="footer-link">
                                     Artists
                                 </Link>
                             </li>
                             <li>
-                                <Link to="/albums" className="text-white text-decoration-none">
+                                <Link to="/albums" className="footer-link">
                                     Albums
                                 </Link>
                             </li>
                             <li>
-                                <Link to="/genres" className="text-white text-decoration-none">
+                                <Link to="/genres" className="footer-link">
                                     Genres
                                 </Link>
                             </li>
@@ -47,20 +46,20 @@ const Footer = () => {
                         <h5>Contact Us</h5>
                         <p>
                             Email:{' '}
-                            <a href="mailto:info@musicapp.com" className="text-white">
+                            <a href="mailto:info@musicapp.com" className="footer-link">
                                 info@musicapp.com
                             </a>
                         </p>
                         <p>Phone: +123 456 7890</p>
                         <h5>Follow Us</h5>
                         <div>
-                            <Link to="#" className="text-white me-3">
+                            <Link to="#" className="footer-link me-3">
                                 <i className="bi bi-facebook"></i>
                             </Link>
-                            <Link to="#" className="text-white me-3">
+                            <Link to="#" className="footer-link me-3">
                                 <i className="bi bi-twitter"></i>
                             </Link>
-                            <Link to="#" className="text-white">
+                            <Link to="#" className="footer-link">
                                 <i className="bi bi-instagram"></i>
                             </Link>
                         </div>

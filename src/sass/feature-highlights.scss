@@ -1,0 +1,42 @@
+
+.feature-highlights {
+    .card {
+        background-color: $card-bg; // Set card background from theme
+        border-color: $card-border-color; // Slate gray for border
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+        &:hover {
+            transform: translateY(-5px); // Slight lift on hover
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2); // Shadow effect
+        }
+
+        .card-title {
+            color: $primary; // Muted red for titles
+            font-size: 1.25rem;
+        }
+
+        .card-text {
+            color: $text-dark; // Deep teal for card text
+        }
+
+        .btn-primary {
+            background-color: $primary; // Primary button color
+            color: $text-light; // Light text on buttons
+            border: none;
+
+            &:hover {
+                background-color: darken($primary, 10%);
+                color: $text-light;
+            }
+        }
+    }
+
+    .spinner-border {
+        color: $primary; // Primary color for loading spinner
+    }
+
+    .text-danger {
+        color: $warning; // Use muted red for error messages
+    }
+}
+

@@ -1,23 +1,22 @@
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { albumApi, trackApi } from '../../api/entitiesApi'; // Import trackApi for fetching track details
-import TrackCard from '../tracks/TrackCard'; // Import TrackCard for displaying track details
+import { albumApi, trackApi } from '../../api/entitiesApi';
+import TrackCard from '../tracks/TrackCard';
 
 const AlbumView = () => {
-    const { albumId } = useParams(); // Get albumId from the route
-    const [album, setAlbum] = useState(null); // State to store album details
-    const [loading, setLoading] = useState(true); // Loading state
-    const [error, setError] = useState(null); // Error state
-    const [selectedTrack, setSelectedTrack] = useState(null); // State for selected track's full details
-    const [expandedTrackId, setExpandedTrackId] = useState(null); // State to track which track is expanded
+    const { albumId } = useParams();
+    const [album, setAlbum] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [selectedTrack, setSelectedTrack] = useState(null);
+    const [expandedTrackId, setExpandedTrackId] = useState(null);
 
-    // Fetch album and track details when the component mounts
     useEffect(() => {
         const fetchAlbumData = async () => {
             try {
                 setLoading(true);
-                const albumData = await albumApi.getById(albumId); // Fetch album by ID (including tracks)
-                setAlbum(albumData); // Set the album data, including tracks
+                const albumData = await albumApi.getById(albumId);
+                setAlbum(albumData);
                 setLoading(false);
             } catch {
                 setError('Failed to load album and tracks');
@@ -28,11 +27,10 @@ const AlbumView = () => {
         fetchAlbumData();
     }, [albumId]);
 
-    // Fetch track details when a track is expanded
     const fetchTrackDetails = async (trackId) => {
         try {
-            const trackData = await trackApi.getById(trackId); // Fetch track details by trackId
-            setSelectedTrack(trackData); // Set the selected track's full details
+            const trackData = await trackApi.getById(trackId);
+            setSelectedTrack(trackData);
         } catch {
             setError('Failed to load track details');
         }
@@ -40,11 +38,9 @@ const AlbumView = () => {
 
     const handleTrackClick = (trackId) => {
         if (expandedTrackId === trackId) {
-            // Collapse the track if it's already expanded
             setExpandedTrackId(null);
-            setSelectedTrack(null); // Clear selected track details
+            setSelectedTrack(null);
         } else {
-            // Expand the track and fetch its full details
             setExpandedTrackId(trackId);
             fetchTrackDetails(trackId);
         }
@@ -63,37 +59,36 @@ const AlbumView = () => {
     }
 
     return (
-        <div className="mt-4 album-view">
-            <div className="card">
+        <div className="container mt-4 album-view">
+            <div className="card album-card">
                 <div className="card-header">
                     <h1 className="card-title">{album.Title}</h1>
-                    <p><strong>Artist:</strong> {album.ArtistName || 'Unknown Artist'}</p> {/* Display artist name */}
+                    <p><strong>Artist:</strong> {album.ArtistName || 'Unknown Artist'}</p>
                 </div>
                 <div className="card-body">
                     <h2 className="mt-4">Tracks</h2>
                     {album.tracks && album.tracks.length > 0 ? (
-                        <ul className="list-group">
+                        <ul className="list-group track-list">
                             {album.tracks.map((track) => (
-                                <li key={track.TrackId} className="list-group-item">
+                                <li key={track.TrackId} className={`list-group-item track-item ${expandedTrackId === track.TrackId ? 'expanded' : ''}`}>
                                     <div
-                                        className="d-flex justify-content-between align-items-center"
-                                        onClick={() => handleTrackClick(track.TrackId)} // Click handler to toggle view
+                                        className="d-flex justify-content-between align-items-center track-summary"
+                                        onClick={() => handleTrackClick(track.TrackId)}
                                     >
                                         <div>
-                                            {track.Name} - ${track.UnitPrice || 'Unknown Price'} {/* Display track price */}
+                                            {track.Name} - ${track.UnitPrice || 'Unknown Price'}
                                         </div>
                                         <button className="btn btn-primary btn-sm">
                                             {expandedTrackId === track.TrackId ? 'Collapse' : 'View'}
                                         </button>
                                     </div>
 
-                                    {/* Conditionally render TrackCard with full track details when expanded */}
                                     {expandedTrackId === track.TrackId && selectedTrack && (
-                                        <div className="mt-3">
+                                        <div className="mt-3 track-details">
                                             <TrackCard
-                                                track={selectedTrack} // Pass the detailed track data to TrackCard
-                                                onEditClick={() => console.log('Edit clicked')} // Add your edit logic
-                                                onDeleteClick={() => console.log('Delete clicked')} // Add your delete logic
+                                                track={selectedTrack}
+                                                onEditClick={() => console.log('Edit clicked')}
+                                                onDeleteClick={() => console.log('Delete clicked')}
                                             />
                                         </div>
                                     )}

@@ -1,0 +1,84 @@
+.table-container {
+    margin: 1.5rem 0;
+    padding: 1rem;
+    background-color: $background;
+    border: 1px solid $custom-dark-color;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); // Subtle shadow for modern look
+
+    // Responsive design adjustments for small screens
+    @media (max-width: 768px) {
+        padding: 0.75rem;
+        box-shadow: none;
+        border: none;
+    }
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    color: $text-dark; // Use deep teal for table text
+    font-size: 1rem;
+
+    .table-header {
+        background-color: $primary; // Muted red for header background
+        color: $text-light; // Light text for header
+        font-size: 1.1rem;
+        text-transform: uppercase; // Modern uppercase style for headers
+
+        .table-header-cell {
+            padding: 0.75rem;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid $custom-dark-color; // Slate gray bottom border
+        }
+    }
+
+    .table-striped tbody tr:nth-of-type(odd) {
+        background-color: lighten($secondary, 40%); // Lighten soft gold for striped effect
+    }
+
+    .table-hover tbody tr {
+        cursor: pointer; // Pointer cursor on hover for interactivity
+        transition: background-color 0.3s ease, transform 0.3s ease; // Smooth transition for hover effect and animation
+
+        &:hover {
+            background-color: lighten($primary, 20%); // Lighten primary color on hover
+            transform: translateY(-3px); // Slight upward lift animation
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); // Shadow effect on hover
+        }
+    }
+
+    tbody td {
+        padding: 0.75rem;
+        border-bottom: 1px solid $custom-dark-color; // Slate gray for table borders
+        text-align: left;
+
+        @media (max-width: 768px) {
+            font-size: 0.9rem;
+            padding: 0.5rem;
+        }
+    }
+
+    .no-data {
+        color: $warning; // Use muted red for no data available message
+        font-weight: bold;
+        text-align: center;
+    }
+
+    .no-headers {
+        color: $secondary; // Use soft gold for no headers available message
+        text-align: center;
+        font-weight: bold;
+    }
+}
+
+// Custom scroll behavior for responsive tables
+.table-responsive {
+    overflow-x: auto;
+    border-radius: 0.5rem;
+
+    @media (max-width: 768px) {
+        border: none;
+    }
+}
