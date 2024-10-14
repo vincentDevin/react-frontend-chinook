@@ -19,7 +19,7 @@ const GenericActions = ({
                 <h2>{title}</h2> {/* Use the title prop here */}
                 <Link to={addLink} aria-label={`Add new ${title}`}>
                     <button className="btn btn-primary" onClick={onAdd}>
-                        <i className="bi bi-plus-circle-fill"></i>
+                        Add <i className="bi bi-plus-circle-fill"></i>
                     </button>
                 </Link>
             </div>
