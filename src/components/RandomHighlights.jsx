@@ -16,23 +16,20 @@ const FeatureHighlights = () => {
             try {
                 setLoading(true);
 
-                // Fetch the total count for each type
                 const [artistCount, albumCount, trackCount] = await Promise.all([
-                    artistApi.getAll({ limit: 0 }), // Fetch count only
-                    albumApi.getAll({ limit: 0 }), // Fetch count only
-                    trackApi.getAll({ limit: 0 }), // Fetch count only
+                    artistApi.getAll({ limit: 0 }),
+                    albumApi.getAll({ limit: 0 }),
+                    trackApi.getAll({ limit: 0 }),
                 ]);
 
                 const artistTotal = artistCount.totalCount || 1;
                 const albumTotal = albumCount.totalCount || 1;
                 const trackTotal = trackCount.totalCount || 1;
 
-                // Generate random offset values within the range
                 const randomArtistOffset = Math.floor(Math.random() * artistTotal);
                 const randomAlbumOffset = Math.floor(Math.random() * albumTotal);
                 const randomTrackOffset = Math.floor(Math.random() * trackTotal);
 
-                // Fetch a single item for each type using random offset
                 const [artistResponse, albumResponse, trackResponse] = await Promise.all([
                     artistApi.getAll({ limit: 1, offset: randomArtistOffset }),
                     albumApi.getAll({ limit: 1, offset: randomAlbumOffset }),
@@ -57,7 +54,7 @@ const FeatureHighlights = () => {
 
     if (loading) {
         return (
-            <section className="container my-5 text-center">
+            <section className="feature-highlights container my-5 text-center">
                 <div className="spinner-border" role="status">
                     <span className="visually-hidden">Loading...</span>
                 </div>
@@ -67,14 +64,14 @@ const FeatureHighlights = () => {
 
     if (error) {
         return (
-            <section className="container my-5 text-center text-danger">
+            <section className="feature-highlights container my-5 text-center text-danger">
                 {error}
             </section>
         );
     }
 
     return (
-        <section className="my-5 feature-highlights">
+        <section className="feature-highlights container my-5">
             <div className="row text-center">
                 {featured.artist && (
                     <div className="col-md-4 mb-4">

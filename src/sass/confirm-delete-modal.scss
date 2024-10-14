@@ -1,0 +1,101 @@
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); // Dim the background
+    display: flex;
+    justify-content: center;
+    align-items: center; // Horizontally center the modal
+    z-index: 1050;
+
+    .modal-dialog {
+        position: relative;
+        top: 50%;
+        transform: translateY(-50%); // Vertically center the modal
+        max-width: 500px;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); // Add shadow
+        width: 100%; // Ensure modal takes appropriate width on small screens
+        max-height: 90vh; // Limit modal height to prevent overflow
+        overflow-y: auto; // Allow scrolling if content overflows
+    }
+
+    .modal-custom {
+        border-radius: 8px; // Smooth border radius for the modal
+    }
+
+    .modal-header {
+        background-color: $primary; // Use primary color for header
+        color: $text-light; // Light text for contrast
+        border-bottom: none;
+        border-radius: 8px 8px 0 0;
+        padding: 1rem 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .modal-title {
+            margin: 0;
+            font-size: 1.25rem;
+            font-weight: bold;
+        }
+
+        .btn-close {
+            background: transparent;
+            border: none;
+            font-size: 1.5rem;
+            color: $text-light;
+            cursor: pointer;
+            transition: color 0.3s ease;
+
+            &:hover {
+                color: darken($text-light, 15%);
+            }
+        }
+    }
+
+    .modal-body {
+        padding: 1.5rem;
+        background-color: $background;
+        color: $text-dark;
+    }
+
+    .modal-footer {
+        background-color: lighten($background, 5%);
+        padding: 1rem 1.5rem;
+        display: flex;
+        justify-content: flex-end;
+        gap: 1rem;
+        border-top: none;
+        border-radius: 0 0 8px 8px;
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-size: 1rem;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+
+            &.btn-secondary {
+                background-color: $secondary;
+                color: $text-light;
+
+                &:hover {
+                    background-color: darken($secondary, 10%);
+                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                }
+            }
+
+            &.btn-danger {
+                background-color: $warning;
+                color: $text-light;
+
+                &:hover {
+                    background-color: darken($warning, 10%);
+                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                }
+            }
+        }
+    }
+}

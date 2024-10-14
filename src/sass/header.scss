@@ -1,0 +1,32 @@
+// Header styling
+header {
+    background-color: $primary;
+    color: $text-light;
+    padding: 0.5rem 0;
+
+    .container {
+        display: flex;
+        align-items: center;
+    }
+
+    h1 {
+        transition: color 0.3s ease;
+        font-size: 1.25rem;
+        margin-bottom: 0;
+
+        &:hover {
+            color: $secondary;
+        }
+    }
+
+    i {
+        font-size: 2rem;
+        margin-right: 1rem;
+        transition: transform 0.3s ease, color 0.3s ease;
+
+        &:hover {
+            transform: scale(1.2);
+            color: $secondary;
+        }
+    }
+}
