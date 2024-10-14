@@ -42,59 +42,64 @@ $btn-link-color: $primary;
 @import 'node_modules/bootstrap/scss/bootstrap';
 @import 'node_modules/bootstrap-icons/font/bootstrap-icons';
 
-// Global Mobile Styles
-// Define media queries to handle styles for mobile devices
-// Target devices with max-width of 767px (bootstrap `sm` breakpoint)
+// Global Icon Styles
+.bi {
+    font-size: 1.25rem; // Increase the icon size globally
+    color: $text-light; // Set default icon color
+    vertical-align: middle; // Ensure proper alignment with text
+    transition: color 0.3s ease; // Add a smooth color transition
 
+    &:hover {
+        color: $success; // Change icon color on hover
+    }
+}
+
+// Global Mobile Styles
 @media (max-width: 767.98px) {
-    // Global body adjustments
     body {
         padding: 0rem;
         font-size: 0.9rem;
         background-color: $background;
     }
 
-    // Navbar
     .navbar {
         padding: 0.5rem 1rem;
+
         .navbar-nav {
-            flex-direction: column; // Make navbar links stack vertically
+            flex-direction: column;
         }
+
         .nav-link {
-            margin-bottom: 0.5rem; // Add spacing between links
-            font-size: 1rem; // Adjust font size for mobile
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
         }
     }
 
-    // Buttons
     .btn {
-        font-size: 0.85rem; // Slightly smaller buttons on mobile
+        font-size: 0.85rem;
         padding: 0.5rem 1rem;
         border-radius: 4px;
     }
 
-    // Table adjustments
     .table {
-        font-size: 0.85rem; // Smaller text in tables for mobile
+        font-size: 0.85rem;
+
         th, td {
             padding: 0.25rem;
         }
     }
 
-    // Card adjustments
     .card {
         padding: 0rem;
-        font-size: 0.9rem; // Adjust card text size
+        font-size: 0.9rem;
     }
 
-    // Footer
     footer {
         padding: 1rem;
         font-size: 0.9rem;
-        text-align: center; // Center footer content on mobile
+        text-align: center;
     }
 
-    // Forms
     form {
         .form-control {
             font-size: 0.85rem;
@@ -102,19 +107,24 @@ $btn-link-color: $primary;
         }
     }
 
-    // Adjust modal styles for mobile
     .modal-dialog {
-        width: 100%; // Ensure modals take up full width on mobile
+        width: 100%;
         max-width: none;
         padding: 0.5rem;
     }
 
-    // Pagination
     .pagination {
         font-size: 0.85rem;
+
         .page-link {
             padding: 0.25rem 0.75rem;
         }
+    }
+
+    // Adjust icon size and alignment for mobile
+    .bi {
+        font-size: 1.5rem; // Slightly larger icons on mobile
+        margin-right: 0.25rem; // Reduce space between icon and text
     }
 }
 

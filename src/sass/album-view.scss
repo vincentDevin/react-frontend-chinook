@@ -42,7 +42,7 @@
             }
 
             &.expanded {
-                background-color: $background;
+                background-color: lighten($secondary, 50%);
                 border-left: 4px solid darken($secondary, 10%);
             }
 
