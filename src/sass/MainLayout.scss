@@ -1,0 +1,34 @@
+// MainLayout component styles
+.main-layout {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; // Ensure the layout fills the full viewport height
+
+    // Header and Navbar
+    header, nav {
+        flex-shrink: 0; // Prevent shrinking when the page height is smaller
+    }
+
+    // Main content area
+    .container {
+        flex-grow: 1; // Ensure the content area grows to fill available space
+        margin-top: 2rem; // Top margin for content separation
+        margin-bottom: 2rem; // Bottom margin for content separation
+    }
+
+    // Footer
+    footer {
+        flex-shrink: 0;
+        background-color: $primary; // Primary color background for the footer
+        color: $white; // White text color
+        padding: 1rem;
+        text-align: center;
+
+        a {
+            color: $accent; // Accent color for footer links
+            &:hover {
+                color: lighten($accent, 10%); // Lighten the accent color on hover
+            }
+        }
+    }
+}

@@ -1,0 +1,112 @@
+// ArtistView component styles
+.artist-view {
+    margin-top: 2rem; // Add space at the top for separation
+
+    // Card layout for artist details
+    .card {
+        background-color: $white; // White background for the card
+        border: 1px solid $light-bg; // Light border to match the theme
+        border-radius: 8px; // Rounded corners for a modern look
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); // Subtle shadow for depth
+        overflow: hidden; // Ensure content doesn't overflow
+
+        .card-header {
+            background-color: $primary; // Dark background for the header
+            color: $white; // White text in the header
+            padding: 1.5rem; // Padding for spacing in the header
+            border-bottom: 1px solid $light-bg; // Light border at the bottom of the header
+
+            .card-title {
+                font-size: 2rem; // Larger font size for the artist's name
+                font-weight: bold; // Make the title bold
+                margin: 0; // Remove default margin
+            }
+        }
+
+        .card-body {
+            padding: 1.5rem; // Padding for the body content
+
+            p {
+                font-size: 1rem; // Standard font size for text
+                margin-bottom: 1.5rem; // Space between paragraphs
+
+                strong {
+                    color: $accent; // Accent color for the "Biography" label
+                }
+            }
+
+            // Albums section
+            h2 {
+                font-size: 1.5rem; // Slightly larger font for section heading
+                margin-bottom: 1rem; // Space below the heading
+                color: $dark-bg; // Dark text color for album section heading
+            }
+
+            // Album list styles
+            .list-group {
+                margin-bottom: 2rem; // Space at the bottom of the list
+
+                .list-group-item {
+                    background-color: $white; // White background for list items
+                    border: 1px solid $light-bg; // Light border for list items
+                    border-radius: 5px; // Rounded corners for list items
+                    padding: 1rem; // Padding inside the list item
+                    margin-bottom: 0.75rem; // Space between items
+
+                    &:hover {
+                        background-color: $lighten-primary; // Lighten background on hover
+                        cursor: pointer; // Change cursor to pointer on hover
+                    }
+
+                    // Flexbox for alignment of album title and button
+                    .d-flex {
+                        justify-content: space-between;
+                        align-items: center;
+
+                        // Button for viewing the album
+                        .btn {
+                            background-color: $primary; // Primary color for the button
+                            border-color: $primary;
+                            border-radius: 5px;
+                            padding: 0.25rem 0.5rem;
+                            transition: background-color 0.3s ease, border-color 0.3s ease;
+
+                            &:hover {
+                                background-color: $darken-primary; // Darken on hover
+                                border-color: $darken-primary;
+                            }
+                        }
+                    }
+                }
+            }
+
+            // If no albums available
+            p {
+                font-size: 1rem;
+                color: $dark-bg; // Dark color for "No albums available" message
+            }
+        }
+    }
+
+    // Alerts for loading, error, and no artist
+    .alert {
+        font-size: 1rem;
+        padding: 1rem;
+        border-radius: 5px;
+
+        &.alert-info {
+            background-color: $light-bg; // Light background for loading state
+            color: $dark-bg; // Dark text for loading message
+        }
+
+        &.alert-danger {
+            background-color: $secondary; // Red background for error state
+            color: $white; // White text for error message
+        }
+
+        &.alert-warning {
+            background-color: $accent; // Accent color background for no artist warning
+            color: $dark-bg; // Dark text for warning message
+        }
+    }
+}

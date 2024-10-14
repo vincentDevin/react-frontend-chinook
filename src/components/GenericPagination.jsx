@@ -22,7 +22,7 @@ const GenericPagination = ({ currentPage, totalPages, onPageChange }) => {
     }
 
     return (
-        <div className="mt-4 d-flex justify-content-center">
+        <div className="mt-4 d-flex justify-content-center pagination">
             <nav aria-label="Generic Pagination">
                 <ul className="pagination">
                     <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>

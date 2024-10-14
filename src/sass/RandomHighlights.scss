@@ -1,0 +1,74 @@
+// FeatureHighlights component styles
+.feature-highlights {
+    margin: 5rem 0; // Top and bottom margin for the section
+
+    .row {
+        text-align: center; // Center-align text in the row
+    }
+
+    // Card styles for each feature (Artist, Album, Track)
+    .card {
+        background-color: $white; // White background for the card
+        border: none; // Remove default border
+        border-radius: 8px; // Rounded corners for modern look
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); // Subtle shadow for depth
+        transition: transform 0.3s ease, box-shadow 0.3s ease; // Smooth hover effect
+
+        &:hover {
+            transform: translateY(-5px); // Lift card on hover
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); // Deeper shadow on hover
+        }
+
+        // Ensure the card body uses flexbox for consistent spacing
+        .card-body {
+            display: flex;
+            flex-direction: column; // Stack items vertically
+            justify-content: space-between; // Space items evenly, keeping the button at the bottom
+            padding: 2rem; // Increase padding inside the card
+            flex-grow: 1; // Allow the card body to grow
+
+            h5 {
+                font-size: 1.5rem;
+                font-weight: bold;
+                color: $primary; // Primary color for card title
+                margin-bottom: 1rem; // Space below the title
+            }
+
+            .card-text {
+                font-size: 1.125rem; // Slightly larger font for card text
+                color: $dark-bg; // Dark text color for details
+                margin-bottom: 1.5rem; // Space below text
+                flex-grow: 1; // Make the text area grow to fill space between the title and the button
+            }
+
+            // Button always stays at the bottom
+            .btn-primary {
+                background-color: $primary; // Primary color for the button
+                border-color: $primary;
+                border-radius: 5px;
+                padding: 0.5rem 1rem;
+                transition: background-color 0.2s ease, border-color 0.2s ease;
+
+                &:hover {
+                    background-color: $darken-primary; // Darken on hover
+                    border-color: $darken-primary;
+                }
+            }
+        }
+    }
+
+    // Spinner styles for loading state
+    .spinner-border {
+        width: 3rem;
+        height: 3rem;
+        border-width: 0.3rem;
+        color: $primary; // Primary color for loading spinner
+    }
+
+    // Error message styling
+    .text-danger {
+        font-size: 1.25rem;
+        font-weight: bold;
+        color: $secondary; // Secondary color for error message
+    }
+}

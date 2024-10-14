@@ -1,0 +1,51 @@
+// TrackView component styles
+.track-view {
+    .container {
+        margin-top: 2rem;
+
+        // Header section for the track details
+        .track-header {
+            background-color: $primary; // Dark brown background for the header
+            color: $white; // White text for the header
+            padding: 1.5rem; // Padding for the header
+            border-radius: 8px; // Rounded corners
+            margin-bottom: 2rem; // Space below the header
+
+            h1 {
+                font-size: 2rem;
+                margin-bottom: 1rem; // Space between title and details
+            }
+
+            p {
+                font-size: 1rem;
+                margin-bottom: 0.5rem;
+
+                strong {
+                    color: $accent; // Accent color for labels (Price, Length, etc.)
+                }
+            }
+        }
+
+        // Alert messages (loading, error, etc.)
+        .alert {
+            font-size: 1rem;
+            padding: 1rem;
+            border-radius: 5px;
+
+            &.alert-info {
+                background-color: $light-bg; // Light background for loading state
+                color: $dark-bg; // Dark text for loading message
+            }
+
+            &.alert-danger {
+                background-color: $secondary; // Red background for error state
+                color: $white; // White text for error message
+            }
+
+            &.alert-warning {
+                background-color: $accent; // Accent color background for warning state
+                color: $dark-bg; // Dark text for warning message
+            }
+        }
+    }
+}
