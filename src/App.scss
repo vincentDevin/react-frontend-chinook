@@ -3,15 +3,15 @@
 @import 'node_modules/bootstrap/scss/variables';
 
 // Define a professional, modern color palette
-$primary: #b4132a;    // Muted Navy (for primary buttons or links)
-$secondary: #4a3a49;  // Soft Gold (for secondary accents, subtle highlights)
-$success: #559310;    // Deep Green (for success notifications, confirmations)
-$warning: #fb3e01;    // Muted Red (for warnings or alerts)
-$info: #478064;       // Cool Blue (for informational content)
-$background: #ffffff; // Soft Gray (clean, modern background)
-$text-dark: #006d7f;  // Deep Charcoal (for text, strong contrast)
-$text-light: #dbe2dc; // White (for text on dark elements)
-$custom-dark-color: #3b3f44; // Slate Gray (for dark headers or footers)
+$primary: #b4132a;
+$secondary: #4a3a49;
+$success: #559310;
+$warning: #fb3e01;
+$info: #478064;
+$background: #ffffff;
+$text-dark: #006d7f;
+$text-light: #dbe2dc;
+$custom-dark-color: #3b3f44;
 
 // Override Bootstrap theme colors
 $theme-colors: (
@@ -20,31 +20,105 @@ $theme-colors: (
   "success": $success,
   "warning": $warning,
   "info": $info,
-  "dark": $custom-dark-color  // Use the renamed variable
+  "dark": $custom-dark-color
 );
 
 // Override component-specific variables
-$body-bg: $background;  // Background color for body
-$body-color: $text-dark; // Text color
-$btn-primary-bg: $primary; // Primary button background
-$btn-primary-color: $text-light; // Primary button text
-$card-bg: $background; // Card background
-$card-border-color: $secondary; // Card border color
+$body-bg: $background;
+$body-color: $text-dark;
+$btn-primary-bg: $primary;
+$btn-primary-color: $text-light;
+$card-bg: $background;
+$card-border-color: $secondary;
 
 // Customize Navbar styles
-$navbar-light-bg: $background;               // Navbar background color (light theme)
-$navbar-light-color: $secondary; // Navbar text color (light theme)
-$nav-link-color: $secondary;    // Navbar link text color
-$nav-link-hover-color: $primary;       // Navbar link hover color
-$btn-link-color: $primary;             // Button link color (for logout button)
+$navbar-light-bg: $background;
+$navbar-light-color: $secondary;
+$nav-link-color: $secondary;
+$nav-link-hover-color: $primary;
+$btn-link-color: $primary;
 
 // Import Bootstrap core styles
 @import 'node_modules/bootstrap/scss/bootstrap';
-
-// Import Bootstrap Icons styles
 @import 'node_modules/bootstrap-icons/font/bootstrap-icons';
 
-//Import Custom Styles
+// Global Mobile Styles
+// Define media queries to handle styles for mobile devices
+// Target devices with max-width of 767px (bootstrap `sm` breakpoint)
+
+@media (max-width: 767.98px) {
+    // Global body adjustments
+    body {
+        padding: 0rem;
+        font-size: 0.9rem;
+        background-color: $background;
+    }
+
+    // Navbar
+    .navbar {
+        padding: 0.5rem 1rem;
+        .navbar-nav {
+            flex-direction: column; // Make navbar links stack vertically
+        }
+        .nav-link {
+            margin-bottom: 0.5rem; // Add spacing between links
+            font-size: 1rem; // Adjust font size for mobile
+        }
+    }
+
+    // Buttons
+    .btn {
+        font-size: 0.85rem; // Slightly smaller buttons on mobile
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+    }
+
+    // Table adjustments
+    .table {
+        font-size: 0.85rem; // Smaller text in tables for mobile
+        th, td {
+            padding: 0.25rem;
+        }
+    }
+
+    // Card adjustments
+    .card {
+        padding: 0rem;
+        font-size: 0.9rem; // Adjust card text size
+    }
+
+    // Footer
+    footer {
+        padding: 1rem;
+        font-size: 0.9rem;
+        text-align: center; // Center footer content on mobile
+    }
+
+    // Forms
+    form {
+        .form-control {
+            font-size: 0.85rem;
+            padding: 0.5rem;
+        }
+    }
+
+    // Adjust modal styles for mobile
+    .modal-dialog {
+        width: 100%; // Ensure modals take up full width on mobile
+        max-width: none;
+        padding: 0.5rem;
+    }
+
+    // Pagination
+    .pagination {
+        font-size: 0.85rem;
+        .page-link {
+            padding: 0.25rem 0.75rem;
+        }
+    }
+}
+
+// Import custom component styles
 @import './sass/feature-highlights.scss';
 @import './sass/hero-section.scss';
 @import './sass/navbar.scss';
@@ -61,6 +135,5 @@ $btn-link-color: $primary;             // Button link color (for logout button)
 @import './sass/genre-tracks-view.scss';
 @import './sass/album-view.scss';
 @import './sass/artist-view.scss';
-//@import './sass/buttons.scss';
 @import './sass/confirm-delete-modal.scss';
 @import './sass/media-type-list.scss';

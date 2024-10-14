@@ -61,4 +61,38 @@
             }
         }
     }
+
+    // Mobile Styles
+    @media (max-width: 767.98px) {
+        .album-card {
+            padding: 1rem;
+            box-shadow: none; // Remove shadow for a cleaner mobile view
+
+            .card-header {
+                padding: 0.75rem;
+                font-size: 1.5rem; // Adjust title size for mobile
+            }
+
+            .card-body {
+                padding: 1rem;
+            }
+        }
+
+        .track-item {
+            padding: 0.75rem;
+            font-size: 0.9rem; // Smaller font for mobile
+            border: 1px solid lighten($custom-dark-color, 20%);
+            margin-bottom: 0.75rem;
+
+            .track-summary {
+                flex-direction: column; // Stack content on mobile
+                align-items: flex-start;
+            }
+
+            .track-details {
+                margin-top: 0.75rem;
+                padding: 0.75rem;
+            }
+        }
+    }
 }

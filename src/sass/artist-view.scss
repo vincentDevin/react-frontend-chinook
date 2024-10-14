@@ -58,4 +58,44 @@
             }
         }
     }
+
+    // Mobile Styles
+    @media (max-width: 767.98px) {
+        .artist-card {
+            padding: 1rem;
+            box-shadow: none; // Remove shadow for a cleaner mobile view
+
+            .card-header {
+                padding: 0.75rem;
+                font-size: 1.5rem; // Adjust title size for mobile
+            }
+
+            .card-body {
+                padding: 1rem;
+
+                p {
+                    margin: 0.75rem 0; // Adjust paragraph spacing
+                }
+            }
+        }
+
+        .album-list {
+            .album-item {
+                padding: 0.75rem;
+                font-size: 0.9rem; // Smaller font for mobile
+                border: 1px solid lighten($custom-dark-color, 20%);
+                margin-bottom: 0.75rem;
+
+                &:hover {
+                    transform: none; // Remove hover effect for mobile
+                    box-shadow: none; // Remove shadow for mobile hover
+                }
+
+                button {
+                    padding: 0.35rem 0.7rem;
+                    font-size: 0.85rem; // Adjust button size for mobile
+                }
+            }
+        }
+    }
 }

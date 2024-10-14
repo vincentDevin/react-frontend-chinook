@@ -17,39 +17,62 @@
         display: flex;
         justify-content: flex-end;
         gap: 10px;
-    }
 
-    .btn-view, .btn-edit, .btn-delete {
-        padding: 0.5rem 1rem;
-        font-size: 0.9rem;
-        border-radius: 4px;
-        transition: background-color 0.3s ease, transform 0.3s ease;
-    }
+        // Buttons for action
+        .btn-view, .btn-edit, .btn-delete {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            border-radius: 4px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
 
-    .btn-view {
-        background-color: $info;
-        color: $text-light;
+        .btn-view {
+            background-color: $info;
+            color: $text-light;
 
-        &:hover {
-            background-color: darken($info, 10%);
+            &:hover {
+                background-color: darken($info, 10%);
+            }
+        }
+
+        .btn-edit {
+            background-color: $secondary;
+            color: $text-light;
+
+            &:hover {
+                background-color: darken($secondary, 10%);
+            }
+        }
+
+        .btn-delete {
+            background-color: $warning;
+            color: $text-light;
+
+            &:hover {
+                background-color: darken($warning, 10%);
+            }
         }
     }
 
-    .btn-edit {
-        background-color: $secondary;
-        color: $text-light;
-
-        &:hover {
-            background-color: darken($secondary, 10%);
+    // Mobile Styles
+    @media (max-width: 767.98px) {
+        // Adjust padding for table cells on smaller screens
+        td {
+            padding: 0.5rem;
+            font-size: 0.85rem; // Reduce font size for better fit on mobile
         }
-    }
 
-    .btn-delete {
-        background-color: $warning;
-        color: $text-light;
+        // Stack the buttons vertically on smaller screens
+        .actions-container {
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 5px;
 
-        &:hover {
-            background-color: darken($warning, 10%);
+            .btn-view, .btn-edit, .btn-delete {
+                width: 100%; // Make buttons full width on mobile
+                text-align: center; // Center button text
+                padding: 0.4rem 0.75rem; // Adjust padding for smaller buttons
+            }
         }
     }
 }

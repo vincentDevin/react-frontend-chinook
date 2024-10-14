@@ -61,4 +61,40 @@
             }
         }
     }
+
+    // Mobile Styles
+    @media (max-width: 767.98px) {
+        // Adjust table styles for mobile
+        .table {
+            font-size: 0.85rem; // Reduce font size for better fit on mobile
+
+            thead {
+                th {
+                    padding: 0.5rem; // Adjust padding for smaller screens
+                }
+            }
+
+            tbody {
+                td {
+                    padding: 0.5rem; // Adjust padding for better readability on mobile
+                }
+            }
+        }
+
+        // Stack buttons vertically on smaller screens
+        .btn-secondary, .btn-danger {
+            width: 100%; // Full width buttons on mobile
+            text-align: center; // Center button text
+            padding: 0.4rem 0.75rem; // Adjust padding for smaller buttons
+            margin-bottom: 0.5rem; // Add space between stacked buttons
+        }
+
+        .btn-secondary, .btn-danger:hover {
+            transform: none; // Remove hover effect for mobile
+        }
+
+        .btn-secondary, .btn-danger:focus {
+            box-shadow: none; // Simplify focus effect for mobile
+        }
+    }
 }
